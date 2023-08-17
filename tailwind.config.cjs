@@ -3,8 +3,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        orange: "#ff9500",
-        "dark-orange": "#db8000",
+        blue: "#1564F9",
+        "gray-300": "#E1E5E8",
+        "gray-400": "#C4CBD0",
+        "gray-700": "#374151",
+        "gray-900": "#111827",
+      },
+      fontFamily: {
+        "lato-regular": "Lato-Regular",
+        "lato-bold": "Lato-Bold",
       },
     },
   },
