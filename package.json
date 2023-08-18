@@ -13,6 +13,7 @@
     "node": ">=17"
   },
   "dependencies": {
+    "@tanstack/react-query": "^4.32.6",
     "@yext/sites-components": "^1.0.0-rc.2",
     "clsx": "^1.2.1",
     "framer-motion": "^10.16.0",

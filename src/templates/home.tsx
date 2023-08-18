@@ -54,7 +54,7 @@ const Home = () => {
             icon={<GraphIcon />}
             title="Content"
             description="Edit your business information such as address, hours, and description."
-            link="#"
+            link="/content?entityId=facility-2"
           />
           <ProductCard
             icon={<StarsIcon />}
