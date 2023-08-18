@@ -12,7 +12,6 @@ export const LocationPinIcon = () => {
       <circle cx="10" cy="10" r="9.5" stroke="#BAC2C5" />
       <mask
         id="mask0_141_884"
-        style="mask-type:luminance"
         maskUnits="userSpaceOnUse"
         x="0"
         y="0"

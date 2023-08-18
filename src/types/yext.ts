@@ -51,6 +51,7 @@ export interface GalleryImage {
 }
 
 export interface Location {
+  id: string;
   address: {
     line1: string;
     line2: string;
@@ -93,7 +94,9 @@ export interface Location {
     folderId: string;
     language: string;
     countryCode: string;
-    entityType: string;
+    entityType: {
+      id: string;
+    };
   };
   categoryIds: string[];
   reviewGenerationUrl: string;

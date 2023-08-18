@@ -29,7 +29,7 @@ const BreadCrumbs = ({ links, loading }: BreadCrumbProps) => {
             >
               {link.name}
             </a>
-            {!isLast && <span className="mx-1 text-gray-500">/</span>}
+            {!isLast && <span className="mx-1 text-gray-500 text-sm">/</span>}
           </span>
         );
       })}

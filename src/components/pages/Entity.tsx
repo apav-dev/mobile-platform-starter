@@ -3,7 +3,9 @@ import Main from "../layouts/Main";
 import ContentContainer from "../ContentContainer";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchLocation, fetchReviews } from "../../utils/api";
+import { fetchLocation } from "../../utils/api";
+import Heading from "../Heading";
+import { LocationPinIcon } from "../icons/LocationPinIcon";
 
 const Entity = () => {
   const [entityId, setEntityId] = useState<string>("");
@@ -24,6 +26,8 @@ const Entity = () => {
     queryFn: () => fetchLocation(entityId),
   });
 
+  const location = data?.response.docs?.[0];
+
   return (
     <Main
       breadcrumbs={[
@@ -31,10 +35,32 @@ const Entity = () => {
           name: "Home",
           path: "/",
         },
-        { name: "Zenith" },
+        { name: location?.name ?? "" },
       ]}
     >
-      <ContentContainer></ContentContainer>
+      {location && (
+        <ContentContainer>
+          <Heading title={location.name} icon={<LocationPinIcon />} />
+          <div className="py-4">
+            <div className="justify-start items-center gap-2 inline-flex">
+              <div className="text-gray-700 font-lato-bold">ID:</div>
+              <div className="text-gray-700 font-lato-regular">
+                {location.id}
+              </div>
+              <div className="text-gray-700 text-[13px] font-bold">|</div>
+              <div className="justify-start items-center gap-2 flex">
+                <div className="text-gray-700 font-lato-bold">Type:</div>
+                <div className="inline-flex items-center gap-1">
+                  <LocationPinIcon />
+                  <div className="text-gray-700 font-lato-regular">
+                    {location.meta.entityType.id}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ContentContainer>
+      )}
     </Main>
   );
 };
