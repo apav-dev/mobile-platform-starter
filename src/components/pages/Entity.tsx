@@ -6,6 +6,9 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchLocation } from "../../utils/api";
 import Heading from "../Heading";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
+import FieldCard from "../FieldCard";
+import ImageCarousel from "../ImageCarousel";
+import Hours from "../Hours";
 
 const Entity = () => {
   const [entityId, setEntityId] = useState<string>("");
@@ -59,6 +62,28 @@ const Entity = () => {
               </div>
             </div>
           </div>
+          <div className="flex flex-col gap-y-2">
+          <FieldCard title="Name">
+            <div className="text-gray-700 font-lato-regular">
+              {location.name}
+            </div>
+          </FieldCard>
+          <FieldCard title="Description">
+          <div className=" text-gray-700 text-sm font-lato-regular">
+            {location.description}
+          </div>
+          </FieldCard>
+          <FieldCard title="Photo Gallery">
+            <ImageCarousel images={location.photoGallery} />
+          </FieldCard>
+          <FieldCard title="Hours">
+            <Hours hours={location.hours}/>
+          </FieldCard>
+          <FieldCard title="Holiday Hours">
+            <Hours hours={location.hours} renderHolidayHours={true}/>
+          </FieldCard>
+          </div>
+
         </ContentContainer>
       )}
     </Main>

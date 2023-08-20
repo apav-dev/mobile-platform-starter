@@ -6,9 +6,10 @@ export interface YextResponse<T> {
   response: T;
 }
 
-export interface DayInterval {
-  openIntervals: TimeInterval[];
-}
+export type DayInterval = 
+  | { openIntervals: TimeInterval[]; closed?: never }
+  | { openIntervals?: never; closed: boolean };
+
 
 export interface TimeInterval {
   start: string;
