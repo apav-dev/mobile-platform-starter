@@ -6,7 +6,7 @@ import {
   HeadConfig,
   TemplateRenderProps,
 } from "@yext/pages";
-import Entity from "../components/pages/Entity";
+import EntityEdit from "../components/pages/EntityEdit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const getPath: GetPath<TemplateRenderProps> = () => {
@@ -28,7 +28,7 @@ const queryClient = new QueryClient();
 const Content = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <Entity />
+      <EntityEdit />
     </QueryClientProvider>
   );
 };

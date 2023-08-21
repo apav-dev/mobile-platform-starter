@@ -1,4 +1,4 @@
-import {  GalleryImage } from "../types/yext";
+import { GalleryImage } from "../types/yext";
 import { useState } from "react";
 import { motion, AnimatePresence, MotionConfig } from "framer-motion";
 import * as React from "react";
@@ -18,11 +18,14 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
 
   return (
     <MotionConfig transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}>
-      <div className="relative overflow-hidden">
-        <motion.div className="flex" animate={{x : `-${index * 100}%`}}>
+      <div className="relative overflow-hidden z-0">
+        <motion.div className="flex" animate={{ x: `-${index * 100}%` }}>
           {images.slice(1).map((image, i) => (
             // <Image image={image} layout="fixed" width={310} height={180} className="mx-auto" />
-            <img src={image.image.url} className="object-cover aspect-3/2 max-h-80"/>
+            <img
+              src={image.image.url}
+              className="object-cover aspect-3/2 max-h-80"
+            />
           ))}
         </motion.div>
         <AnimatePresence initial={false}>

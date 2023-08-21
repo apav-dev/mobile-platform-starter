@@ -46,17 +46,13 @@ const Footer = () => {
     <div className="fixed bottom-0 w-full">
       <motion.div
         className={twMerge(
-          "bg-gray-900 w-full shadow rounded-t-xl flex-col justify-start items-start gap-1 flex overflow-hidden",
+          "bg-gray-900 z-[5] w-full shadow rounded-t-xl flex-col justify-start items-start gap-1 flex overflow-hidden",
           menuOpen && "px-2 py-4"
         )}
-        initial="closed"
-        animate={menuOpen ? "open" : "closed"}
-        variants={{
-          open: { height: "auto" },
-          closed: { height: 0 },
-        }}
+        initial={false}
+        animate={{ y: menuOpen ? 0 : "100%" }}
         exit="closed"
-        transition={{ duration: 0.2, ease: [0.43, 0.13, 0.23, 0.96] }}
+        transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
       >
         {footerLinks.map((link) => (
           <a
@@ -71,7 +67,7 @@ const Footer = () => {
           </a>
         ))}
       </motion.div>
-      <div className="bg-gray-900 pl-[15px] w-full pr-1.5 py-2 justify-center items-center gap-4 inline-flex border-t border-gray-700">
+      <div className="bg-gray-900 relative z-10 pl-[15px] w-full pr-1.5 py-2 justify-center items-center gap-4 inline-flex border-t border-gray-700">
         <YextIcon />
         <div className="grow shrink basis-0 text-white text-sm font-bold font-lato-bold">
           Company Name
