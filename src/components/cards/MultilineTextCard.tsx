@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import ContentContainer from "../ContentContainer";
 import { useEntity } from "../utils/useEntityContext";
 import TextareaForm from "../form/TextAreaForm";
+import { twMerge } from "tailwind-merge";
 
 export interface FieldCardProps {
   title: string;
@@ -14,6 +15,7 @@ export interface FieldCardProps {
 
 const FieldCard = ({ title, fieldId, value }: FieldCardProps) => {
   const [editMode, setEditMode] = useState(false);
+  const [hidden, setHidden] = useState(true);
 
   const { formData } = useEntity();
 
@@ -40,7 +42,16 @@ const FieldCard = ({ title, fieldId, value }: FieldCardProps) => {
       <motion.div
         initial={false}
         animate={{ y: editMode ? 0 : "100%" }}
-        className="inset-0 absolute bg-white -mx-6 -mb-3 z-10"
+        className={twMerge(
+          "inset-0 absolute bg-white -mx-6 -mb-3 z-10",
+          hidden && "hidden"
+        )}
+        onAnimationStart={() => {
+          setHidden(false);
+        }}
+        onAnimationComplete={() => {
+          !editMode && setHidden(true);
+        }}
         transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
       >
         <ContentContainer>

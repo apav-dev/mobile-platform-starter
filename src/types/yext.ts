@@ -6,17 +6,16 @@ export interface YextResponse<T> {
   response: T;
 }
 
-export type DayInterval = 
-  | { openIntervals: TimeInterval[]; closed?: never }
-  | { openIntervals?: never; closed: boolean };
-
+export type DayIntervalType =
+  | { openIntervals: TimeInterval[]; isClosed?: never }
+  | { openIntervals?: never; isClosed: boolean };
 
 export interface TimeInterval {
   start: string;
   end: string;
 }
 
-export interface HolidayHour {
+export interface HolidayHourType {
   date: string;
   isClosed?: boolean;
   openIntervals?: TimeInterval[];
@@ -63,14 +62,14 @@ export interface Location {
   };
   description: string;
   hours: {
-    monday: DayInterval;
-    tuesday: DayInterval;
-    wednesday: DayInterval;
-    thursday: DayInterval;
-    friday: DayInterval;
-    saturday: DayInterval;
-    sunday: DayInterval;
-    holidayHours: HolidayHour[];
+    monday: DayIntervalType;
+    tuesday: DayIntervalType;
+    wednesday: DayIntervalType;
+    thursday: DayIntervalType;
+    friday: DayIntervalType;
+    saturday: DayIntervalType;
+    sunday: DayIntervalType;
+    holidayHours: HolidayHourType[];
   };
   logo: {
     image: ComplexImageType;

@@ -1,10 +1,10 @@
 import * as React from "react";
 
-import { HolidayHour } from "../types/yext";
+import { HolidayHourType } from "../types/yext";
 import { getDayOfWeek } from "../utils/getDayOfWeek";
 
 export interface DayIntervalProps {
-  holiday: HolidayHour;
+  holiday: HolidayHourType;
 }
 
 const HolidayInterval = ({ holiday }: DayIntervalProps) => {
@@ -18,7 +18,7 @@ const HolidayInterval = ({ holiday }: DayIntervalProps) => {
 
   return (
     <div className="justify-start items-start gap-4 inline-flex">
-      <div className="w-[200px] text-gray-700 text-base font-lato-bold leading-tight">
+      <div className="w-40 text-gray-700 text-base font-lato-bold leading-tight">
         {date}
       </div>
       <div className="text-gray-700 text-base font-lato-regular leading-tight">

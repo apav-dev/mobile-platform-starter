@@ -5,8 +5,8 @@ import { useEntity } from "../utils/useEntityContext";
 import Hours from "../Hours";
 
 import {
-  DayInterval as DayIntervalType,
-  HolidayHour as HolidayHourType,
+  DayIntervalType as DayIntervalType,
+  HolidayHourType as HolidayHourType,
 } from "@/src/types/yext";
 
 export interface HoursCardProps {

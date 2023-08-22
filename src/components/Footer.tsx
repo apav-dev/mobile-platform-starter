@@ -41,18 +41,26 @@ const footerLinks = [
 
 const Footer = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuHidden, setMenuHidden] = useState(true);
 
   return (
-    <div className="fixed bottom-0 w-full">
+    <div className="fixed bottom-0 w-full z-50">
       <motion.div
         className={twMerge(
           "bg-gray-900 z-[5] w-full shadow rounded-t-xl flex-col justify-start items-start gap-1 flex overflow-hidden",
-          menuOpen && "px-2 py-4"
+          menuOpen && "px-2 py-4",
+          menuHidden && "hidden"
         )}
         initial={false}
         animate={{ y: menuOpen ? 0 : "100%" }}
         exit="closed"
         transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+        onAnimationStart={() => {
+          setMenuHidden(false);
+        }}
+        onAnimationComplete={() => {
+          !menuOpen && setMenuHidden(true);
+        }}
       >
         {footerLinks.map((link) => (
           <a

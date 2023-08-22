@@ -1,6 +1,7 @@
 import { fetch } from "@yext/pages/util";
 // import axios from "axios";
 // import fetch from "node-fetch";
+// import { fetch } from "cross-fetch";
 
 class Response {
   body: string;
@@ -17,7 +18,7 @@ class Response {
 }
 
 export default async function entity(request) {
-  const { method, body, queryParams } = request;
+  const { method, body, pathParams } = request;
 
   switch (method) {
     case "GET":
@@ -26,7 +27,7 @@ export default async function entity(request) {
       return new Response("Method not allowed", null, 405);
   }
 
-  const { id } = queryParams;
+  const { id } = pathParams;
 
   if (!id) {
     return new Response("Missing entity id", null, 400);

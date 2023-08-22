@@ -53,7 +53,7 @@ const EntityEdit = () => {
         ]}
       >
         {location && (
-          <ContentContainer>
+          <ContentContainer containerClassName="">
             <Heading title={location.name} icon={<LocationPinIcon />} />
             <div className="py-4">
               <div className="justify-start items-center gap-2 inline-flex">
@@ -73,7 +73,7 @@ const EntityEdit = () => {
                 </div>
               </div>
             </div>
-            <div className="relative flex flex-col gap-y-2 overflow-hidden min-h-[calc(100vh-205px)]">
+            <div className="relative flex flex-col gap-y-2">
               <TextCard title="Name" fieldId="name" value={location.name} />
               <MultilineTextCard
                 title="Description"
