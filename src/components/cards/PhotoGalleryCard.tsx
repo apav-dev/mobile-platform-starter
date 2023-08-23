@@ -1,8 +1,6 @@
 import * as React from "react";
-import Card from "../Card";
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import ContentContainer from "../ContentContainer";
+import Card from "../Card";
 import { useEntity } from "../utils/useEntityContext";
 import { GalleryImage } from "@/src/types/yext";
 import ImageCarousel from "../ImageCarousel";

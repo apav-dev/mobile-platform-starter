@@ -1,11 +1,10 @@
 import * as React from "react";
-import Card from "../Card";
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Card from "../Card";
 import ContentContainer from "../ContentContainer";
 import InputForm from "../form/InputForm";
 import { useEntity } from "../utils/useEntityContext";
-import { twMerge } from "tailwind-merge";
+import EditPanel from "../EditPanel";
 
 export interface FieldCardProps {
   title: string;
@@ -13,9 +12,8 @@ export interface FieldCardProps {
   value?: string;
 }
 
-const FieldCard = ({ title, fieldId, value }: FieldCardProps) => {
+const TextCard = ({ title, fieldId, value }: FieldCardProps) => {
   const [editMode, setEditMode] = useState(false);
-  const [hidden, setHidden] = useState(true);
 
   const { formData } = useEntity();
 
@@ -39,21 +37,7 @@ const FieldCard = ({ title, fieldId, value }: FieldCardProps) => {
         </div>
         <div className="text-gray-700 font-lato-regular">{value}</div>
       </Card>
-      <motion.div
-        initial={false}
-        animate={{ y: editMode ? 0 : "100%" }}
-        className={twMerge(
-          "inset-0 absolute bg-white -mx-6 -mb-3 z-10",
-          hidden && "hidden"
-        )}
-        onAnimationStart={() => {
-          setHidden(false);
-        }}
-        onAnimationComplete={() => {
-          !editMode && setHidden(true);
-        }}
-        transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-      >
+      <EditPanel open={editMode}>
         <ContentContainer>
           <InputForm
             id={fieldId}
@@ -62,9 +46,9 @@ const FieldCard = ({ title, fieldId, value }: FieldCardProps) => {
             onCancel={handleCancel}
           />
         </ContentContainer>
-      </motion.div>
+      </EditPanel>
     </div>
   );
 };
 
-export default FieldCard;
+export default TextCard;
