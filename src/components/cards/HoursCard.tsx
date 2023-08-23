@@ -70,7 +70,12 @@ const HoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
         transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
       >
         <ContentContainer containerClassName="pt-4 pb-20">
-          <HoursForm id="hours" initialHours={hours} onCancel={handleCancel} />
+          <HoursForm
+            id="hours"
+            label="Hours"
+            initialHours={hours}
+            onCancel={handleCancel}
+          />
         </ContentContainer>
       </motion.div>
     </div>

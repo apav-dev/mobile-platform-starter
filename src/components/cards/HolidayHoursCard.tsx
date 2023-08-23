@@ -8,6 +8,10 @@ import {
   DayIntervalType as DayIntervalType,
   HolidayHourType as HolidayHourType,
 } from "@/src/types/yext";
+import { motion } from "framer-motion";
+import { twMerge } from "tailwind-merge";
+import ContentContainer from "../ContentContainer";
+import HolidayHoursForm from "../form/HolidayHoursForm";
 
 export interface HoursCardProps {
   title: string;
@@ -26,6 +30,7 @@ export interface HoursCardProps {
 
 const HolidayHoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
   const [editMode, setEditMode] = useState(false);
+  const [hidden, setHidden] = useState(true);
 
   const { formData } = useEntity();
 
@@ -36,36 +41,44 @@ const HolidayHoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
   }, [formData, fieldId]);
 
   const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     e.stopPropagation();
     setEditMode(false);
   };
 
   return (
     // TODO: Is it bad to have onClick without button?
-    <div
-    // onClick={() => setEditMode(true)}
-    >
+    <div onClick={() => setEditMode(true)}>
       <Card>
         <div className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2">
           {title}
         </div>
         <Hours hours={hours} renderHolidayHours />
       </Card>
-      {/* <motion.div
+      <motion.div
         initial={false}
         animate={{ y: editMode ? 0 : "100%" }}
-        className="inset-0 absolute bg-white -mx-6 -mb-3 z-10"
+        className={twMerge(
+          "inset-0 absolute bg-white -mx-6 -mb-3 z-10",
+          hidden && "hidden"
+        )}
+        onAnimationStart={() => {
+          setHidden(false);
+        }}
+        onAnimationComplete={() => {
+          !editMode && setHidden(true);
+        }}
         transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
       >
-        <ContentContainer>
-          <InputForm
-            id={fieldId}
-            label={title}
-            initialValue={value}
+        <ContentContainer containerClassName="pt-4 pb-20">
+          <HolidayHoursForm
+            id="hours"
+            label="Holiday Hours"
+            initialHolidayHours={hours}
             onCancel={handleCancel}
           />
         </ContentContainer>
-      </motion.div> */}
+      </motion.div>
     </div>
   );
 };
