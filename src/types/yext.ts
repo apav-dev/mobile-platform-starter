@@ -25,8 +25,8 @@ export interface ComplexImageType {
   url: string;
   width: number;
   height: number;
-  sourceUrl: string;
-  thumbnails: Thumbnail[];
+  sourceUrl?: string;
+  thumbnails?: Thumbnail[];
 }
 
 export interface Thumbnail {

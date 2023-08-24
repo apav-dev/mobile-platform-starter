@@ -97,6 +97,7 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
         ...prev,
         [id]: values[id],
       }));
+      form.reset();
     };
 
     const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -122,6 +123,7 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
 
     return (
       <Form {...form}>
+        <FormLabel className="font-lato-bold text-base">{label}</FormLabel>
         <FormLabel className="font-lato-bold text-base">{label}</FormLabel>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}

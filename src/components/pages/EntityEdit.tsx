@@ -36,6 +36,10 @@ const EntityEdit = () => {
 
   const location = data?.response.docs?.[0];
 
+  useEffect(() => {
+    console.log("formData", formData);
+  }, [location]);
+
   return (
     <EntityProvider
       value={{
@@ -80,7 +84,6 @@ const EntityEdit = () => {
                 fieldId="description"
                 value={location.description}
               />
-
               <PhotoGalleryCard
                 title="Photo Gallery"
                 fieldId="photoGallery"

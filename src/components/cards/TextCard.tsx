@@ -38,7 +38,7 @@ const TextCard = ({ title, fieldId, value }: FieldCardProps) => {
         <div className="text-gray-700 font-lato-regular">{value}</div>
       </Card>
       <EditPanel open={editMode}>
-        <ContentContainer>
+        <ContentContainer containerClassName="pt-4 pb-20">
           <InputForm
             id={fieldId}
             label={title}

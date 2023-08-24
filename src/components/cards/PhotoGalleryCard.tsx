@@ -4,6 +4,9 @@ import Card from "../Card";
 import { useEntity } from "../utils/useEntityContext";
 import { GalleryImage } from "@/src/types/yext";
 import ImageCarousel from "../ImageCarousel";
+import EditPanel from "../EditPanel";
+import ContentContainer from "../ContentContainer";
+import PhotoGalleryForm from "../form/PhotoGalleryForm";
 
 export interface PhotoGalleryCardProps {
   title: string;
@@ -33,26 +36,24 @@ const FieldCard = ({ title, fieldId, images }: PhotoGalleryCardProps) => {
     // onClick={() => setEditMode(true)}
     >
       <Card>
-        <div className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2">
+        <div
+          onClick={() => setEditMode(true)}
+          className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2"
+        >
           {title}
         </div>
         <ImageCarousel images={images} />
       </Card>
-      {/* <motion.div
-        initial={false}
-        animate={{ y: editMode ? 0 : "100%" }}
-        className="inset-0 absolute bg-white -mx-6 -mb-3 z-10"
-        transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-      >
-        <ContentContainer>
-          <InputForm
-            id={fieldId}
-            label={title}
-            initialValue={value}
+      <EditPanel open={editMode}>
+        <ContentContainer containerClassName="pt-4 pb-20">
+          <PhotoGalleryForm
+            id={"photoGallery"}
+            label="Photo Gallery"
             onCancel={handleCancel}
+            initialImages={images}
           />
         </ContentContainer>
-      </motion.div> */}
+      </EditPanel>
     </div>
   );
 };
