@@ -4,10 +4,8 @@ import * as z from "zod";
 import * as React from "react";
 import { Form, FormField, FormLabel } from "./Form";
 import { useEntity } from "../utils/useEntityContext";
-import IntervalFormCard from "./IntervalFormItem";
 
-import { DayIntervalType, HolidayHourType } from "@/src/types/yext";
-import HolidayHoursCard from "../cards/HolidayHoursCard";
+import { HolidayHourType } from "@/src/types/yext";
 import HolidayHourFormItem from "./HolidayHourFormItem";
 
 export type DayOfWeek =
@@ -28,12 +26,6 @@ export interface HoursFormProps
   onCancel?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   label?: string;
 }
-
-export const isClosedInterval = (
-  interval: any
-): interval is { isClosed: boolean } => {
-  return "isClosed" in interval;
-};
 
 // TODO: multiple intervals
 // TODO: initial values when switching from open to closed
@@ -73,50 +65,57 @@ const HolidayHoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
       },
     });
 
-    // // 2. Define a submit handler.
-    // const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    //   // Do something with the form values.
-    //   // ✅ This will be type-safe and validated.
-    //   console.log(values);
-    //   setFormData((prev) => ({
-    //     ...prev,
-    //     [id]: values[id],
-    //   }));
-    // };
-
-    const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation();
-      form.resetField(id);
-      onCancel?.(e);
-    };
-
     const onValueChange = (index: number, value: HolidayHourType) => {
-      // console.log(dayOfWeek, value);
       const holidayHours = form.getValues(id).holidayHours;
       // replace the value at the index
       holidayHours[index] = value;
-      form.setValue(`${id}.holidayHours`, holidayHours);
+      form.setValue(`${id}.holidayHours[${index}]`, value);
+    };
+
+    const onDelete = (
+      e: React.MouseEvent<HTMLButtonElement>,
+      index: number
+    ) => {
+      const holidayHours = form.getValues(id).holidayHours;
+      holidayHours.splice(index, 1);
+      form.setValue(`${id}.holidayHours[${index}]`, null);
+    };
+
+    // // 2. Define a submit handler.
+    const handleSubmit = (values: z.infer<typeof formSchema>) => {
+      // Do something with the form values.
+      // ✅ This will be type-safe and validated.
+      setFormData((prev) => ({
+        ...prev,
+        [id]: values[id],
+      }));
+    };
+
+    const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      form.reset();
+      onCancel?.(e);
     };
 
     return (
       <Form {...form}>
         <FormLabel className="font-lato-bold text-base">{label}</FormLabel>
         <form
-          // onSubmit={form.handleSubmit(handleSubmit)}
+          onSubmit={form.handleSubmit(handleSubmit)}
           className="space-y-4 mt-4"
         >
           {form.getValues(id).holidayHours.map((holidayHour, index) => (
             <FormField
               control={form.control}
-              name={"hours.monday"}
+              name={`${id}.holidayHours[${index}]`}
               render={({ field }) => (
                 <HolidayHourFormItem
                   label={`Holiday Hours ${index + 1}`}
                   key={index}
                   index={index}
-                  date={holidayHour.date}
                   onValueChange={onValueChange}
-                  value={field.value}
+                  holidayHourValue={field.value}
+                  onDelete={onDelete}
                 />
               )}
             />

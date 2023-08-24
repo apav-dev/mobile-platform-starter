@@ -9,6 +9,9 @@ module.exports = {
         "gray-700": "#374151",
         "gray-900": "#111827",
       },
+      screens: {
+        xs: "375px",
+      },
       fontFamily: {
         "lato-regular": "Lato-Regular",
         "lato-bold": "Lato-Bold",

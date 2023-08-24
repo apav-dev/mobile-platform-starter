@@ -4,10 +4,7 @@ import { useEffect, useState } from "react";
 import { useEntity } from "../utils/useEntityContext";
 import Hours from "../Hours";
 
-import {
-  DayIntervalType as DayIntervalType,
-  HolidayHourType as HolidayHourType,
-} from "@/src/types/yext";
+import { HolidayHourType as HolidayHourType } from "@/src/types/yext";
 import ContentContainer from "../ContentContainer";
 import HolidayHoursForm from "../form/HolidayHoursForm";
 import EditPanel from "../EditPanel";
@@ -16,13 +13,6 @@ export interface HoursCardProps {
   title: string;
   fieldId: string;
   hours: {
-    monday: DayIntervalType;
-    tuesday: DayIntervalType;
-    wednesday: DayIntervalType;
-    thursday: DayIntervalType;
-    friday: DayIntervalType;
-    saturday: DayIntervalType;
-    sunday: DayIntervalType;
     holidayHours: HolidayHourType[];
   };
 }

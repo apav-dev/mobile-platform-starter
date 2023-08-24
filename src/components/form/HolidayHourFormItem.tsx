@@ -1,80 +1,121 @@
 import * as React from "react";
-import { DayOfWeek, isClosedInterval } from "./HoursForm";
 import Card from "../Card";
 import { FormControl, FormItem, FormLabel, FormMessage } from "./Form";
 import { RadioGroup, RadioGroupItem } from "../Radio";
 import { Label } from "../Label";
 import { Input } from "../Input";
 import { HolidayHourType } from "@/src/types/yext";
+import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
+import { Button } from "../Button";
+import { cn } from "../../utils/cn";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "../Calendar";
+import { format } from "date-fns";
+import { TrashIcon } from "../icons/TrashIcon";
 
 export interface IntervalFormCardProps {
   label: string;
-  date: string;
   index: number;
   onValueChange: (index: number, value: HolidayHourType) => void;
-  value: HolidayHourType;
+  holidayHourValue?: HolidayHourType;
+  onDelete?: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    index: number
+  ) => void;
 }
 
-const IntervalFormItem = ({
+const HolidayHourFormItem = ({
   label,
-  date,
   index,
   onValueChange,
-  value,
+  holidayHourValue,
+  onDelete,
 }: IntervalFormCardProps) => {
+  if (!holidayHourValue) return null;
+
+  let startValue = holidayHourValue.openIntervals?.[0]
+    ? holidayHourValue.openIntervals?.[0].start
+    : "";
+  startValue = startValue.length == 3 ? `0${startValue}` : startValue;
+
+  let endValue = holidayHourValue.openIntervals?.[0]
+    ? holidayHourValue.openIntervals?.[0].end
+    : "";
+  endValue = endValue.length == 3 ? `0${endValue}` : endValue;
+
   const onRadioChange = (value: string) => {
     if (value === "closed") {
-      onValueChange(date, { isClosed: true });
+      onValueChange(index, {
+        isClosed: true,
+        date: holidayHourValue.date,
+      });
     } else {
-      onValueChange(date, {
+      onValueChange(index, {
+        isClosed: false,
+        date: holidayHourValue.date,
         openIntervals: [
           {
-            start: "9:00",
-            end: "5:00",
+            start: startValue,
+            end: endValue,
           },
         ],
       });
     }
   };
 
+  const onDateChange = (date: Date | undefined) => {
+    const dateStr = date?.toISOString().split("T")[0];
+    onValueChange(index, {
+      date: dateStr || "",
+      isClosed: holidayHourValue.isClosed,
+      openIntervals: holidayHourValue.openIntervals,
+    });
+  };
+
   const onStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onValueChange(date, {
+    onValueChange(index, {
+      ...holidayHourValue,
       openIntervals: [
         {
           start: e.target.value,
-          end: value.openIntervals[0].end,
+          end: endValue,
         },
       ],
     });
   };
 
   const onEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onValueChange(date, {
+    onValueChange(index, {
+      ...holidayHourValue,
       openIntervals: [
         {
-          start: value.openIntervals[0].start,
+          start: startValue,
           end: e.target.value,
         },
       ],
     });
   };
 
-  let startValue = isClosedInterval(value)
-    ? "09:00"
-    : value.openIntervals[0].start;
-  startValue = startValue.length === 4 ? `0${startValue}` : startValue;
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    onDelete?.(e, index);
+  };
 
-  let endValue = isClosedInterval(value) ? "17:00" : value.openIntervals[0].end;
-  endValue = endValue.length === 4 ? `0${endValue}` : endValue;
+  const [year, month, day] = holidayHourValue.date.split("-").map(Number);
+  const localDate = new Date(year, month - 1, day);
 
   return (
     <Card>
       <FormItem className="space-y-3">
-        <FormLabel className="font-lato-bold text-base">{label}</FormLabel>
+        <div className="flex justify-between">
+          <FormLabel className="font-lato-bold text-base">{label}</FormLabel>
+          <button type="button" onClick={handleDelete}>
+            <TrashIcon />
+          </button>
+        </div>
         <FormControl>
           <RadioGroup
             onValueChange={onRadioChange}
-            defaultValue={isClosedInterval(value) ? "closed" : "open"}
+            defaultValue={holidayHourValue.isClosed ? "closed" : "open"}
             className="flex flex-col space-y-1"
           >
             <FormItem className="flex items-center space-x-3 space-y-0">
@@ -96,32 +137,52 @@ const IntervalFormItem = ({
           </RadioGroup>
         </FormControl>
         <FormMessage />
-        <div>
+        <div className="flex flex-col">
           <Label className="font-lato-regular text-[13px] text-gray-700 pb-1">
             Date
           </Label>
-          <Input
-            type="date"
-            step={60}
-            className="font-lato-regular text-base h-8 "
-            onChange={onStartChange}
-            // id={id}
-            // placeholder="shadcn"
-            // {...field}
-            value={date}
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <FormControl>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "pl-3 text-left font-lato-regular text-gray-500",
+                    !localDate && "text-muted-foreground"
+                  )}
+                >
+                  {localDate ? (
+                    format(localDate, "MM/dd/yyyy")
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+              </FormControl>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                className="bg-white font-lato-regular"
+                mode="single"
+                // new date from string of form yyyy-mm-dd
+                selected={localDate}
+                onSelect={onDateChange}
+                disabled={(date) => date < new Date()}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
         </div>
-        {/* TODO: Make the inputs 24 hr instead of 12 hr */}
-        {isClosedInterval(value) ? null : (
-          <div className="flex gap-x-2">
-            <div>
+        {holidayHourValue.isClosed ? null : (
+          <div className="gap-3 flex flex-col xs:flex-row xs:gap-2">
+            <div className="flex flex-col flex-1">
               <Label className="font-lato-regular text-[13px] text-gray-700 pb-1">
                 From
               </Label>
               <Input
                 type="time"
                 // step={60}
-                className="font-lato-regular text-base h-8"
+                className="font-lato-regular text-[13px] text-gray-500  h-8"
                 onChange={onStartChange}
                 // id={id}
                 // placeholder="shadcn"
@@ -129,14 +190,14 @@ const IntervalFormItem = ({
                 value={startValue}
               />
             </div>
-            <div>
+            <div className="flex flex-col flex-1">
               <Label className="font-lato-regular text-[13px] text-gray-700 pb-1">
                 To
               </Label>
               <Input
                 type="time"
                 step={60}
-                className="font-lato-regular text-base h-8"
+                className="font-lato-regular text-[13px] h-8 text-gray-500"
                 // id={id}
                 // placeholder="shadcn"
                 // {...field}
@@ -151,4 +212,4 @@ const IntervalFormItem = ({
   );
 };
 
-export default IntervalFormItem;
+export default HolidayHourFormItem;

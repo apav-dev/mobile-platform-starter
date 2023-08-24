@@ -90,15 +90,14 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
     });
 
     // // 2. Define a submit handler.
-    // const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    //   // Do something with the form values.
-    //   // ✅ This will be type-safe and validated.
-    //   console.log(values);
-    //   setFormData((prev) => ({
-    //     ...prev,
-    //     [id]: values[id],
-    //   }));
-    // };
+    const handleSubmit = (values: z.infer<typeof formSchema>) => {
+      // Do something with the form values.
+      // ✅ This will be type-safe and validated.
+      setFormData((prev) => ({
+        ...prev,
+        [id]: values[id],
+      }));
+    };
 
     const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
@@ -107,7 +106,6 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
     };
 
     const onValueChange = (dayOfWeek: DayOfWeek, value: DayIntervalType) => {
-      // console.log(dayOfWeek, value);
       if (value.isClosed) {
         form.setValue(`${id}.${dayOfWeek}`, { isClosed: true });
       } else {
@@ -126,7 +124,7 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
       <Form {...form}>
         <FormLabel className="font-lato-bold text-base">{label}</FormLabel>
         <form
-          // onSubmit={form.handleSubmit(handleSubmit)}
+          onSubmit={form.handleSubmit(handleSubmit)}
           className="space-y-4 mt-4"
         >
           <FormField
