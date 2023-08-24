@@ -89,7 +89,7 @@ const EntityEdit = () => {
               <HoursCard title="Hours" fieldId="hours" hours={location.hours} />
               <HolidayHoursCard
                 title="Holiday Hours"
-                fieldId="holidayHours"
+                fieldId="hours"
                 hours={location.hours}
               />
             </div>
