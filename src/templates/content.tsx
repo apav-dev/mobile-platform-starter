@@ -5,12 +5,23 @@ import {
   GetHeadConfig,
   HeadConfig,
   TemplateRenderProps,
+  TemplateConfig,
+  TemplateProps,
 } from "@yext/pages";
 import EntityEdit from "../components/pages/EntityEdit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-export const getPath: GetPath<TemplateRenderProps> = () => {
-  return `content`;
+export const config: TemplateConfig = {
+  stream: {
+    $id: "locations",
+    localization: { locales: ["en"] },
+    fields: ["id", "slug"],
+    filter: { entityTypes: ["location"] },
+  },
+};
+
+export const getPath: GetPath<TemplateProps> = ({ document }) => {
+  return document.slug ?? `content/${document.id}`;
 };
 
 export const getHeadConfig: GetHeadConfig<
@@ -25,10 +36,12 @@ export const getHeadConfig: GetHeadConfig<
 
 const queryClient = new QueryClient();
 
-const Content = () => {
+const Content = ({ document }: TemplateRenderProps) => {
+  const { id } = document;
+
   return (
     <QueryClientProvider client={queryClient}>
-      <EntityEdit />
+      <EntityEdit entityId={id} />
     </QueryClientProvider>
   );
 };

@@ -69,7 +69,7 @@ export interface Location {
     friday: DayIntervalType;
     saturday: DayIntervalType;
     sunday: DayIntervalType;
-    holidayHours: HolidayHourType[];
+    holidayHours?: HolidayHourType[];
   };
   logo: {
     image: ComplexImageType;

@@ -23,11 +23,15 @@ export interface HoursCardProps {
     friday: DayIntervalType;
     saturday: DayIntervalType;
     sunday: DayIntervalType;
-    holidayHours: HolidayHourType[];
+    holidayHours?: HolidayHourType[];
   };
 }
 
 const HolidayHoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
+  if (!hours.holidayHours) {
+    return null;
+  }
+
   const [editMode, setEditMode] = useState(false);
 
   const { formData } = useEntity();

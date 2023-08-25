@@ -6,7 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchLocation } from "../../utils/api";
 import Heading from "../Heading";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
-
 import { EntityProvider } from "../utils/useEntityContext";
 import TextCard from "../cards/TextCard";
 import MultilineTextCard from "../cards/MultilineTextCard";
@@ -14,18 +13,13 @@ import PhotoGalleryCard from "../cards/PhotoGalleryCard";
 import HoursCard from "../cards/HoursCard";
 import HolidayHoursCard from "../cards/HolidayHoursCard";
 
-const EntityEdit = () => {
-  const [entityId, setEntityId] = useState<string>("");
+export interface EntityEditProps {
+  entityId: string;
+}
+
+// TODO: Add ability to add missing fields
+const EntityEdit = ({ entityId }: EntityEditProps) => {
   const [formData, setFormData] = useState<Record<string, any>>({});
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const entityId = urlParams.get("entityId");
-
-    if (entityId) {
-      setEntityId(entityId);
-    }
-  }, []);
 
   const { isLoading, isError, data, error } = useQuery({
     queryKey: ["entityId", entityId],
@@ -95,7 +89,6 @@ const EntityEdit = () => {
                 images={location.photoGallery}
               />
               <HoursCard title="Hours" fieldId="hours" hours={location.hours} />
-              {/* hours except for holidayHours */}
               <HolidayHoursCard
                 title="Holiday Hours"
                 fieldId="hours"

@@ -29,7 +29,7 @@ export interface HoursFormProps
     friday: DayIntervalType;
     saturday: DayIntervalType;
     sunday: DayIntervalType;
-    holidayHours: HolidayHourType[];
+    holidayHours?: HolidayHourType[];
   };
   onCancel?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   label?: string;

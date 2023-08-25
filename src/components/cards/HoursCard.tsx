@@ -24,7 +24,7 @@ export interface HoursCardProps {
     friday: DayIntervalType;
     saturday: DayIntervalType;
     sunday: DayIntervalType;
-    holidayHours: HolidayHourType[];
+    holidayHours?: HolidayHourType[];
   };
 }
 
