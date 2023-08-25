@@ -21,6 +21,7 @@ export interface InputProps
   label?: string;
   minLen?: number;
   maxLen?: number;
+  required?: boolean;
 }
 
 const TextareaForm = React.forwardRef<HTMLInputElement, InputProps>(
@@ -34,16 +35,26 @@ const TextareaForm = React.forwardRef<HTMLInputElement, InputProps>(
       maxLen,
       initialValue,
       onCancel,
+      required,
       ...props
     },
     ref
   ) => {
     const { setFormData } = useEntity();
 
+    const minLength = minLen ?? (required ? 1 : 0);
+    const maxLength = maxLen ?? 1000;
     const formSchema = z.object({
-      [id]: z.string(),
-      // .min(minLen ?? 2)
-      // .max(maxLen ?? 50),
+      [id]: z
+        .string()
+        .min(minLength, {
+          message: required
+            ? `${label} is required`
+            : `${label} must be at least ${minLength} characters`,
+        })
+        .max(maxLen ?? 1000, {
+          message: `${label} must be less than ${maxLength} characters`,
+        }),
     });
 
     // 1. Define your form.
@@ -62,6 +73,7 @@ const TextareaForm = React.forwardRef<HTMLInputElement, InputProps>(
         ...prev,
         [id]: values[id],
       }));
+      form.reset();
     };
 
     const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {

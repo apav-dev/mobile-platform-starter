@@ -103,7 +103,7 @@ const HolidayHoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
         <FormLabel className="font-lato-bold text-base">{label}</FormLabel>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="space-y-4 mt-4"
+          className="space-y-3 mt-4"
         >
           {form.getValues(id).holidayHours.map((holidayHour, index) => (
             <FormField

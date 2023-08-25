@@ -9,19 +9,26 @@ export interface DayIntervalProps {
 }
 
 const DayInterval = ({ day, intervals }: DayIntervalProps) => {
-  // TODO: Handle multiple intervals
   const closed = isClosedInterval(intervals);
-  const open = intervals.openIntervals?.[0]?.start;
-  const close = intervals.openIntervals?.[0]?.end;
 
   return (
     <div className="justify-start items-start gap-4 inline-flex">
       <div className="w-[42px] text-gray-700 text-base font-lato-bold leading-tight">
         {day}
       </div>
-      <div className="text-gray-700 text-base font-lato-regular leading-tight">
-        {closed ? "Closed" : `${open} to ${close}`}
-      </div>
+      {closed ? (
+        <div className="text-gray-700 text-base font-lato-regular leading-tight">
+          Closed
+        </div>
+      ) : (
+        <div className="flex flex-col">
+          {intervals.openIntervals?.map((interval) => (
+            <div className="text-gray-700 text-base font-lato-regular leading-tight">
+              {`${interval.start} to ${interval.end}`}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

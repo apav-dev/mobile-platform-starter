@@ -2,10 +2,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import * as React from "react";
-import { Form, FormField, FormLabel } from "./Form";
+import { Form, FormControl, FormField, FormLabel } from "./Form";
 import { useEntity } from "../utils/useEntityContext";
 import { DayIntervalType } from "@/src/types/yext";
 import IntervalFormCard from "./IntervalFormItem";
+import { validateTime } from "../../utils/validateTime";
 
 export type DayOfWeek =
   | "monday"
@@ -38,35 +39,67 @@ export const isClosedInterval = (
   return "isClosed" in interval;
 };
 
-// TODO: multiple intervals
-// TODO: initial values when switching from open to closed
-// TODO: Time validation (aka start < end)
 const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
   ({ className, type, id, label, initialHours, onCancel, ...props }, ref) => {
     const { setFormData } = useEntity();
 
     // Schema for TimeInterval
-    const TimeIntervalSchema = z.object({
-      start: z.string(),
-      end: z.string(),
-    });
+    const TimeIntervalSchema = z
+      .object({
+        start: z.string().refine((value) => validateTime(value, "start"), {
+          message: "Invalid time interval",
+        }),
+        end: z.string().refine((value) => validateTime(value, "end"), {
+          message: "Invalid time interval",
+        }),
+      })
+      .refine((data) => data.start <= data.end, {
+        message: "Start time cannot be before the end time",
+        path: ["start"],
+      });
 
     // Schema for DayInterval
-    const DayIntervalSchema = z.union([
-      z.object({
-        openIntervals: z.array(TimeIntervalSchema),
-      }),
-      z.object({
-        isClosed: z.boolean(),
-      }),
-    ]);
-
-    // Schema for HolidayHour
-    const HolidayHourSchema = z.object({
-      date: z.string(),
-      isClosed: z.optional(z.boolean()),
-      openIntervals: z.optional(z.array(TimeIntervalSchema)),
-    });
+    const DayIntervalSchema = z
+      .union([
+        z.object({
+          openIntervals: z.array(TimeIntervalSchema),
+        }),
+        z.object({
+          isClosed: z.boolean(),
+        }),
+      ])
+      .refine(
+        (data) => {
+          if ("isClosed" in data && data.isClosed && "openIntervals" in data) {
+            return false;
+          }
+          return true;
+        },
+        {
+          message: "If a day is closed, it cannot have any open intervals.",
+        }
+      )
+      .refine(
+        (data) => {
+          if ("openIntervals" in data) {
+            const intervals = data.openIntervals;
+            for (let i = 0; i < intervals.length; i++) {
+              for (let j = i + 1; j < intervals.length; j++) {
+                if (
+                  intervals[i].start < intervals[j].end &&
+                  intervals[i].end > intervals[j].start
+                ) {
+                  return false; // overlapping interval found
+                }
+              }
+            }
+          }
+          return true;
+        },
+        {
+          message: "Overlapping intervals are not allowed.",
+        }
+      );
 
     // Schema for the form
     const formSchema = z.object({
@@ -81,7 +114,6 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
       }),
     });
 
-    // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
       defaultValues: {
@@ -89,11 +121,8 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
       },
     });
 
-    // // 2. Define a submit handler.
     const handleSubmit = (values: z.infer<typeof formSchema>) => {
-      // Do something with the form values.
-      // ✅ This will be type-safe and validated.
-      setFormData((prev) => ({
+      setFormData((prev: Record<string, any>) => ({
         ...prev,
         [id]: values[id],
       }));
@@ -102,108 +131,76 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
 
     const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
-      form.resetField(id);
+      form.reset();
       onCancel?.(e);
     };
 
-    const onValueChange = (dayOfWeek: DayOfWeek, value: DayIntervalType) => {
+    const onValueChange = (
+      dayOfWeek: DayOfWeek,
+      value: DayIntervalType,
+      changeToOpen?: boolean
+    ) => {
       if (value.isClosed) {
         form.setValue(`${id}.${dayOfWeek}`, { isClosed: true });
       } else {
-        form.setValue(`${id}.${dayOfWeek}`, {
-          openIntervals: [
-            {
-              start: value.openIntervals[0].start,
-              end: value.openIntervals[0].end,
-            },
-          ],
-        });
+        // if changeToOpen is true, then we are changing from closed to open. set the openIntervals to their original values if they exist and if not, set them to an empty array
+        if (changeToOpen) {
+          form.setValue(`${id}.${dayOfWeek}`, {
+            openIntervals: initialHours?.[dayOfWeek].openIntervals ?? [
+              { start: "", end: "" },
+            ],
+          });
+        } else {
+          form.setValue(`${id}.${dayOfWeek}`, value);
+        }
       }
     };
 
     return (
       <Form {...form}>
         <FormLabel className="font-lato-bold text-base">{label}</FormLabel>
-        <FormLabel className="font-lato-bold text-base">{label}</FormLabel>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="space-y-4 mt-4"
+          className="space-y-3 mt-4"
         >
           <FormField
             control={form.control}
-            name={"hours.monday"}
+            name={id}
             render={({ field }) => (
-              <IntervalFormCard
-                day="monday"
-                onValueChange={onValueChange}
-                value={field.value}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={"hours.tuesday"}
-            render={({ field }) => (
-              <IntervalFormCard
-                day="tuesday"
-                onValueChange={onValueChange}
-                value={field.value}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={"hours.wednesday"}
-            render={({ field }) => (
-              <IntervalFormCard
-                day="wednesday"
-                onValueChange={onValueChange}
-                value={field.value}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={"hours.thursday"}
-            render={({ field }) => (
-              <IntervalFormCard
-                day="thursday"
-                onValueChange={onValueChange}
-                value={field.value}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={"hours.friday"}
-            render={({ field }) => (
-              <IntervalFormCard
-                day="friday"
-                onValueChange={onValueChange}
-                value={field.value}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={"hours.saturday"}
-            render={({ field }) => (
-              <IntervalFormCard
-                day="saturday"
-                onValueChange={onValueChange}
-                value={field.value}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={"hours.sunday"}
-            render={({ field }) => (
-              <IntervalFormCard
-                day="sunday"
-                onValueChange={onValueChange}
-                value={field.value}
-              />
+              <>
+                {Object.keys(field.value)
+                  .filter((day) => day !== "holidayHours")
+                  // sort days of week mon-sun
+                  .sort((a, b) => {
+                    const days = [
+                      "monday",
+                      "tuesday",
+                      "wednesday",
+                      "thursday",
+                      "friday",
+                      "saturday",
+                      "sunday",
+                    ];
+                    return days.indexOf(a) - days.indexOf(b);
+                  })
+                  .map((day) => {
+                    return (
+                      <FormControl>
+                        <FormField
+                          control={form.control}
+                          name={`${id}.${day}`}
+                          render={({ field }) => (
+                            <IntervalFormCard
+                              day={day as DayOfWeek}
+                              onValueChange={onValueChange}
+                              value={field.value}
+                            />
+                          )}
+                        />
+                      </FormControl>
+                    );
+                  })}
+              </>
             )}
           />
           <button

@@ -10,9 +10,19 @@ export interface FieldCardProps {
   title: string;
   fieldId: string;
   value?: string;
+  required?: boolean;
+  minLen?: number;
+  maxLen?: number;
 }
 
-const TextCard = ({ title, fieldId, value }: FieldCardProps) => {
+const TextCard = ({
+  title,
+  fieldId,
+  value,
+  required,
+  maxLen,
+  minLen,
+}: FieldCardProps) => {
   const [editMode, setEditMode] = useState(false);
 
   const { formData } = useEntity();
@@ -44,6 +54,9 @@ const TextCard = ({ title, fieldId, value }: FieldCardProps) => {
             label={title}
             initialValue={value}
             onCancel={handleCancel}
+            required={required}
+            minLen={minLen}
+            maxLen={maxLen}
           />
         </ContentContainer>
       </EditPanel>

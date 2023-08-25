@@ -36,10 +36,6 @@ const EntityEdit = () => {
 
   const location = data?.response.docs?.[0];
 
-  useEffect(() => {
-    console.log("formData", formData);
-  }, [location]);
-
   return (
     <EntityProvider
       value={{
@@ -78,7 +74,12 @@ const EntityEdit = () => {
               </div>
             </div>
             <div className="relative flex flex-col gap-y-2">
-              <TextCard title="Name" fieldId="name" value={location.name} />
+              <TextCard
+                title="Name"
+                fieldId="name"
+                value={location.name}
+                required
+              />
               <MultilineTextCard
                 title="Description"
                 fieldId="description"
@@ -90,6 +91,7 @@ const EntityEdit = () => {
                 images={location.photoGallery}
               />
               <HoursCard title="Hours" fieldId="hours" hours={location.hours} />
+              {/* hours except for holidayHours */}
               <HolidayHoursCard
                 title="Holiday Hours"
                 fieldId="hours"

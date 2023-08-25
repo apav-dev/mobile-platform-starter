@@ -7,7 +7,11 @@ import ContentContainer from "../ContentContainer";
 import HoursForm from "../form/HoursForm";
 import EditPanel from "../EditPanel";
 
-import { DayIntervalType as DayIntervalType } from "@/src/types/yext";
+import {
+  DayIntervalType as DayIntervalType,
+  HolidayHourType,
+} from "../../types/yext";
+import { sortIntervalsByStartTime } from "../../utils/sortIntervalsByStartTime";
 
 export interface HoursCardProps {
   title: string;
@@ -20,6 +24,7 @@ export interface HoursCardProps {
     friday: DayIntervalType;
     saturday: DayIntervalType;
     sunday: DayIntervalType;
+    holidayHours: HolidayHourType;
   };
 }
 
@@ -39,6 +44,9 @@ const HoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
     setEditMode(false);
   };
 
+  const { holidayHours, ...weekHours } = hours;
+  const sortedHours = sortIntervalsByStartTime(weekHours);
+
   return (
     // TODO: Is it bad to have onClick without button?
     <div onClick={() => setEditMode(true)}>
@@ -46,14 +54,14 @@ const HoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
         <div className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2">
           {title}
         </div>
-        <Hours hours={hours} />
+        <Hours hours={weekHours} />
       </Card>
       <EditPanel open={editMode}>
         <ContentContainer containerClassName="pt-4 pb-20">
           <HoursForm
             id="hours"
             label="Hours"
-            initialHours={hours}
+            initialHours={sortedHours}
             onCancel={handleCancel}
           />
         </ContentContainer>

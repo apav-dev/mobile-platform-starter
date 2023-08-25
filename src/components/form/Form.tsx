@@ -93,7 +93,7 @@ const FormLabel = React.forwardRef<
   return (
     <Label
       ref={ref}
-      className={cn(error && "text-destructive", className)}
+      className={cn(error && "text-red-500", className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -141,12 +141,24 @@ const FormDescription = React.forwardRef<
 });
 FormDescription.displayName = "FormDescription";
 
+const getFirstErrorMessage = (error: any): string | undefined => {
+  if (typeof error === "string") return error;
+  if (error && error.message) return error.message;
+  for (let key in error) {
+    if (typeof error[key] === "object") {
+      return getFirstErrorMessage(error[key]);
+    }
+  }
+  return undefined;
+};
+
 const FormMessage = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message) : children;
+  const errorMessage = getFirstErrorMessage(error);
+  const body = errorMessage || children;
 
   if (!body) {
     return null;
@@ -156,7 +168,7 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn("text-sm font-medium text-destructive", className)}
+      className={cn("text-sm font-medium text-red-500", className)}
       {...props}
     >
       {body}
