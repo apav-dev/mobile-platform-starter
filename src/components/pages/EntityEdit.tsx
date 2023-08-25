@@ -36,6 +36,10 @@ const EntityEdit = () => {
 
   const location = data?.response.docs?.[0];
 
+  useEffect(() => {
+    console.log("formData", formData);
+  }, [formData]);
+
   return (
     <EntityProvider
       value={{

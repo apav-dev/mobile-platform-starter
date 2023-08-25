@@ -24,7 +24,7 @@ export interface HoursCardProps {
     friday: DayIntervalType;
     saturday: DayIntervalType;
     sunday: DayIntervalType;
-    holidayHours: HolidayHourType;
+    holidayHours: HolidayHourType[];
   };
 }
 
@@ -44,8 +44,7 @@ const HoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
     setEditMode(false);
   };
 
-  const { holidayHours, ...weekHours } = hours;
-  const sortedHours = sortIntervalsByStartTime(weekHours);
+  const sortedHours = sortIntervalsByStartTime(hours);
 
   return (
     // TODO: Is it bad to have onClick without button?
@@ -54,7 +53,7 @@ const HoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
         <div className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2">
           {title}
         </div>
-        <Hours hours={weekHours} />
+        <Hours hours={sortedHours} />
       </Card>
       <EditPanel open={editMode}>
         <ContentContainer containerClassName="pt-4 pb-20">

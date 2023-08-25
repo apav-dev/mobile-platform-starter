@@ -9,8 +9,9 @@ export const sortIntervalsByStartTime = (hours: {
   friday: DayIntervalType;
   saturday: DayIntervalType;
   sunday: DayIntervalType;
+  holidayHours: HolidayHourType[];
 }): typeof hours => {
-  const days = [
+  const days: (keyof typeof hours)[] = [
     "monday",
     "tuesday",
     "wednesday",
@@ -21,9 +22,10 @@ export const sortIntervalsByStartTime = (hours: {
   ];
 
   for (let day of days) {
-    const dayInterval = hours[day as keyof typeof hours];
+    const dayInterval = hours[day];
 
-    if (!isClosedInterval(dayInterval) && dayInterval.openIntervals) {
+    // Added type guard to ensure we're working with a DayIntervalType
+    if ("openIntervals" in dayInterval && !isClosedInterval(dayInterval)) {
       dayInterval.openIntervals.sort((a, b) => {
         return a.start.localeCompare(b.start);
       });

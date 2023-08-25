@@ -4,9 +4,10 @@ import * as z from "zod";
 import * as React from "react";
 import { Form, FormField, FormLabel } from "./Form";
 import { useEntity } from "../utils/useEntityContext";
-
-import { HolidayHourType } from "@/src/types/yext";
 import HolidayHourFormItem from "./HolidayHourFormItem";
+import { DayIntervalSchema, HolidayHourSchema } from "../../schemas/hours";
+
+import { DayIntervalType, HolidayHourType } from "../../types/yext";
 
 export type DayOfWeek =
   | "monday"
@@ -21,15 +22,19 @@ export interface HoursFormProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   initialHolidayHours?: {
+    monday: DayIntervalType;
+    tuesday: DayIntervalType;
+    wednesday: DayIntervalType;
+    thursday: DayIntervalType;
+    friday: DayIntervalType;
+    saturday: DayIntervalType;
+    sunday: DayIntervalType;
     holidayHours: HolidayHourType[];
   };
   onCancel?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   label?: string;
 }
 
-// TODO: multiple intervals
-// TODO: initial values when switching from open to closed
-// TODO: Time validation (aka start < end)
 const HolidayHoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
   (
     { className, type, id, label, initialHolidayHours, onCancel, ...props },
@@ -37,22 +42,16 @@ const HolidayHoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
   ) => {
     const { setFormData } = useEntity();
 
-    // Schema for TimeInterval
-    const TimeIntervalSchema = z.object({
-      start: z.string(),
-      end: z.string(),
-    });
-
-    // Schema for HolidayHour
-    const HolidayHourSchema = z.object({
-      date: z.string(),
-      isClosed: z.optional(z.boolean()),
-      openIntervals: z.optional(z.array(TimeIntervalSchema)),
-    });
-
     // Schema for the form
     const formSchema = z.object({
       [id]: z.object({
+        monday: DayIntervalSchema,
+        tuesday: DayIntervalSchema,
+        wednesday: DayIntervalSchema,
+        thursday: DayIntervalSchema,
+        friday: DayIntervalSchema,
+        saturday: DayIntervalSchema,
+        sunday: DayIntervalSchema,
         holidayHours: z.array(HolidayHourSchema),
       }),
     });
@@ -67,9 +66,8 @@ const HolidayHoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
 
     const onValueChange = (index: number, value: HolidayHourType) => {
       const holidayHours = form.getValues(id).holidayHours;
-      // replace the value at the index
       holidayHours[index] = value;
-      form.setValue(`${id}.holidayHours[${index}]`, value);
+      form.setValue(`${id}.holidayHours`, holidayHours);
     };
 
     const onDelete = (
@@ -78,14 +76,11 @@ const HolidayHoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
     ) => {
       const holidayHours = form.getValues(id).holidayHours;
       holidayHours.splice(index, 1);
-      form.setValue(`${id}.holidayHours[${index}]`, null);
+      form.setValue(`${id}.holidayHours`, holidayHours);
     };
 
-    // // 2. Define a submit handler.
     const handleSubmit = (values: z.infer<typeof formSchema>) => {
-      // Do something with the form values.
-      // ✅ This will be type-safe and validated.
-      setFormData((prev) => ({
+      setFormData((prev: Record<string, any>) => ({
         ...prev,
         [id]: values[id],
       }));
@@ -105,22 +100,31 @@ const HolidayHoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
           onSubmit={form.handleSubmit(handleSubmit)}
           className="space-y-3 mt-4"
         >
-          {form.getValues(id).holidayHours.map((holidayHour, index) => (
-            <FormField
-              control={form.control}
-              name={`${id}.holidayHours[${index}]`}
-              render={({ field }) => (
-                <HolidayHourFormItem
-                  label={`Holiday Hours ${index + 1}`}
-                  key={index}
-                  index={index}
-                  onValueChange={onValueChange}
-                  holidayHourValue={field.value}
-                  onDelete={onDelete}
-                />
-              )}
-            />
-          ))}
+          <FormField
+            control={form.control}
+            name={`${id}.holidayHours`}
+            render={({ field }) => (
+              <>
+                {field.value.map((holidayHour, index) => (
+                  <FormField
+                    key={index}
+                    name={`${id}.holidayHours.${index}`}
+                    control={form.control}
+                    render={({ field }) => (
+                      <HolidayHourFormItem
+                        label={`Holiday Hours ${index + 1}`}
+                        key={index}
+                        index={index}
+                        onValueChange={onValueChange}
+                        value={holidayHour}
+                        onDelete={onDelete}
+                      />
+                    )}
+                  />
+                ))}
+              </>
+            )}
+          />
           <button
             formAction="submit"
             className="px-4 py-3 mt-4 bg-gray-700 justify-center items-center flex flex-1 w-full border-none focus:outline-none "

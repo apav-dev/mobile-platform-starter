@@ -8,9 +8,6 @@
     "outDir": "./dist",
     "module": "esnext",
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"]
-    }
   },
   "include": ["src"]
 }

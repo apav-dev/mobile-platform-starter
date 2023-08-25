@@ -5,7 +5,9 @@ import { FormLabel, FormMessage } from "./Form";
 import { RadioGroup, RadioGroupItem } from "../Radio";
 import { Label } from "../Label";
 import { Input } from "../Input";
-import { DayIntervalType } from "@/src/types/yext";
+import { TrashIcon } from "../icons/TrashIcon";
+
+import { DayIntervalType } from "../../types/yext";
 
 export interface IntervalFormCardProps {
   day: DayOfWeek;
@@ -97,15 +99,16 @@ const IntervalFormItem = ({
     }
   };
 
+  const handleRemoveLastInterval = () => {
+    if (!isClosedInterval(value)) {
+      const intervals = value.openIntervals.slice(0, -1);
+      onValueChange(day, {
+        openIntervals: intervals,
+      });
+    }
+  };
+
   const dayOfWeekLabel = day.charAt(0).toUpperCase() + day.slice(1);
-
-  let startValue = isClosedInterval(value)
-    ? "--:--"
-    : value.openIntervals[0].start;
-  startValue = startValue.length === 4 ? `0${startValue}` : startValue;
-
-  let endValue = isClosedInterval(value) ? "--:--" : value.openIntervals[0].end;
-  endValue = endValue.length === 4 ? `0${endValue}` : endValue;
 
   return (
     <Card>
@@ -145,7 +148,7 @@ const IntervalFormItem = ({
                       id={`${day}-start`}
                       type="time"
                       step={60}
-                      className="font-lato-regular text-base h-8"
+                      className="font-lato-regular text-[13px] h-8 text-gray-500"
                       onChange={(e) => handleStartChange(e, index)}
                       value={interval.start}
                     />
@@ -158,11 +161,23 @@ const IntervalFormItem = ({
                       id={`${day}-end`}
                       type="time"
                       step={60}
-                      className="font-lato-regular text-base h-8"
+                      className="font-lato-regular text-[13px] h-8 text-gray-500"
                       onChange={(e) => handleEndChange(e, index)}
                       value={interval.end}
                     />
                   </div>
+                  {value.openIntervals.length > 1 &&
+                  index === value.openIntervals.length - 1 ? (
+                    <button
+                      type="button"
+                      onClick={handleRemoveLastInterval}
+                      className="flex items-end pb-2"
+                    >
+                      <TrashIcon />
+                    </button>
+                  ) : (
+                    <div className="w-3" />
+                  )}
                 </div>
               );
             })}
