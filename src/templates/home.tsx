@@ -60,7 +60,7 @@ const Home = () => {
             icon={<StarsIcon />}
             title="Reviews"
             description="View your recent reviews, filter, and respond."
-            link="#"
+            link="/reviews?entityId=facility-2"
           />
           <ProductCard
             icon={<SocialIcon />}

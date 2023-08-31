@@ -8,27 +8,19 @@ import {
   TemplateConfig,
   TemplateProps,
 } from "@yext/pages";
-import EntityEdit from "../components/pages/EntityEdit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-export const config: TemplateConfig = {
-  stream: {
-    $id: "location-entities",
-    localization: { locales: ["en"] },
-    fields: ["id", "slug"],
-    filter: { entityTypes: ["location"] },
-  },
-};
+import { useEffect, useState } from "react";
+import EntityReviews from "../components/pages/EntityReviews";
 
 export const getPath: GetPath<TemplateProps> = ({ document }) => {
-  return document.slug ?? `content/${document.id}`;
+  return `reviews`;
 };
 
 export const getHeadConfig: GetHeadConfig<
   TemplateRenderProps
 > = (): HeadConfig => {
   return {
-    title: "Content",
+    title: `Reviews`,
     charset: "UTF-8",
     viewport: "width=device-width, initial-scale=1",
   };
@@ -36,14 +28,20 @@ export const getHeadConfig: GetHeadConfig<
 
 const queryClient = new QueryClient();
 
-const Content = ({ document }: TemplateRenderProps) => {
-  const { id } = document;
+const Reviews = () => {
+  const [entityId, setEntityId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const entityId = urlParams.get("entityId");
+    setEntityId(entityId);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <EntityEdit entityId={id} />
+      <EntityReviews entityId={entityId} />
     </QueryClientProvider>
   );
 };
 
-export default Content;
+export default Reviews;

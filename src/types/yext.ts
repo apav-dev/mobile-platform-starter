@@ -107,6 +107,7 @@ export interface Location {
 export interface YextContent<T> {
   docs: T[];
   count: number;
+  nextPageToken?: string;
 }
 
 export interface Review {
@@ -115,6 +116,7 @@ export interface Review {
     primary_key: string;
   };
   authorName: string;
+  comments: ReviewComment[];
   content: string;
   entity: {
     address: {
@@ -126,4 +128,11 @@ export interface Review {
   publisher: string;
   rating: number;
   reviewDate: string;
+}
+
+export interface ReviewComment {
+  authorName: string;
+  content: string;
+  contentId: string;
+  contentDate: string;
 }

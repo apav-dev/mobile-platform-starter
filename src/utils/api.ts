@@ -22,11 +22,27 @@ export const fetchLocation = async (
 };
 
 export const fetchReviews = async (
-  entityId: string
+  entityId: string,
+  limit?: number,
+  pageToken?: string
 ): Promise<YextResponse<YextContent<Review>>> => {
+  const params = new URLSearchParams({
+    api_key: YEXT_PUBLIC_CONTENT_API_KEY,
+    v: "20230817",
+    "entity.id": entityId,
+    limit: limit?.toString() ?? "5",
+  });
+
+  if (pageToken) {
+    params.append("pageToken", pageToken);
+  }
+
   const response = await fetch(
-    `https://cdn.yextapis.com/v2/accounts/me/content/reviewManagement?api_key=${YEXT_PUBLIC_CONTENT_API_KEY}&v=20230817&entity.id=${entityId}`
+    `https://cdn.yextapis.com/v2/accounts/me/content/reviewManagement?${params.toString()}`
   );
+
   const data = await response.json();
   return data;
 };
+
+export const submitReviewResponse = async () => {};
