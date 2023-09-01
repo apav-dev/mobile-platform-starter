@@ -1,4 +1,4 @@
-// import { fetch } from "@yext/pages/util";
+import { fetch } from "@yext/pages/util";
 // import axios from "axios";
 // import fetch from "node-fetch";
 // import { fetch } from "cross-fetch";
@@ -22,32 +22,26 @@ export default async function entity(request) {
 
   switch (method) {
     case "GET":
-      break;
+      return getEntity(pathParams.id);
     default:
       return new Response("Method not allowed", null, 405);
   }
+}
 
-  // const { id } = pathParams;
+async function getEntity(id?: string) {
+  if (!id) {
+    return new Response("Missing entity id", null, 400);
+  }
 
-  // if (!id) {
-  //   return new Response("Missing entity id", null, 400);
-  // }
+  const mgmtApiResp = await fetch(
+    `https://api.yextapis.com/v2/accounts/me/entities/${id}?api_key=${YEXT_PUBLIC_MGMT_API_KEY}&v=20230901`
+  );
 
-  return new Response("Hello World", null, 200);
+  const resp = await mgmtApiResp.json();
 
-  // const response = await fetch(
-  //   `https://api.yextapis.com/v2/accounts/me/entities/${id}?api_key=${YEXT_PUBLIC_MGMT_API_KEY}`,
-  //   { method: "PUT", body }
-  // );
-
-  // const response = await axios.put(
-  //   `https://api.yext.com/v2/accounts/me/entities/${id}?api_key=${YEXT_PUBLIC_MGMT_API_KEY}`,
-  //   body
-  // );
-
-  // return {
-  //   body: response,
-  //   headers: null,
-  //   statusCode: 200,
-  // };
+  return {
+    body: resp,
+    headers: null,
+    statusCode: 200,
+  };
 }
