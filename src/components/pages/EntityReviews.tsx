@@ -33,6 +33,7 @@ const EntityReviews = ({ entityId }: EntityReviewProps) => {
   const [pageToken, setPageToken] = useState<string | undefined>(undefined);
   const [prevPageTokens, setPrevPageTokens] = useState<string[]>([]);
   const [startIndex, setStartIndex] = useState<number>(1); // Starting index of current page
+  const [formData, setFormData] = useState<Record<string, any>>({});
 
   const { isLoading, isError, error, data, isFetching, isPreviousData } =
     useQuery(
@@ -75,89 +76,98 @@ const EntityReviews = ({ entityId }: EntityReviewProps) => {
   );
 
   return (
-    <Main
-      breadcrumbs={[
-        {
-          name: "Home",
-          path: "/",
-        },
-        { name: "Reviews" },
-      ]}
+    <EntityProvider
+      value={{
+        formData,
+        setFormData,
+      }}
     >
-      {reviews && (
-        <ContentContainer containerClassName="flex flex-col gap-y-4">
-          <Heading title={"Reviews"} icon={<StarsIcon />} />
-          <div className="py-4 flex flex-col gap-y-4">
-            {reviews.map((review) => (
-              <ReviewCard key={review.$key.primary_key} review={review} />
-            ))}
-            <div className="justify-between items-start gap-4 flex">
-              <div className="justify-start items-center gap-2 flex">
-                <div className="text-gray-700 text-base font-lato-regular leading-tight">
-                  Show
-                </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-start items-center gap-2 inline-flex font-lato-regular">
-                    <div className="flex gap-x-2 ">
-                      {pageSize}
-                      <div className="my-auto">
-                        <DownChevronIcon />
+      <Main
+        breadcrumbs={[
+          {
+            name: "Home",
+            path: "/",
+          },
+          { name: "Reviews" },
+        ]}
+      >
+        {reviews && (
+          <ContentContainer containerClassName="flex flex-col gap-y-4 ">
+            <Heading title={"Reviews"} icon={<StarsIcon />} />
+            <div className="flex flex-col gap-y-4">
+              <div className="relative flex flex-col gap-y-2">
+                {reviews.map((review) => (
+                  <ReviewCard key={review.$key.primary_key} review={review} />
+                ))}
+                <div className="justify-between items-start gap-4 flex">
+                  <div className="justify-start items-center gap-2 flex">
+                    <div className="text-gray-700 text-base font-lato-regular leading-tight">
+                      Show
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-start items-center gap-2 inline-flex font-lato-regular">
+                        <div className="flex gap-x-2 ">
+                          {pageSize}
+                          <div className="my-auto">
+                            <DownChevronIcon />
+                          </div>
+                        </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="font-lato-regular bg-white min-w-[6rem]">
+                        {pageSizes
+                          .filter((size) => size !== pageSize)
+                          .map((size) => (
+                            <DropdownMenuItem
+                              key={size}
+                              onSelect={() => setPageSize(size)}
+                            >
+                              <DropdownMenuLabel>{size}</DropdownMenuLabel>
+                            </DropdownMenuItem>
+                          ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                  <div className="justify-start items-center gap-2 flex">
+                    <div className="text-gray-700 text-base font-lato leading-tight">
+                      <span className="font-lato-bold">
+                        {startIndex}-{endIndex}
+                      </span>
+                      <span className="font-lato-regular"> of</span>
+                      <span className="font-lato-bold"> {count}</span>
+                    </div>
+                    <div className="justify-center items-center flex">
+                      <div className="self-stretch justify-start items-start gap-px inline-flex">
+                        <button
+                          className={twMerge(
+                            "w-11 h-11 px-2 py-1.5 bg-gray-100 rounded-tl-[3px] rounded-bl-[3px] justify-center items-center gap-2.5 flex",
+                            prevPageTokens.length === 0 && "bg-zinc-200"
+                          )}
+                          onClick={handlePrev}
+                          disabled={prevPageTokens.length === 0}
+                        >
+                          <LeftChevronIcon />
+                        </button>
+                        <button
+                          className={twMerge(
+                            "w-11 h-11 px-2 py-1.5 bg-zinc-200 rounded-tr-[3px] rounded-br-[3px] justify-center items-center gap-2.5 flex",
+                            data?.response.nextPageToken === undefined &&
+                              "bg-gray-100"
+                          )}
+                          onClick={handleNext}
+                          disabled={data?.response.nextPageToken === undefined}
+                        >
+                          <RightChevronIcon />
+                        </button>
                       </div>
                     </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="font-lato-regular bg-white min-w-[6rem]">
-                    {pageSizes
-                      .filter((size) => size !== pageSize)
-                      .map((size) => (
-                        <DropdownMenuItem
-                          key={size}
-                          onSelect={() => setPageSize(size)}
-                        >
-                          <DropdownMenuLabel>{size}</DropdownMenuLabel>
-                        </DropdownMenuItem>
-                      ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-              <div className="justify-start items-center gap-2 flex">
-                <div className="text-gray-700 text-base font-lato leading-tight">
-                  <span className="font-lato-bold">
-                    {startIndex}-{endIndex}
-                  </span>
-                  <span className="font-lato-regular"> of</span>
-                  <span className="font-lato-bold"> {count}</span>
-                </div>
-                <div className="justify-center items-center flex">
-                  <div className="self-stretch justify-start items-start gap-px inline-flex">
-                    <button
-                      className={twMerge(
-                        "w-11 h-11 px-2 py-1.5 bg-gray-100 rounded-tl-[3px] rounded-bl-[3px] justify-center items-center gap-2.5 flex",
-                        prevPageTokens.length === 0 && "bg-zinc-200"
-                      )}
-                      onClick={handlePrev}
-                      disabled={prevPageTokens.length === 0}
-                    >
-                      <LeftChevronIcon />
-                    </button>
-                    <button
-                      className={twMerge(
-                        "w-11 h-11 px-2 py-1.5 bg-zinc-200 rounded-tr-[3px] rounded-br-[3px] justify-center items-center gap-2.5 flex",
-                        data?.response.nextPageToken === undefined &&
-                          "bg-gray-100"
-                      )}
-                      onClick={handleNext}
-                      disabled={data?.response.nextPageToken === undefined}
-                    >
-                      <RightChevronIcon />
-                    </button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </ContentContainer>
-      )}
-    </Main>
+          </ContentContainer>
+        )}
+      </Main>
+    </EntityProvider>
   );
 };
 

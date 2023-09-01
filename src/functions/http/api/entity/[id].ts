@@ -1,7 +1,4 @@
 import { fetch } from "@yext/pages/util";
-// import axios from "axios";
-// import fetch from "node-fetch";
-// import { fetch } from "cross-fetch";
 
 class Response {
   body: string;
@@ -40,7 +37,7 @@ async function getEntity(id?: string) {
   const resp = await mgmtApiResp.json();
 
   return {
-    body: resp,
+    body: JSON.stringify(resp),
     headers: null,
     statusCode: 200,
   };

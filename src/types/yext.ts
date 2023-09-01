@@ -50,16 +50,18 @@ export interface GalleryImage {
   image: ComplexImageType;
 }
 
+export interface Address {
+  line1: string;
+  line2: string;
+  city: string;
+  region: string;
+  postalCode: string;
+  countryCode: string;
+}
+
 export interface Location {
   id: string;
-  address: {
-    line1: string;
-    line2: string;
-    city: string;
-    region: string;
-    postalCode: string;
-    countryCode: string;
-  };
+  address: Address;
   description: string;
   hours: {
     monday: DayIntervalType;
@@ -119,9 +121,7 @@ export interface Review {
   comments: ReviewComment[];
   content: string;
   entity: {
-    address: {
-      line1: string;
-    };
+    address: Address;
     id: string;
     name: string;
   };
@@ -134,5 +134,5 @@ export interface ReviewComment {
   authorName: string;
   content: string;
   contentId: string;
-  contentDate: string;
+  commentDate: string;
 }

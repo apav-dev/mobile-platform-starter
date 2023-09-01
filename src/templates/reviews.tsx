@@ -5,10 +5,8 @@ import {
   GetHeadConfig,
   HeadConfig,
   TemplateRenderProps,
-  TemplateConfig,
   TemplateProps,
 } from "@yext/pages";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import EntityReviews from "../components/pages/EntityReviews";
 
@@ -26,10 +24,9 @@ export const getHeadConfig: GetHeadConfig<
   };
 };
 
-const queryClient = new QueryClient();
-
 const Reviews = () => {
   const [entityId, setEntityId] = useState<string | null>(null);
+  const [formData, setFormData] = useState<Record<string, any>>({});
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -37,11 +34,7 @@ const Reviews = () => {
     setEntityId(entityId);
   }, []);
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <EntityReviews entityId={entityId} />
-    </QueryClientProvider>
-  );
+  return <EntityReviews entityId={entityId} />;
 };
 
 export default Reviews;

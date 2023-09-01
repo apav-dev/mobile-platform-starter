@@ -12,7 +12,7 @@ export interface FieldCardProps {
   value?: string;
 }
 
-const FieldCard = ({ title, fieldId, value }: FieldCardProps) => {
+const MultilineTextCard = ({ title, fieldId, value }: FieldCardProps) => {
   const [editMode, setEditMode] = useState(false);
 
   const { formData } = useEntity();
@@ -51,4 +51,4 @@ const FieldCard = ({ title, fieldId, value }: FieldCardProps) => {
   );
 };
 
-export default FieldCard;
+export default MultilineTextCard;
