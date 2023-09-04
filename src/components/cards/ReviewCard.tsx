@@ -1,7 +1,6 @@
 import * as React from "react";
-import { useState } from "react";
-import Card from "../Card";
-import ContentContainer from "../ContentContainer";
+import { Card } from "../Card";
+import { ContentContainer } from "../ContentContainer";
 import EditPanel from "../EditPanel";
 import { Review } from "src/types/yext";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
@@ -13,6 +12,10 @@ import Stars from "../Stars";
 import { HorizontalDivider } from "../HorizontalDivider";
 import TextareaForm from "../form/TextAreaForm";
 import { getDaysSince } from "../../utils/getDaysSince";
+import { StarsIcon } from "../icons/StarsIcon";
+import { Heading } from "../Heading";
+import Header from "../Header";
+import { usePageContext } from "../utils/usePageContext";
 
 export interface ReviewCardProps {
   review: Review;
@@ -21,12 +24,12 @@ export interface ReviewCardProps {
 {
   /* TODO: Handle comments */
 }
-const ReviewCard = ({ review }: ReviewCardProps) => {
-  const [editMode, setEditMode] = useState(false);
+export const ReviewCard = ({ review }: ReviewCardProps) => {
+  const { formData, entityMeta, editId, setEditId } = usePageContext();
 
-  const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    setEditMode(false);
+  const handleCancel = (e?: React.MouseEvent<HTMLButtonElement>) => {
+    e?.stopPropagation();
+    setEditId?.("");
   };
 
   // address string where parts of the address are separated by commas and parts maybe missing so don't use commas to separate and don't show undefined parts
@@ -43,7 +46,7 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
 
   return (
     // TODO: Is it bad to have onClick without button?
-    <div onClick={() => setEditMode(true)}>
+    <div onClick={() => setEditId?.(review.$key.primary_key)}>
       <Card containerClassName="flex flex-col gap-y-4">
         <div className="justify-between items-center gap-4 inline-flex">
           <div className="flex gap-x-4">
@@ -87,8 +90,19 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
           </div>
         </div>
       </Card>
-      <EditPanel open={editMode} containerClassName="top-24">
+      <EditPanel open={editId === review.$key.primary_key}>
+        <Header
+          breadcrumbs={[
+            {
+              name: "Home",
+              path: "/",
+            },
+            { name: "Reviews", onClick: handleCancel },
+            { name: review.$key.primary_key },
+          ]}
+        />
         <ContentContainer containerClassName={"flex flex-col gap-y-6"}>
+          <Heading title={"Reviews"} icon={<StarsIcon />} />
           <div className={"flex flex-col gap-y-4"}>
             <Card>
               <div className="justify-between items-center gap-4 inline-flex">
@@ -168,7 +182,6 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
               </div>
             </div>
           ))}
-
           <TextareaForm
             id={"content"}
             submitButtonLabel="Submit Response"
@@ -180,5 +193,3 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
     </div>
   );
 };
-
-export default ReviewCard;

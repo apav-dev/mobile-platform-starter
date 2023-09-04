@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import "../index.css";
 import {
   GetPath,
@@ -7,12 +8,8 @@ import {
   TemplateRenderProps,
   TemplateProps,
 } from "@yext/pages";
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchReviews } from "../utils/api";
-import ContentContainer from "../components/ContentContainer";
-import Heading from "../components/Heading";
-import { StarsIcon } from "../components/icons/StarsIcon";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -20,12 +17,15 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
 } from "@radix-ui/react-dropdown-menu";
-import ReviewCard from "../components/cards/ReviewCard";
+import { StarsIcon } from "../components/icons/StarsIcon";
+import { ContentContainer } from "../components/ContentContainer";
+import { Heading } from "../components/Heading";
+import { ReviewCard } from "../components/cards/ReviewCard";
 import { DownChevronIcon } from "../components/icons/DownChevronIcon";
 import { LeftChevronIcon } from "../components/icons/LeftChevronIcon";
 import { RightChevronIcon } from "../components/icons/RightChevronIcon";
-import Main from "../components/layouts/Main";
-import { EntityProvider } from "../components/utils/useEntityContext";
+import { Main } from "../components/layouts/Main";
+import { PageContextProvider } from "../components/utils/usePageContext";
 import { twMerge } from "tailwind-merge";
 
 export const getPath: GetPath<TemplateProps> = ({ document }) => {
@@ -56,6 +56,7 @@ const Reviews = () => {
   const [prevPageTokens, setPrevPageTokens] = useState<string[]>([]);
   const [startIndex, setStartIndex] = useState<number>(1); // Starting index of current page
   const [formData, setFormData] = useState<Record<string, any>>({});
+  const [editId, setEditId] = useState("");
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -104,10 +105,12 @@ const Reviews = () => {
   );
 
   return (
-    <EntityProvider
+    <PageContextProvider
       value={{
         formData,
         setFormData,
+        editId,
+        setEditId,
       }}
     >
       <Main
@@ -120,9 +123,14 @@ const Reviews = () => {
         ]}
       >
         {reviews && (
-          <ContentContainer containerClassName="flex flex-col gap-y-4 ">
-            <Heading title={"Reviews"} icon={<StarsIcon />} />
+          <ContentContainer
+            containerClassName={twMerge(
+              "overflow-y-hidden",
+              editId && "overflow-y-hidden"
+            )}
+          >
             <div className="flex flex-col gap-y-4">
+              <Heading title={"Reviews"} icon={<StarsIcon />} />
               <div className="relative flex flex-col gap-y-2">
                 {reviews.map((review) => (
                   <ReviewCard key={review.$key.primary_key} review={review} />
@@ -195,7 +203,7 @@ const Reviews = () => {
           </ContentContainer>
         )}
       </Main>
-    </EntityProvider>
+    </PageContextProvider>
   );
 };
 

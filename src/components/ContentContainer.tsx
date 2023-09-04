@@ -6,12 +6,13 @@ export interface ContainerProps {
   containerClassName?: string;
 }
 
-const ContentContainer = ({ children, containerClassName }: ContainerProps) => {
+export const ContentContainer = ({
+  children,
+  containerClassName,
+}: ContainerProps) => {
   return (
     <div className={twMerge("px-6 py-4 mx-auto", containerClassName)}>
       {children}
     </div>
   );
 };
-
-export default ContentContainer;

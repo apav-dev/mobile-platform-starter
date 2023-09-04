@@ -1,12 +1,11 @@
 import * as React from "react";
-import { LocationPinIcon } from "./icons/LocationPinIcon";
 
 export interface HeadingProps {
   icon?: React.ReactNode;
   title: string;
 }
 
-const Heading = ({ icon, title }: HeadingProps) => {
+export const Heading = ({ icon, title }: HeadingProps) => {
   return (
     <div className="justify-start items-center gap-2 inline-flex">
       {icon}
@@ -16,5 +15,3 @@ const Heading = ({ icon, title }: HeadingProps) => {
     </div>
   );
 };
-
-export default Heading;

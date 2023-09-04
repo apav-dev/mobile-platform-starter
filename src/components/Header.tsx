@@ -1,15 +1,14 @@
 import * as React from "react";
-import BreadCrumbs, { Link } from "./Breadcrumbs";
+import { Breadcrumbs, Link } from "./Breadcrumbs";
 
 export interface HeaderProps {
-  loading?: boolean;
   breadcrumbs?: Link[];
 }
 
-const Header = ({ loading, breadcrumbs }: HeaderProps) => {
+const Header = ({ breadcrumbs }: HeaderProps) => {
   return (
-    <div className="min-h-[36px] px-6 py-2 bg-white">
-      <BreadCrumbs links={breadcrumbs || []} />
+    <div className="min-h-[36px] px-6 py-2 bg-white overflow-x-auto whitespace-nowrap">
+      <Breadcrumbs links={breadcrumbs || []} />
     </div>
   );
 };

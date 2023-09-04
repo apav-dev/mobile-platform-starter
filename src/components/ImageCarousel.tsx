@@ -2,9 +2,9 @@ import { GalleryImage } from "../types/yext";
 import { useState } from "react";
 import { motion, AnimatePresence, MotionConfig } from "framer-motion";
 import * as React from "react";
-import { Image } from "@yext/sites-components";
 import { LeftChevronIcon } from "./icons/LeftChevronIcon";
 import { RightChevronIcon } from "./icons/RightChevronIcon";
+import { v4 as uuidv4 } from "uuid";
 
 export interface ImageCarouselProps {
   images: GalleryImage[];
@@ -13,7 +13,7 @@ export interface ImageCarouselProps {
 // TODO: Handle images that don't take full width
 // TODO: Figure out why I can't use Yext Image component
 // TODO: Address larger breakpoints
-const ImageCarousel = ({ images }: ImageCarouselProps) => {
+export const ImageCarousel = ({ images }: ImageCarouselProps) => {
   let [index, setIndex] = useState(0);
 
   return (
@@ -23,6 +23,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
           {images.slice(1).map((image, i) => (
             // <Image image={image} layout="fixed" width={310} height={180} className="mx-auto" />
             <img
+              key={`image-${uuidv4()}`}
               src={image.image.url}
               className="object-cover aspect-3/2 max-h-80"
             />
@@ -60,5 +61,3 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
     </MotionConfig>
   );
 };
-
-export default ImageCarousel;

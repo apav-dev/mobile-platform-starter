@@ -6,7 +6,7 @@ export interface CardProps {
   containerClassName?: string;
 }
 
-const Card = ({ children, containerClassName }: CardProps) => {
+export const Card = ({ children, containerClassName }: CardProps) => {
   return (
     <div
       className={twMerge(
@@ -18,5 +18,3 @@ const Card = ({ children, containerClassName }: CardProps) => {
     </div>
   );
 };
-
-export default Card;

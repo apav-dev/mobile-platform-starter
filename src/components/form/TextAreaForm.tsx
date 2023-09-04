@@ -10,7 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./Form";
-import { useEntity } from "../utils/useEntityContext";
+import { usePageContext } from "../utils/usePageContext";
 import { Textarea } from "../Textarea";
 
 export interface InputProps
@@ -44,7 +44,7 @@ const TextareaForm = React.forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
-    const { setFormData } = useEntity();
+    const { setFormData } = usePageContext();
 
     const minLength = minLen ?? (required ? 1 : 0);
     const maxLength = maxLen ?? 1000;

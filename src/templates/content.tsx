@@ -9,17 +9,18 @@ import {
   TemplateProps,
 } from "@yext/pages";
 import { useQuery } from "@tanstack/react-query";
-import Heading from "../components/Heading";
-import ContentContainer from "../components/ContentContainer";
-import HolidayHoursCard from "../components/cards/HolidayHoursCard";
-import HoursCard from "../components/cards/HoursCard";
-import MultilineTextCard from "../components/cards/MultilineTextCard";
-import PhotoGalleryCard from "../components/cards/PhotoGalleryCard";
-import TextCard from "../components/cards/TextCard";
+import { Heading } from "../components/Heading";
+import { ContentContainer } from "../components/ContentContainer";
+import { HolidayHoursCard } from "../components/cards/HolidayHoursCard";
+import { HoursCard } from "../components/cards/HoursCard";
+import { MultilineTextCard } from "../components/cards/MultilineTextCard";
+import { PhotoGalleryCard } from "../components/cards/PhotoGalleryCard";
+import { TextCard } from "../components/cards/TextCard";
 import { LocationPinIcon } from "../components/icons/LocationPinIcon";
-import Main from "../components/layouts/Main";
-import { EntityProvider } from "../components/utils/useEntityContext";
+import { Main } from "../components/layouts/Main";
+import { PageContextProvider } from "../components/utils/usePageContext";
 import { fetchLocation } from "../utils/api";
+import { twMerge } from "tailwind-merge";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return "content";
@@ -35,9 +36,10 @@ export const getHeadConfig: GetHeadConfig<
   };
 };
 
-const Content = ({ document }: TemplateRenderProps) => {
+const Content = () => {
   const [formData, setFormData] = React.useState<Record<string, any>>({});
   const [entityId, setEntityId] = useState<string | null>(null);
+  const [editId, setEditId] = useState("");
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -54,11 +56,21 @@ const Content = ({ document }: TemplateRenderProps) => {
 
   const location = data?.response.docs?.[0];
 
+  useEffect(() => {
+    console.log("editId", entityId);
+  }, [editId]);
+
   return (
-    <EntityProvider
+    <PageContextProvider
       value={{
         formData,
         setFormData,
+        entityMeta: location && {
+          id: location?.id,
+          name: location?.name,
+        },
+        setEditId,
+        editId,
       }}
     >
       <Main
@@ -71,7 +83,12 @@ const Content = ({ document }: TemplateRenderProps) => {
         ]}
       >
         {location && (
-          <ContentContainer containerClassName="">
+          <ContentContainer
+            containerClassName={twMerge(
+              "overflow-y-hidden",
+              editId && "overflow-y-hidden"
+            )}
+          >
             <Heading title={location.name} icon={<LocationPinIcon />} />
             <div className="py-4">
               <div className="justify-start items-center gap-2 inline-flex">
@@ -111,14 +128,14 @@ const Content = ({ document }: TemplateRenderProps) => {
               <HoursCard title="Hours" fieldId="hours" hours={location.hours} />
               <HolidayHoursCard
                 title="Holiday Hours"
-                fieldId="hours"
+                fieldId="holidayHours"
                 hours={location.hours}
               />
             </div>
           </ContentContainer>
         )}
       </Main>
-    </EntityProvider>
+    </PageContextProvider>
   );
 };
 

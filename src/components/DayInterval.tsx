@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import { v4 as uuidv4 } from "uuid";
 import { DayIntervalType as DayIntervalType } from "../types/yext";
 import { isClosedInterval } from "./form/HoursForm";
 
@@ -8,7 +8,7 @@ export interface DayIntervalProps {
   intervals: DayIntervalType;
 }
 
-const DayInterval = ({ day, intervals }: DayIntervalProps) => {
+export const DayInterval = ({ day, intervals }: DayIntervalProps) => {
   const closed = isClosedInterval(intervals);
 
   return (
@@ -23,7 +23,10 @@ const DayInterval = ({ day, intervals }: DayIntervalProps) => {
       ) : (
         <div className="flex flex-col">
           {intervals.openIntervals?.map((interval) => (
-            <div className="text-gray-700 text-base font-lato-regular leading-tight">
+            <div
+              key={uuidv4()}
+              className="text-gray-700 text-base font-lato-regular leading-tight"
+            >
               {`${interval.start} to ${interval.end}`}
             </div>
           ))}
@@ -32,5 +35,3 @@ const DayInterval = ({ day, intervals }: DayIntervalProps) => {
     </div>
   );
 };
-
-export default DayInterval;

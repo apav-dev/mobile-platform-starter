@@ -1,16 +1,18 @@
 import * as React from "react";
-import Card from "../Card";
-import { useEffect, useState } from "react";
-import { useEntity } from "../utils/useEntityContext";
-
+import { Card } from "../Card";
+import { useEffect } from "react";
+import { usePageContext } from "../utils/usePageContext";
 import {
   DayIntervalType,
   HolidayHourType as HolidayHourType,
-} from "@/src/types/yext";
-import ContentContainer from "../ContentContainer";
-import HolidayHoursForm from "../form/HolidayHoursForm";
+} from "../../types/yext";
+import { ContentContainer } from "../ContentContainer";
+import { HolidayHoursForm } from "../form/HolidayHoursForm";
 import EditPanel from "../EditPanel";
-import HolidayHours from "../HolidayHours";
+import { HolidayHours } from "../HolidayHours";
+import { LocationPinIcon } from "../icons/LocationPinIcon";
+import { Heading } from "../Heading";
+import Header from "../Header";
 
 export interface HoursCardProps {
   title: string;
@@ -27,50 +29,59 @@ export interface HoursCardProps {
   };
 }
 
-const HolidayHoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
+export const HolidayHoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
   if (!hours.holidayHours) {
     return null;
   }
 
-  const [editMode, setEditMode] = useState(false);
-
-  const { formData } = useEntity();
+  const { formData, entityMeta, setEditId, editId } = usePageContext();
 
   useEffect(() => {
     if (formData[fieldId]) {
-      setEditMode(false);
+      setEditId?.("");
     }
   }, [formData, fieldId]);
 
-  const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setEditMode(false);
+  const handleCancel = (e?: React.MouseEvent<HTMLButtonElement>) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    setEditId?.("");
   };
 
   const { holidayHours } = hours;
 
   return (
     // TODO: Is it bad to have onClick without button?
-    <div onClick={() => setEditMode(true)}>
+    <div onClick={() => setEditId?.(fieldId)}>
       <Card>
         <div className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2">
           {title}
         </div>
         <HolidayHours holidayHours={holidayHours} />
       </Card>
-      <EditPanel open={editMode}>
+      <EditPanel open={editId === fieldId}>
+        <Header
+          breadcrumbs={[
+            {
+              name: "Home",
+              path: "/",
+            },
+            { name: entityMeta?.name ?? "", onClick: handleCancel },
+            { name: `Edit ${title}` },
+          ]}
+        />
         <ContentContainer containerClassName="pt-4 pb-20">
-          <HolidayHoursForm
-            id="hours"
-            label="Holiday Hours"
-            initialHolidayHours={hours}
-            onCancel={handleCancel}
-          />
+          <Heading title={entityMeta?.name ?? ""} icon={<LocationPinIcon />} />
+          <div className="pt-4">
+            <HolidayHoursForm
+              id="hours"
+              label="Holiday Hours"
+              initialHolidayHours={hours}
+              onCancel={handleCancel}
+            />
+          </div>
         </ContentContainer>
       </EditPanel>
     </div>
   );
 };
-
-export default HolidayHoursCard;

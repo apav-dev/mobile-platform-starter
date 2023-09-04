@@ -1,11 +1,12 @@
 import * as React from "react";
 import { DayOfWeek, isClosedInterval } from "./HoursForm";
-import Card from "../Card";
+import { Card } from "../Card";
 import { FormLabel, FormMessage } from "./Form";
 import { RadioGroup, RadioGroupItem } from "../Radio";
 import { Label } from "../Label";
 import { Input } from "../Input";
 import { TrashIcon } from "../icons/TrashIcon";
+import { v4 as uuidv4 } from "uuid";
 
 import { DayIntervalType } from "../../types/yext";
 
@@ -19,7 +20,7 @@ export interface IntervalFormCardProps {
   value: DayIntervalType;
 }
 
-const IntervalFormItem = ({
+export const IntervalFormItem = ({
   day,
   onValueChange,
   value,
@@ -139,7 +140,10 @@ const IntervalFormItem = ({
           <>
             {value.openIntervals.map((interval, index) => {
               return (
-                <div className="gap-3 flex flex-col xs:flex-row xs:gap-2">
+                <div
+                  key={uuidv4()}
+                  className="gap-3 flex flex-col xs:flex-row xs:gap-2"
+                >
                   <div className="flex flex-col flex-1">
                     <Label className="font-lato-regular text-[13px] text-gray-700 pb-1">
                       From
@@ -197,5 +201,3 @@ const IntervalFormItem = ({
     </Card>
   );
 };
-
-export default IntervalFormItem;
