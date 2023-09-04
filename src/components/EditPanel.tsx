@@ -18,6 +18,7 @@ const EditPanel = ({ open, children }: EditPanelProps) => {
       initial={false}
       animate={{ y: open ? 0 : "100%" }}
       className={twMerge(
+        // TODD: Make fixed and add heading to where it's used
         "inset-0 absolute bg-white -mx-6 -mb-3 z-10",
         hidden && "hidden",
         hasOverflow && "overflow-y-auto"
