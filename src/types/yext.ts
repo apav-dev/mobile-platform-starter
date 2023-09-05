@@ -112,27 +112,40 @@ export interface YextContent<T> {
   nextPageToken?: string;
 }
 
+export interface ReviewResponse {
+  averageRating: number;
+  count: number;
+  nextPageToken?: string;
+  reviews: Review[];
+}
+
 export interface Review {
-  $key: {
-    locale: string;
-    primary_key: string;
-  };
-  authorName: string;
-  comments: ReviewComment[];
-  content: string;
-  entity: {
-    address: Address;
-    id: string;
-    name: string;
-  };
-  publisher: string;
+  id: string;
   rating: number;
-  reviewDate: string;
+  content: string;
+  authorName: string;
+  authorEmail: string;
+  url: string;
+  publisherDate: number;
+  locationId: string;
+  accountId: string;
+  publisherId: string;
+  title: string;
+  lastYextUpdateTime: number;
+  comments: ReviewComment[];
+  status: string;
+  flagStatus: string;
+  reviewLanguage: string;
+  apiIdentifier: string;
 }
 
 export interface ReviewComment {
+  id: number;
+  parentId: number;
+  publisherDate: number;
   authorName: string;
+  authorEmail: string;
+  authorRole: string;
   content: string;
-  contentId: string;
-  commentDate: string;
+  visibility: string;
 }

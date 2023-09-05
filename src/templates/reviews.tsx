@@ -9,7 +9,7 @@ import {
   TemplateProps,
 } from "@yext/pages";
 import { useQuery } from "@tanstack/react-query";
-import { fetchReviews } from "../utils/api";
+import { fetchLocation, fetchReviews } from "../utils/api";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -28,7 +28,7 @@ import { Main } from "../components/layouts/Main";
 import { PageContextProvider } from "../components/utils/usePageContext";
 import { twMerge } from "tailwind-merge";
 
-export const getPath: GetPath<TemplateProps> = ({ document }) => {
+export const getPath: GetPath<TemplateProps> = () => {
   return `reviews`;
 };
 
@@ -64,18 +64,24 @@ const Reviews = () => {
     setEntityId(entityId);
   }, []);
 
-  const { isLoading, isError, error, data, isFetching, isPreviousData } =
-    useQuery(
-      ["reviews", entityId, pageToken, pageSize],
-      () => fetchReviews(entityId, pageSize, pageToken),
-      { keepPreviousData: true, enabled: !!entityId }
-    );
+  const reviewsQuery = useQuery(
+    ["reviews", entityId, pageToken, pageSize],
+    () => fetchReviews(entityId, pageSize, pageToken),
+    { keepPreviousData: true, enabled: !!entityId }
+  );
+
+  const entityQuery = useQuery({
+    queryKey: ["entityId", entityId],
+    enabled: !!entityId,
+    retry: false,
+    queryFn: () => fetchLocation(entityId),
+  });
 
   const handleNext = () => {
-    if (data?.response.nextPageToken) {
+    if (reviewsQuery.data?.response.nextPageToken) {
       // Push the current pageToken to the prevPageTokens stack before moving to the next page
       setPrevPageTokens([...prevPageTokens, pageToken!]);
-      setPageToken(data?.response.nextPageToken);
+      setPageToken(reviewsQuery.data.response.nextPageToken);
       setStartIndex(startIndex + pageSize); // Update start index
     }
   };
@@ -96,13 +102,15 @@ const Reviews = () => {
     setStartIndex(1);
   }, [pageSize]);
 
-  const reviews = data?.response.docs;
-  const count = data?.response.count;
+  const reviews = reviewsQuery.data?.response.reviews;
+  const count = reviewsQuery.data?.response.count;
   // Calculate the ending index for current page
   const endIndex = Math.min(
     startIndex + pageSize - 1,
-    data?.response.count ?? 0
+    reviewsQuery.data?.response.count ?? 0
   );
+  const entityName = entityQuery.data?.response.docs?.[0]?.name;
+  const entityAddress = entityQuery.data?.response.docs?.[0]?.address;
 
   return (
     <PageContextProvider
@@ -124,16 +132,18 @@ const Reviews = () => {
       >
         {reviews && (
           <ContentContainer
-            containerClassName={twMerge(
-              "overflow-y-hidden",
-              editId && "overflow-y-hidden"
-            )}
+            containerClassName={twMerge(editId && "overflow-y-hidden")}
           >
             <div className="flex flex-col gap-y-4">
               <Heading title={"Reviews"} icon={<StarsIcon />} />
               <div className="relative flex flex-col gap-y-2">
                 {reviews.map((review) => (
-                  <ReviewCard key={review.$key.primary_key} review={review} />
+                  <ReviewCard
+                    key={review.id}
+                    review={review}
+                    entityAddress={entityAddress}
+                    entityName={entityName}
+                  />
                 ))}
                 <div className="justify-between items-start gap-4 flex">
                   <div className="justify-start items-center gap-2 flex">
@@ -163,7 +173,7 @@ const Reviews = () => {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  <div className="justify-start items-center gap-2 flex">
+                  <div className="justify-start items-center gap-2 flex pb-8">
                     <div className="text-gray-700 text-base font-lato leading-tight">
                       <span className="font-lato-bold">
                         {startIndex}-{endIndex}
@@ -186,11 +196,14 @@ const Reviews = () => {
                         <button
                           className={twMerge(
                             "w-11 h-11 px-2 py-1.5 bg-zinc-200 rounded-tr-[3px] rounded-br-[3px] justify-center items-center gap-2.5 flex",
-                            data?.response.nextPageToken === undefined &&
-                              "bg-gray-100"
+                            reviewsQuery.data?.response.nextPageToken ===
+                              undefined && "bg-gray-100"
                           )}
                           onClick={handleNext}
-                          disabled={data?.response.nextPageToken === undefined}
+                          disabled={
+                            reviewsQuery.data?.response.nextPageToken ===
+                            undefined
+                          }
                         >
                           <RightChevronIcon />
                         </button>

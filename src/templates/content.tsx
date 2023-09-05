@@ -84,10 +84,7 @@ const Content = () => {
       >
         {location && (
           <ContentContainer
-            containerClassName={twMerge(
-              "overflow-y-hidden",
-              editId && "overflow-y-hidden"
-            )}
+            containerClassName={twMerge(editId && "overflow-y-hidden")}
           >
             <Heading title={location.name} icon={<LocationPinIcon />} />
             <div className="py-4">

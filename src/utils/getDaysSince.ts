@@ -1,5 +1,4 @@
-export const getDaysSince = (date: string): string => {
-  // Get the current date and time in UTC
+export const getDaysSince = (date: number): string => {
   const now = new Date();
   const nowUTC = Date.UTC(
     now.getUTCFullYear(),
@@ -7,7 +6,6 @@ export const getDaysSince = (date: string): string => {
     now.getUTCDate()
   );
 
-  // Convert the input date to UTC time
   const then = new Date(date);
   const thenUTC = Date.UTC(
     then.getUTCFullYear(),
@@ -15,10 +13,8 @@ export const getDaysSince = (date: string): string => {
     then.getUTCDate()
   );
 
-  // Calculate the difference in days
   const daysSince = Math.floor((nowUTC - thenUTC) / (1000 * 60 * 60 * 24));
 
-  // Generate the display string based on the difference
   if (daysSince === 0) {
     return "Today";
   } else if (daysSince === 1) {

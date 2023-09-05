@@ -1,4 +1,10 @@
-import { Location, Review, YextContent, YextResponse } from "../types/yext";
+import {
+  Location,
+  Review,
+  ReviewResponse,
+  YextContent,
+  YextResponse,
+} from "../types/yext";
 
 // TODO: use MGMT API when it return CORS headers OR I can use serverless with 1.0.0 rc
 // export const fetchLocation = async (
@@ -25,7 +31,7 @@ export const fetchReviews = async (
   entityId: string,
   limit?: number,
   pageToken?: string
-): Promise<YextResponse<YextContent<Review>>> => {
+): Promise<YextResponse<ReviewResponse>> => {
   const params = new URLSearchParams({
     api_key: YEXT_PUBLIC_CONTENT_API_KEY,
     v: "20230817",
@@ -38,7 +44,7 @@ export const fetchReviews = async (
   }
 
   const response = await fetch(
-    `https://cdn.yextapis.com/v2/accounts/me/content/reviewManagement?${params.toString()}`
+    `/api/entity/${entityId}/reviews?${params.toString()}`
   );
 
   const data = await response.json();

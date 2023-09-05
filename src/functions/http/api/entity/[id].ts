@@ -1,33 +1,22 @@
+import { SitesHttpRequest, SitesHttpResponse } from "@yext/pages/*";
 import { fetch } from "@yext/pages/util";
 
-class Response {
-  body: string;
-  headers: any;
-  statusCode: number;
-
-  constructor(body: string, headers: any, statusCode: number) {
-    this.body = body;
-    this.headers = headers || {
-      "Content-Type": "application/json",
-    };
-    this.statusCode = statusCode;
-  }
-}
-
-export default async function entity(request) {
-  const { method, body, pathParams } = request;
+export default async function entity(
+  request: SitesHttpRequest
+): Promise<SitesHttpResponse> {
+  const { method, pathParams } = request;
 
   switch (method) {
     case "GET":
       return getEntity(pathParams.id);
     default:
-      return new Response("Method not allowed", null, 405);
+      return { body: "Method not allowed", headers: {}, statusCode: 405 };
   }
 }
 
-async function getEntity(id?: string) {
+async function getEntity(id?: string): Promise<SitesHttpResponse> {
   if (!id) {
-    return new Response("Missing entity id", null, 400);
+    return { body: "Missing entity id", headers: {}, statusCode: 400 };
   }
 
   const mgmtApiResp = await fetch(
@@ -38,7 +27,7 @@ async function getEntity(id?: string) {
 
   return {
     body: JSON.stringify(resp),
-    headers: null,
+    headers: {},
     statusCode: 200,
   };
 }

@@ -2,11 +2,10 @@ import * as React from "react";
 import { Card } from "../Card";
 import { ContentContainer } from "../ContentContainer";
 import EditPanel from "../EditPanel";
-import { Review } from "src/types/yext";
+import { Address, Review } from "src/types/yext";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { CommentBubbleIcon } from "../icons/CommentBubble";
 import { PersonIcon } from "../icons/PersonIcon";
-import { formatDate } from "../../utils/formatDate";
 import { ClockIcon } from "../icons/ClockIcon";
 import Stars from "../Stars";
 import { HorizontalDivider } from "../HorizontalDivider";
@@ -16,15 +15,22 @@ import { StarsIcon } from "../icons/StarsIcon";
 import { Heading } from "../Heading";
 import Header from "../Header";
 import { usePageContext } from "../utils/usePageContext";
+import { formatUtcDate } from "../../utils/formatUtcDate";
 
 export interface ReviewCardProps {
   review: Review;
+  entityName?: string;
+  entityAddress?: Address;
 }
 
 {
   /* TODO: Handle comments */
 }
-export const ReviewCard = ({ review }: ReviewCardProps) => {
+export const ReviewCard = ({
+  review,
+  entityName,
+  entityAddress,
+}: ReviewCardProps) => {
   const { formData, entityMeta, editId, setEditId } = usePageContext();
 
   const handleCancel = (e?: React.MouseEvent<HTMLButtonElement>) => {
@@ -33,20 +39,22 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
   };
 
   // address string where parts of the address are separated by commas and parts maybe missing so don't use commas to separate and don't show undefined parts
-  const addressStr = [
-    review.entity.address.line1,
-    review.entity.address.line2,
-    review.entity.address.city,
-    review.entity.address.region,
-    review.entity.address.postalCode,
-    review.entity.address.countryCode,
-  ]
-    .filter((part) => part !== undefined)
-    .join(", ");
+  const addressStr = entityAddress
+    ? [
+        entityAddress.line1,
+        entityAddress.line2,
+        entityAddress.city,
+        entityAddress.region,
+        entityAddress.postalCode,
+        entityAddress.countryCode,
+      ]
+        .filter((part) => part !== undefined)
+        .join(", ")
+    : "";
 
   return (
     // TODO: Is it bad to have onClick without button?
-    <div onClick={() => setEditId?.(review.$key.primary_key)}>
+    <div onClick={() => setEditId?.(review.id)}>
       <Card containerClassName="flex flex-col gap-y-4">
         <div className="justify-between items-center gap-4 inline-flex">
           <div className="flex gap-x-4">
@@ -55,7 +63,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
             </div>
             <div className="flex-col justify-center items-start inline-flex">
               <div className="text-gray-700 text-base font-lato-bold leading-tight">
-                {review.entity.name}
+                {entityName}
               </div>
               <div
                 className={
@@ -86,11 +94,11 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
         <div className="justify-start items-center gap-4 inline-flex">
           <ClockIcon />
           <div className="text-gray-700 text-base font-lato-regular leading-tight">
-            {formatDate(review.reviewDate)}
+            {formatUtcDate(review.publisherDate)}
           </div>
         </div>
       </Card>
-      <EditPanel open={editId === review.$key.primary_key}>
+      <EditPanel open={editId === review.id}>
         <Header
           breadcrumbs={[
             {
@@ -98,10 +106,10 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
               path: "/",
             },
             { name: "Reviews", onClick: handleCancel },
-            { name: review.$key.primary_key },
+            { name: review.id },
           ]}
         />
-        <ContentContainer containerClassName={"flex flex-col gap-y-6"}>
+        <ContentContainer containerClassName={"flex flex-col gap-y-6 pb-20"}>
           <Heading title={"Reviews"} icon={<StarsIcon />} />
           <div className={"flex flex-col gap-y-4"}>
             <Card>
@@ -112,7 +120,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
                   </div>
                   <div className="flex-col justify-center items-start inline-flex">
                     <div className="text-gray-700 text-base font-lato-bold leading-tight">
-                      {review.entity.name}
+                      {entityName}
                     </div>
                     <div
                       className={
@@ -138,7 +146,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
             <div className="justify-start items-center gap-4 inline-flex">
               <ClockIcon />
               <div className="text-gray-700 text-base font-lato-regular leading-tight">
-                {formatDate(review.reviewDate)}
+                {formatUtcDate(review.publisherDate)}
               </div>
             </div>
           </div>
@@ -172,10 +180,10 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
                   <ClockIcon />
                   <div className="self-stretch flex-col justify-start items-start gap-0.5 inline-flex">
                     <p className="font-lato-regular">
-                      {formatDate(comment.commentDate)}
+                      {formatUtcDate(comment.publisherDate)}
                     </p>
                     <p className="text-gray-500 text-sm font-lato-regular">
-                      {getDaysSince(comment.commentDate)}
+                      {getDaysSince(comment.publisherDate)}
                     </p>
                   </div>
                 </div>
