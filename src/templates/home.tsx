@@ -6,6 +6,7 @@ import {
   HeadConfig,
   TemplateRenderProps,
 } from "@yext/pages";
+import { getRuntime } from "@yext/pages/util";
 import Main from "../components/layouts/Main";
 import ContentContainer from "../components/ContentContainer";
 import ProductCard from "../components/ProductCard";
@@ -30,7 +31,39 @@ export const getHeadConfig: GetHeadConfig<
   };
 };
 
+const runtime = getRuntime();
+
 const Home = () => {
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [permissionedEntity, setPermissionedEntity] = React.useState("#");
+
+  React.useEffect(() => {
+    async function fetchPermissionedEntity() {
+      try {
+        const token = window?.YEXT_TOKENS?.AUTH_SEARCH.token;
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", `Bearer ${token}`);
+        const requestOptions = {
+          method: "GET",
+          headers: myHeaders,
+        };
+        const searchResults = await fetch(
+          "https://cdn.yextapis.com/v2/accounts/me/search/vertical/query?input=locations&locale=en&verticalKey=locations&experienceKey=mobile-starter-search&version=PRODUCTION&v=20230907",
+          requestOptions
+        ).then((response) => response.json());
+        const entityId = searchResults.response.results[0].data.id;
+        setPermissionedEntity(entityId);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (!runtime.isServerSide) {
+      fetchPermissionedEntity();
+    }
+  }, []);
+
   return (
     <Main>
       <ContentContainer containerClassName="py-8">
@@ -54,7 +87,7 @@ const Home = () => {
             icon={<GraphIcon />}
             title="Content"
             description="Edit your business information such as address, hours, and description."
-            link="/content?entityId=facility-2"
+            link={`/content/${permissionedEntity}`}
           />
           <ProductCard
             icon={<StarsIcon />}
