@@ -16,6 +16,7 @@ import { SocialIcon } from "../components/icons/SocialIcon";
 import { MessageBubbleIcon } from "../components/icons/MessageBubbleIcon";
 import { AnalyticsIcon } from "../components/icons/AnalyticsIcon";
 import platformImgUrl from "../assets/images/platform.png";
+import Skeleton from "../components/Skeleton";
 
 export const getPath: GetPath<TemplateRenderProps> = () => {
   return `index.html`;
@@ -41,6 +42,10 @@ const Home = () => {
     async function fetchPermissionedEntity() {
       try {
         const token = window?.YEXT_TOKENS?.AUTH_SEARCH.token;
+        if (!token) {
+          console.log("no token found on window");
+          return;
+        }
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", `Bearer ${token}`);
@@ -82,38 +87,48 @@ const Home = () => {
             version.
           </p>
         </div>
-        <div className="flex flex-col gap-y-6 mt-6">
-          <ProductCard
-            icon={<GraphIcon />}
-            title="Content"
-            description="Edit your business information such as address, hours, and description."
-            link={`/content/${permissionedEntity}`}
-          />
-          <ProductCard
-            icon={<StarsIcon />}
-            title="Reviews"
-            description="View your recent reviews, filter, and respond."
-            link="#"
-          />
-          <ProductCard
-            icon={<SocialIcon />}
-            title="Social"
-            description="View and create social posts for Google, Facebook, Instagram, and Twitter."
-            link="#"
-          />
-          <ProductCard
-            icon={<MessageBubbleIcon />}
-            title="Q&A"
-            description="View top metrics such as impressions and average rating for your business."
-            link="#"
-          />
-          <ProductCard
-            icon={<AnalyticsIcon />}
-            title="Analytics"
-            description="View top metrics such as impressions and average rating for your business."
-            link="#"
-          />
-        </div>
+        {isLoading ? (
+          <div className="flex flex-col gap-y-6 mt-6">
+            <Skeleton className="h-24 w-full rounded-lg shadow" />
+            <Skeleton className="h-24 w-full rounded-lg shadow" />
+            <Skeleton className="h-24 w-full rounded-lg shadow" />
+            <Skeleton className="h-24 w-full rounded-lg shadow" />
+            <Skeleton className="h-24 w-full rounded-lg shadow" />
+          </div>
+        ) : (
+          <div className="flex flex-col gap-y-6 mt-6">
+            <ProductCard
+              icon={<GraphIcon />}
+              title="Content"
+              description="Edit your business information such as address, hours, and description."
+              link={`/content/${permissionedEntity}`}
+            />
+            <ProductCard
+              icon={<StarsIcon />}
+              title="Reviews"
+              description="View your recent reviews, filter, and respond."
+              link="#"
+            />
+            <ProductCard
+              icon={<SocialIcon />}
+              title="Social"
+              description="View and create social posts for Google, Facebook, Instagram, and Twitter."
+              link="#"
+            />
+            <ProductCard
+              icon={<MessageBubbleIcon />}
+              title="Q&A"
+              description="View top metrics such as impressions and average rating for your business."
+              link="#"
+            />
+            <ProductCard
+              icon={<AnalyticsIcon />}
+              title="Analytics"
+              description="View top metrics such as impressions and average rating for your business."
+              link="#"
+            />
+          </div>
+        )}
       </ContentContainer>
     </Main>
   );
