@@ -1,53 +1,33 @@
-// import { fetch } from "@yext/pages/util";
-// import axios from "axios";
-// import fetch from "node-fetch";
-// import { fetch } from "cross-fetch";
+import { SitesHttpRequest, SitesHttpResponse } from "@yext/pages/*";
+import { fetch } from "@yext/pages/util";
 
-class Response {
-  body: string;
-  headers: any;
-  statusCode: number;
-
-  constructor(body: string, headers: any, statusCode: number) {
-    this.body = body;
-    this.headers = headers || {
-      "Content-Type": "application/json",
-    };
-    this.statusCode = statusCode;
-  }
-}
-
-export default async function entity(request) {
-  const { method, body, pathParams } = request;
+export default async function entity(
+  request: SitesHttpRequest
+): Promise<SitesHttpResponse> {
+  const { method, pathParams } = request;
 
   switch (method) {
     case "GET":
-      break;
+      return getEntity(pathParams.id);
     default:
-      return new Response("Method not allowed", null, 405);
+      return { body: "Method not allowed", headers: {}, statusCode: 405 };
+  }
+}
+
+async function getEntity(id?: string): Promise<SitesHttpResponse> {
+  if (!id) {
+    return { body: "Missing entity id", headers: {}, statusCode: 400 };
   }
 
-  // const { id } = pathParams;
+  const mgmtApiResp = await fetch(
+    `https://api.yextapis.com/v2/accounts/me/entities/${id}?api_key=${YEXT_PUBLIC_MGMT_API_KEY}&v=20230901`
+  );
 
-  // if (!id) {
-  //   return new Response("Missing entity id", null, 400);
-  // }
+  const resp = await mgmtApiResp.json();
 
-  return new Response("Hello World", null, 200);
-
-  // const response = await fetch(
-  //   `https://api.yextapis.com/v2/accounts/me/entities/${id}?api_key=${YEXT_PUBLIC_MGMT_API_KEY}`,
-  //   { method: "PUT", body }
-  // );
-
-  // const response = await axios.put(
-  //   `https://api.yext.com/v2/accounts/me/entities/${id}?api_key=${YEXT_PUBLIC_MGMT_API_KEY}`,
-  //   body
-  // );
-
-  // return {
-  //   body: response,
-  //   headers: null,
-  //   statusCode: 200,
-  // };
+  return {
+    body: JSON.stringify(resp),
+    headers: {},
+    statusCode: 200,
+  };
 }

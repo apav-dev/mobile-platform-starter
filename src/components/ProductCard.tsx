@@ -1,5 +1,5 @@
 import * as React from "react";
-import Card from "./Card";
+import { Card } from "./Card";
 import { RightChevronIcon } from "./icons/RightChevronIcon";
 
 export interface ProductCardProps {

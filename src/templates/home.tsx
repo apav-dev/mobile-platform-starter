@@ -7,8 +7,8 @@ import {
   TemplateRenderProps,
 } from "@yext/pages";
 import { getRuntime } from "@yext/pages/util";
-import Main from "../components/layouts/Main";
-import ContentContainer from "../components/ContentContainer";
+import { Main } from "../components/layouts/Main";
+import { ContentContainer } from "../components/ContentContainer";
 import ProductCard from "../components/ProductCard";
 import { GraphIcon } from "../components/icons/GraphIcon";
 import { StarsIcon } from "../components/icons/StarsIcon";
@@ -101,13 +101,13 @@ const Home = () => {
               icon={<GraphIcon />}
               title="Content"
               description="Edit your business information such as address, hours, and description."
-              link={`/content/${permissionedEntity}`}
+              link={`/content?entityId=${permissionedEntity}`}
             />
             <ProductCard
               icon={<StarsIcon />}
               title="Reviews"
               description="View your recent reviews, filter, and respond."
-              link="#"
+              link={`/reviews?entityId=${permissionedEntity}`}
             />
             <ProductCard
               icon={<SocialIcon />}

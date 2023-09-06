@@ -3,8 +3,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import * as React from "react";
 import { Form, FormField, FormLabel } from "./Form";
-import { useEntity } from "../utils/useEntityContext";
-import HolidayHourFormItem from "./HolidayHourFormItem";
+import { usePageContext } from "../utils/usePageContext";
+import { HolidayHourFormItem } from "./HolidayHourFormItem";
 import { DayIntervalSchema, HolidayHourSchema } from "../../schemas/hours";
 
 import { DayIntervalType, HolidayHourType } from "../../types/yext";
@@ -35,12 +35,15 @@ export interface HoursFormProps
   label?: string;
 }
 
-const HolidayHoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
+export const HolidayHoursForm = React.forwardRef<
+  HTMLInputElement,
+  HoursFormProps
+>(
   (
     { className, type, id, label, initialHolidayHours, onCancel, ...props },
     ref
   ) => {
-    const { setFormData } = useEntity();
+    const { setFormData } = usePageContext();
 
     // Schema for the form
     const formSchema = z.object({
@@ -145,5 +148,3 @@ const HolidayHoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
   }
 );
 HolidayHoursForm.displayName = "HoursForm";
-
-export default HolidayHoursForm;

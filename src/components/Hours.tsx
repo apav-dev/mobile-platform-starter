@@ -1,5 +1,5 @@
 import * as React from "react";
-import DayInterval from "./DayInterval";
+import { DayInterval } from "./DayInterval";
 
 import {
   DayIntervalType as DayIntervalType,

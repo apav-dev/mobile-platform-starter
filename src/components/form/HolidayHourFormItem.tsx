@@ -1,5 +1,5 @@
 import * as React from "react";
-import Card from "../Card";
+import { Card } from "../Card";
 import { FormLabel, FormMessage } from "./Form";
 import { RadioGroup, RadioGroupItem } from "../Radio";
 import { Label } from "../Label";
@@ -12,6 +12,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../Calendar";
 import { format } from "date-fns";
 import { TrashIcon } from "../icons/TrashIcon";
+import { v4 as uuidv4 } from "uuid";
 
 export interface IntervalFormCardProps {
   label: string;
@@ -24,7 +25,7 @@ export interface IntervalFormCardProps {
   ) => void;
 }
 
-const HolidayHourFormItem = ({
+export const HolidayHourFormItem = ({
   label,
   index,
   onValueChange,
@@ -203,7 +204,7 @@ const HolidayHourFormItem = ({
         {value.isClosed ? null : (
           <>
             {value.openIntervals?.map((interval, index) => (
-              <div className="flex flex-col gap-y-3">
+              <div key={uuidv4()} className="flex flex-col gap-y-3">
                 <div className="gap-3 flex flex-col xs:flex-row xs:gap-2">
                   <div className="flex flex-col flex-1">
                     <Label className="font-lato-regular text-[13px] text-gray-700 pb-1">
@@ -261,5 +262,3 @@ const HolidayHourFormItem = ({
     </Card>
   );
 };
-
-export default HolidayHourFormItem;

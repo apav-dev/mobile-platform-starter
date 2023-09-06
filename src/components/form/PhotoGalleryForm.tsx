@@ -2,19 +2,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import * as React from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./Form";
+import { Form, FormField, FormLabel } from "./Form";
 import { Input } from "../Input";
-import { useEntity } from "../utils/useEntityContext";
-import { GalleryImage } from "@/src/types/yext";
-import Card from "../Card";
-import { Image } from "@yext/sites-components";
+import { GalleryImage } from "../../types/yext";
+import { Card } from "../Card";
 import { TrashIcon } from "../icons/TrashIcon";
 import {
   Dialog,
@@ -25,8 +16,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../Dialog";
-import { Label } from "../Label";
 import { useState } from "react";
+import { usePageContext } from "../utils/usePageContext";
+import { v4 as uuidv4 } from "uuid";
 
 export interface PhotoGalleryFormProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -38,14 +30,14 @@ export interface PhotoGalleryFormProps
 
 type UploadType = "none" | "url" | "file";
 
-const PhotoGalleryForm = React.forwardRef<
+export const PhotoGalleryForm = React.forwardRef<
   HTMLInputElement,
   PhotoGalleryFormProps
 >(({ className, type, id, label, initialImages, onCancel, ...props }, ref) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploadType, setUploadType] = useState<UploadType>("none");
 
-  const { setFormData } = useEntity();
+  const { setFormData } = usePageContext();
 
   const ThumbnailSchema = z.object({
     url: z.string(),
@@ -265,7 +257,7 @@ const PhotoGalleryForm = React.forwardRef<
           render={({ field }) => (
             <>
               {field.value.map((galleryImage, index) => (
-                <Card>
+                <Card key={uuidv4()}>
                   <div className="self-stretch rounded-[3px] justify-between items-center gap-4 flex">
                     <div className="flex gap-x-4">
                       <img
@@ -319,5 +311,3 @@ const PhotoGalleryForm = React.forwardRef<
   );
 });
 PhotoGalleryForm.displayName = "PhotoGalleryForm";
-
-export default PhotoGalleryForm;

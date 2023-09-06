@@ -10,7 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./Form";
-import { useEntity } from "../utils/useEntityContext";
+import { usePageContext } from "../utils/usePageContext";
 import { Textarea } from "../Textarea";
 
 export interface InputProps
@@ -22,6 +22,8 @@ export interface InputProps
   minLen?: number;
   maxLen?: number;
   required?: boolean;
+  submitButtonLabel?: string;
+  placeholder?: string;
 }
 
 const TextareaForm = React.forwardRef<HTMLInputElement, InputProps>(
@@ -36,11 +38,13 @@ const TextareaForm = React.forwardRef<HTMLInputElement, InputProps>(
       initialValue,
       onCancel,
       required,
+      submitButtonLabel,
+      placeholder,
       ...props
     },
     ref
   ) => {
-    const { setFormData } = useEntity();
+    const { setFormData } = usePageContext();
 
     const minLength = minLen ?? (required ? 1 : 0);
     const maxLength = maxLen ?? 1000;
@@ -94,7 +98,11 @@ const TextareaForm = React.forwardRef<HTMLInputElement, InputProps>(
                   {label}
                 </FormLabel>
                 <FormControl>
-                  <Textarea className="resize-none" {...field} />
+                  <Textarea
+                    className="resize-none"
+                    {...field}
+                    placeholder={placeholder}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -104,7 +112,9 @@ const TextareaForm = React.forwardRef<HTMLInputElement, InputProps>(
             className="px-4 py-3 mt-4 bg-gray-700 justify-center items-center flex flex-1 w-full border-none focus:outline-none "
             formAction="submit"
           >
-            <div className="text-white text-base font-lato-regular">Save</div>
+            <div className="text-white text-base font-lato-regular">
+              {submitButtonLabel ?? "Save"}
+            </div>
           </button>
           <div className="px-4 justify-center items-center flex">
             <button

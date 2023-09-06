@@ -50,16 +50,18 @@ export interface GalleryImage {
   image: ComplexImageType;
 }
 
+export interface Address {
+  line1: string;
+  line2: string;
+  city: string;
+  region: string;
+  postalCode: string;
+  countryCode: string;
+}
+
 export interface Location {
   id: string;
-  address: {
-    line1: string;
-    line2: string;
-    city: string;
-    region: string;
-    postalCode: string;
-    countryCode: string;
-  };
+  address: Address;
   description: string;
   hours: {
     monday: DayIntervalType;
@@ -107,23 +109,43 @@ export interface Location {
 export interface YextContent<T> {
   docs: T[];
   count: number;
+  nextPageToken?: string;
+}
+
+export interface ReviewResponse {
+  averageRating: number;
+  count: number;
+  nextPageToken?: string;
+  reviews: Review[];
 }
 
 export interface Review {
-  $key: {
-    locale: string;
-    primary_key: string;
-  };
-  authorName: string;
-  content: string;
-  entity: {
-    address: {
-      line1: string;
-    };
-    id: string;
-    name: string;
-  };
-  publisher: string;
+  id: string;
   rating: number;
-  reviewDate: string;
+  content: string;
+  authorName: string;
+  authorEmail: string;
+  url: string;
+  publisherDate: number;
+  locationId: string;
+  accountId: string;
+  publisherId: string;
+  title: string;
+  lastYextUpdateTime: number;
+  comments: ReviewComment[];
+  status: string;
+  flagStatus: string;
+  reviewLanguage: string;
+  apiIdentifier: string;
+}
+
+export interface ReviewComment {
+  id: number;
+  parentId: number;
+  publisherDate: number;
+  authorName: string;
+  authorEmail: string;
+  authorRole: string;
+  content: string;
+  visibility: string;
 }

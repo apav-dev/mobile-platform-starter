@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "./Form";
 import { Input } from "../Input";
-import { useEntity } from "../utils/useEntityContext";
+import { usePageContext } from "../utils/usePageContext";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -40,7 +40,7 @@ const InputForm = React.forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
-    const { setFormData } = useEntity();
+    const { setFormData } = usePageContext();
 
     const minLength = minLen ?? (required ? 1 : 0);
     const maxLength = maxLen ?? 1000;

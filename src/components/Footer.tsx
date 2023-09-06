@@ -44,7 +44,7 @@ const Footer = () => {
   const [menuHidden, setMenuHidden] = useState(true);
 
   return (
-    <div className="fixed bottom-0 w-full z-50">
+    <div className="fixed bottom-0 w-full z-40">
       <motion.div
         className={twMerge(
           "bg-gray-900 z-[5] w-full shadow rounded-t-xl flex-col justify-start items-start gap-1 flex overflow-hidden",

@@ -1,12 +1,13 @@
+import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import * as React from "react";
 import { Form, FormControl, FormField, FormLabel } from "./Form";
-import { useEntity } from "../utils/useEntityContext";
+import { usePageContext } from "../utils/usePageContext";
 import { DayIntervalType, HolidayHourType } from "../../types/yext";
-import IntervalFormCard from "./IntervalFormItem";
+import { IntervalFormItem } from "./IntervalFormItem";
 import { DayIntervalSchema, HolidayHourSchema } from "../../schemas/hours";
+import { v4 as uuidv4 } from "uuid";
 
 export type DayOfWeek =
   | "monday"
@@ -42,7 +43,7 @@ export const isClosedInterval = (
 
 const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
   ({ className, type, id, label, initialHours, onCancel, ...props }, ref) => {
-    const { setFormData } = useEntity();
+    const { setFormData } = usePageContext();
 
     // Schema for the form
     const formSchema = z.object({
@@ -135,7 +136,8 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
                           control={form.control}
                           name={`${id}.${day}`}
                           render={({ field }) => (
-                            <IntervalFormCard
+                            <IntervalFormItem
+                              key={uuidv4()}
                               day={day as DayOfWeek}
                               onValueChange={onValueChange}
                               value={field.value}
