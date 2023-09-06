@@ -6,8 +6,8 @@ import {
   HeadConfig,
   TemplateRenderProps,
 } from "@yext/pages";
-import Main from "../components/layouts/Main";
-import ContentContainer from "../components/ContentContainer";
+import { Main } from "../components/layouts/Main";
+import { ContentContainer } from "../components/ContentContainer";
 import ProductCard from "../components/ProductCard";
 import { GraphIcon } from "../components/icons/GraphIcon";
 import { StarsIcon } from "../components/icons/StarsIcon";

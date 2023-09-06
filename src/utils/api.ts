@@ -34,8 +34,6 @@ export const fetchReviews = async (
 ): Promise<YextResponse<ReviewResponse>> => {
   const params = new URLSearchParams({
     api_key: YEXT_PUBLIC_CONTENT_API_KEY,
-    v: "20230817",
-    "entity.id": entityId,
     limit: limit?.toString() ?? "5",
   });
 
