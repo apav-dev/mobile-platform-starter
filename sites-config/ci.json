@@ -24,18 +24,6 @@
         "functionName": "PagesGenerator"
       },
       {
-        "pluginName": "test-15775",
-        "event": "API",
-        "functionName": "default",
-        "apiPath": "api/test",
-        "sourceFiles": [
-          {
-            "root": "dist/functions/test-15775",
-            "pattern": "*{.js,.ts}"
-          }
-        ]
-      },
-      {
         "pluginName": "id-81494",
         "event": "API",
         "functionName": "default",
@@ -43,6 +31,30 @@
         "sourceFiles": [
           {
             "root": "dist/functions/id-81494",
+            "pattern": "*{.js,.ts}"
+          }
+        ]
+      },
+      {
+        "pluginName": "reviews-86166",
+        "event": "API",
+        "functionName": "default",
+        "apiPath": "api/entity/{{id}}/reviews",
+        "sourceFiles": [
+          {
+            "root": "dist/functions/reviews-86166",
+            "pattern": "*{.js,.ts}"
+          }
+        ]
+      },
+      {
+        "pluginName": "comment-72919",
+        "event": "API",
+        "functionName": "default",
+        "apiPath": "api/entity/{{id}}/review/{{id}}/comment",
+        "sourceFiles": [
+          {
+            "root": "dist/functions/comment-72919",
             "pattern": "*{.js,.ts}"
           }
         ]
