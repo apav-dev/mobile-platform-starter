@@ -8,19 +8,19 @@ export default async function entity(
 
   switch (method) {
     case "GET":
-      return getEntity(pathParams.id);
+      return getEntity(pathParams.entityId);
     default:
       return { body: "Method not allowed", headers: {}, statusCode: 405 };
   }
 }
 
-async function getEntity(id?: string): Promise<SitesHttpResponse> {
-  if (!id) {
+async function getEntity(entityId?: string): Promise<SitesHttpResponse> {
+  if (!entityId) {
     return { body: "Missing entity id", headers: {}, statusCode: 400 };
   }
 
   const mgmtApiResp = await fetch(
-    `https://api.yextapis.com/v2/accounts/me/entities/${id}?api_key=${YEXT_PUBLIC_MGMT_API_KEY}&v=20230901`
+    `https://api.yextapis.com/v2/accounts/me/entities/${entityId}?api_key=${YEXT_PUBLIC_MGMT_API_KEY}&v=20230901`
   );
 
   const resp = await mgmtApiResp.json();

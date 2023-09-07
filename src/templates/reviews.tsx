@@ -8,8 +8,8 @@ import {
   TemplateRenderProps,
   TemplateProps,
 } from "@yext/pages";
-import { useQuery } from "@tanstack/react-query";
-import { fetchLocation, fetchReviews } from "../utils/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createReviewComment, fetchLocation, fetchReviews } from "../utils/api";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -76,6 +76,31 @@ const Reviews = () => {
     retry: false,
     queryFn: () => fetchLocation(entityId),
   });
+
+  const commentMutation = useMutation({
+    mutationFn: createReviewComment,
+    onSettled: () => {
+      setFormData({});
+      //delay refetch to allow time for the comment to be indexed
+      // TODO: check if this is acceptable
+      // TODO: set loading state
+      setTimeout(() => reviewsQuery.refetch(), 1000);
+    },
+  });
+
+  useEffect(() => {
+    // check how many keys are in the formData object. If greater than 1, log an error
+    if (Object.keys(formData).length > 1) {
+      console.error(
+        "The formData object should only have one key-value pair. Please check the ReviewCard component."
+      );
+    } else if (entityId && Object.keys(formData).length === 1) {
+      // If there is only one key-value pair, then it is the comment to be submitted. the key is the reviewId
+      const reviewId = Object.keys(formData)[0];
+      const content = formData[reviewId];
+      commentMutation.mutate({ entityId, reviewId, content });
+    }
+  }, [formData]);
 
   const handleNext = () => {
     if (reviewsQuery.data?.response.nextPageToken) {

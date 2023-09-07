@@ -57,8 +57,9 @@ const Content = () => {
   const location = data?.response.docs?.[0];
 
   useEffect(() => {
-    console.log("editId", entityId);
-  }, [editId]);
+    // TODO: submit form data
+    console.log("formData", formData);
+  }, [formData]);
 
   return (
     <PageContextProvider

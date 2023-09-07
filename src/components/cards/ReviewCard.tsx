@@ -16,6 +16,7 @@ import { Heading } from "../Heading";
 import Header from "../Header";
 import { usePageContext } from "../utils/usePageContext";
 import { formatUtcDate } from "../../utils/formatUtcDate";
+import { useEffect } from "react";
 
 export interface ReviewCardProps {
   review: Review;
@@ -33,10 +34,18 @@ export const ReviewCard = ({
 }: ReviewCardProps) => {
   const { formData, entityMeta, editId, setEditId } = usePageContext();
 
+  console.log("review", review.id);
+
   const handleCancel = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.stopPropagation();
     setEditId?.("");
   };
+
+  useEffect(() => {
+    if (formData[review.id.toString()]) {
+      setEditId?.("");
+    }
+  }, [formData, review]);
 
   // address string where parts of the address are separated by commas and parts maybe missing so don't use commas to separate and don't show undefined parts
   const addressStr = entityAddress
@@ -191,7 +200,7 @@ export const ReviewCard = ({
             </div>
           ))}
           <TextareaForm
-            id={"content"}
+            id={review.id.toString()}
             submitButtonLabel="Submit Response"
             placeholder="Write a Response..."
             onCancel={handleCancel}

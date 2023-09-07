@@ -11,7 +11,6 @@ type PageContextType = {
   setEditId?: (id: string) => void;
 };
 
-// TODO: edit mode by field id
 // Setup LocatorProvider to pass the [selected, hovered, focused]Ids between Marker interactions and LocatorCard interactions
 export const [usePageContext, PageContextProvider] = createCtx<PageContextType>(
   "Attempted to call usePageContext outside of PageContextProvider"
