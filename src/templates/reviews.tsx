@@ -194,20 +194,7 @@ const Reviews = () => {
             containerClassName={twMerge(editId && "overflow-y-hidden")}
           >
             <div className="flex flex-col gap-y-4">
-              <button
-                onClick={() => {
-                  toast({
-                    title: "Comment Submitted!",
-                    description: "Comment successfully submitted for review",
-                    duration: 5000,
-                    action: (
-                      <ToastAction altText="Try again">View Review</ToastAction>
-                    ),
-                  });
-                }}
-              >
-                <Heading title={"Reviews"} icon={<StarsIcon />} />
-              </button>
+              <Heading title={"Reviews"} icon={<StarsIcon />} />
               <div className="relative flex flex-col gap-y-2">
                 {reviews?.map((review) => (
                   <ReviewCard
