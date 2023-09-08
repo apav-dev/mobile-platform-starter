@@ -7,8 +7,8 @@ type PageContextType = {
     id: string;
     name: string;
   };
-  editId?: string;
-  setEditId?: (id: string) => void;
+  editId?: string | number;
+  setEditId?: (id: number | string) => void;
 };
 
 // Setup LocatorProvider to pass the [selected, hovered, focused]Ids between Marker interactions and LocatorCard interactions

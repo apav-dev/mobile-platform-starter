@@ -118,6 +118,7 @@ const InputForm = React.forwardRef<HTMLInputElement, InputProps>(
             <button
               className="text-blue text-base font-lato-regular hover:underline"
               onClick={handleCancel}
+              type="button"
             >
               Cancel
             </button>

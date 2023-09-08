@@ -17,12 +17,41 @@ import Header from "../Header";
 import { usePageContext } from "../utils/usePageContext";
 import { formatUtcDate } from "../../utils/formatUtcDate";
 import { useEffect } from "react";
+import Skeleton from "../Skeleton";
 
 export interface ReviewCardProps {
   review: Review;
   entityName?: string;
   entityAddress?: Address;
 }
+
+export const ReviewCardSkeleton = () => {
+  return (
+    <Card containerClassName="flex flex-col gap-y-4">
+      <div className="justify-between items-center gap-4 inline-flex">
+        <div className="flex gap-x-4">
+          <Skeleton className="rounded-full h-5 w-5" />
+          <div className="flex-col gap-y-1 justify-center items-start inline-flex">
+            <Skeleton className="w-[170px] h-4" />
+            <Skeleton className="w-[170px] h-3" />
+          </div>
+        </div>
+      </div>
+      <Skeleton className="w-20" />
+      <div className="flex flex-col gap-y-1">
+        <Skeleton className="w-full h-3" />
+        <Skeleton className="w-full h-3" />
+        <Skeleton className="w-fulla h-3" />
+      </div>
+      <div className="justify-start items-center gap-4 inline-flex">
+        <Skeleton className="w-[170px] h-4" />
+      </div>
+      <div className="justify-start items-center gap-4 inline-flex">
+        <Skeleton className="w-[170px] h-4" />
+      </div>
+    </Card>
+  );
+};
 
 {
   /* TODO: Handle comments */
@@ -33,8 +62,6 @@ export const ReviewCard = ({
   entityAddress,
 }: ReviewCardProps) => {
   const { formData, entityMeta, editId, setEditId } = usePageContext();
-
-  console.log("review", review.id);
 
   const handleCancel = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.stopPropagation();

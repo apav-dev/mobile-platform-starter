@@ -138,6 +138,7 @@ export const HolidayHoursForm = React.forwardRef<
             <button
               className="text-blue text-base font-lato-regular hover:underline"
               onClick={handleCancel}
+              type="button"
             >
               Cancel
             </button>

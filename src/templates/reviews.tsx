@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useEffect, useState } from "react";
 import "../index.css";
 import {
@@ -20,13 +19,14 @@ import {
 import { StarsIcon } from "../components/icons/StarsIcon";
 import { ContentContainer } from "../components/ContentContainer";
 import { Heading } from "../components/Heading";
-import { ReviewCard } from "../components/cards/ReviewCard";
+import { ReviewCard, ReviewCardSkeleton } from "../components/cards/ReviewCard";
 import { DownChevronIcon } from "../components/icons/DownChevronIcon";
-import { LeftChevronIcon } from "../components/icons/LeftChevronIcon";
-import { RightChevronIcon } from "../components/icons/RightChevronIcon";
+import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { Main } from "../components/layouts/Main";
 import { PageContextProvider } from "../components/utils/usePageContext";
 import { twMerge } from "tailwind-merge";
+import { useToast } from "../components/utils/useToast";
+import { ToastAction } from "../components/Toast";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return `reviews`;
@@ -49,6 +49,8 @@ export interface EntityReviewProps {
 const pageSizes = [5, 10, 25, 50];
 
 const Reviews = () => {
+  const { toast } = useToast();
+
   const [entityId, setEntityId] = useState<string | null>(null);
   const [pageSize, setPageSize] = useState(pageSizes[0]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -56,7 +58,7 @@ const Reviews = () => {
   const [prevPageTokens, setPrevPageTokens] = useState<string[]>([]);
   const [startIndex, setStartIndex] = useState<number>(1); // Starting index of current page
   const [formData, setFormData] = useState<Record<string, any>>({});
-  const [editId, setEditId] = useState("");
+  const [editId, setEditId] = useState<number | string>("");
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -79,11 +81,30 @@ const Reviews = () => {
 
   const commentMutation = useMutation({
     mutationFn: createReviewComment,
-    onSettled: () => {
+    onError: (error) => {
+      // TODO: handle error
+      // toast({
+      //   title: "Error",
+      //   description: `Failed to submit comment for review ${rev}`,
+      //   duration: 5000,
+      // });
+    },
+    onSuccess: () => {
+      const reviewId = Object.keys(formData)[0];
+      toast({
+        title: "Comment Submitted!",
+        description: "Comment successfully submitted for review",
+        duration: 5000,
+        action: (
+          <ToastAction
+            altText="View Review"
+            onClick={() => setEditId(Number(reviewId) ?? "")}
+          >
+            View Review
+          </ToastAction>
+        ),
+      });
       setFormData({});
-      //delay refetch to allow time for the comment to be indexed
-      // TODO: check if this is acceptable
-      // TODO: set loading state
       setTimeout(() => reviewsQuery.refetch(), 1000);
     },
   });
@@ -155,14 +176,40 @@ const Reviews = () => {
           { name: "Reviews" },
         ]}
       >
-        {reviews && (
+        {reviewsQuery.isLoading ? (
+          <ContentContainer>
+            <div className="flex flex-col gap-y-4">
+              <Heading title={"Reviews"} icon={<StarsIcon />} />
+              <div className="relative flex flex-col gap-y-2">
+                <div className="flex flex-col gap-y-4">
+                  {[...Array(pageSize)].map((_, index) => (
+                    <ReviewCardSkeleton key={index} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </ContentContainer>
+        ) : (
           <ContentContainer
             containerClassName={twMerge(editId && "overflow-y-hidden")}
           >
             <div className="flex flex-col gap-y-4">
-              <Heading title={"Reviews"} icon={<StarsIcon />} />
+              <button
+                onClick={() => {
+                  toast({
+                    title: "Comment Submitted!",
+                    description: "Comment successfully submitted for review",
+                    duration: 5000,
+                    action: (
+                      <ToastAction altText="Try again">View Review</ToastAction>
+                    ),
+                  });
+                }}
+              >
+                <Heading title={"Reviews"} icon={<StarsIcon />} />
+              </button>
               <div className="relative flex flex-col gap-y-2">
-                {reviews.map((review) => (
+                {reviews?.map((review) => (
                   <ReviewCard
                     key={review.id}
                     review={review}
@@ -210,13 +257,18 @@ const Reviews = () => {
                       <div className="self-stretch justify-start items-start gap-px inline-flex">
                         <button
                           className={twMerge(
-                            "w-11 h-11 px-2 py-1.5 bg-gray-100 rounded-tl-[3px] rounded-bl-[3px] justify-center items-center gap-2.5 flex",
-                            prevPageTokens.length === 0 && "bg-zinc-200"
+                            "w-11 h-11 px-2 py-1.5 bg-zinc-200 rounded-tl-[3px] rounded-bl-[3px] justify-center items-center gap-2.5 flex",
+                            prevPageTokens.length === 0 && "bg-gray-100"
                           )}
                           onClick={handlePrev}
                           disabled={prevPageTokens.length === 0}
                         >
-                          <LeftChevronIcon />
+                          <FaChevronLeft
+                            className={twMerge(
+                              "h-3 w-3",
+                              prevPageTokens.length === 0 && "text-gray-400"
+                            )}
+                          />
                         </button>
                         <button
                           className={twMerge(
@@ -230,7 +282,7 @@ const Reviews = () => {
                             undefined
                           }
                         >
-                          <RightChevronIcon />
+                          <FaChevronRight className="h-3 w-3" />
                         </button>
                       </div>
                     </div>
