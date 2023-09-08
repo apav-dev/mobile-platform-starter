@@ -226,12 +226,24 @@ export const ReviewCard = ({
               </div>
             </div>
           ))}
-          <TextareaForm
-            id={review.id.toString()}
-            submitButtonLabel="Submit Response"
-            placeholder="Write a Response..."
-            onCancel={handleCancel}
-          />
+          {review.comments?.length === 0 ? (
+            <TextareaForm
+              id={review.id.toString()}
+              submitButtonLabel="Submit Response"
+              placeholder="Write a Response..."
+              onCancel={handleCancel}
+            />
+          ) : (
+            <div className="px-4 justify-center items-center flex">
+              <button
+                className="text-blue text-base font-lato-regular hover:underline"
+                onClick={handleCancel}
+                type="button"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
         </ContentContainer>
       </EditPanel>
     </div>

@@ -51,9 +51,17 @@ async function createComment(
 
   const resp = await mgmtApiResp.json();
 
-  return {
-    body: JSON.stringify(resp),
-    headers: {},
-    statusCode: 200,
-  };
+  if (mgmtApiResp.status !== 201) {
+    return {
+      body: JSON.stringify(resp),
+      headers: {},
+      statusCode: mgmtApiResp.status,
+    };
+  } else {
+    return {
+      body: JSON.stringify(resp),
+      headers: {},
+      statusCode: 201,
+    };
+  }
 }

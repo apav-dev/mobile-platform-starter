@@ -8,17 +8,34 @@ import {
 } from "./Toast";
 import { FaCheckCircle } from "react-icons/fa";
 import { useToast } from "../components/utils/useToast";
+import { twMerge } from "tailwind-merge";
 
 export function Toaster() {
   const { toasts } = useToast();
 
   return (
     <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
+      {toasts.map(function ({
+        id,
+        title,
+        description,
+        action,
+        variant,
+        ...props
+      }) {
         return (
-          <Toast key={id} {...props} className="bg-white justify-between">
+          <Toast
+            key={id}
+            {...props}
+            className={twMerge(
+              "bg-white justify-between",
+              variant === "destructive" && "bg-red-300"
+            )}
+          >
             <div className="flex gap-3 items-center">
-              <FaCheckCircle className="text-green-500 w-6 h-6" />
+              {variant !== "destructive" && (
+                <FaCheckCircle className="text-green-500 w-6 h-6" />
+              )}
               <div className="grid gap-1">
                 {title && (
                   <ToastTitle className="font-lato-bold">{title}</ToastTitle>
