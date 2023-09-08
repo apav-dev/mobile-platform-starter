@@ -24,6 +24,18 @@
         "functionName": "PagesGenerator"
       },
       {
+        "pluginName": "social-82940",
+        "event": "API",
+        "functionName": "default",
+        "apiPath": "api/social",
+        "sourceFiles": [
+          {
+            "root": "dist/functions/social-82940",
+            "pattern": "*{.js,.ts}"
+          }
+        ]
+      },
+      {
         "pluginName": "id-81494",
         "event": "API",
         "functionName": "default",
