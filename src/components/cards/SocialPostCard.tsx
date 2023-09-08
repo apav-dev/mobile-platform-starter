@@ -2,10 +2,8 @@ import * as React from "react";
 import { Card } from "../Card";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { FacebookIcon } from "../icons/FacebookIcon";
-import { CommentBubbleIcon } from "../icons/CommentBubble";
-import { HeartIcon } from "../icons/HeartIcon";
 import { formatUtcDate } from "../../utils/formatUtcDate";
-import { ClockIcon } from "../icons/ClockIcon";
+import { FaClock, FaCommentAlt, FaHeart } from "react-icons/fa";
 
 export default function SocialPostCard({
   entityName,
@@ -29,8 +27,14 @@ export default function SocialPostCard({
         .join(", ")
     : "";
 
-  const publisherName =
+  const cleanedPublisher =
     publisher.substring(0, 1) + publisher.substring(1).toLowerCase();
+
+  const publisherName =
+    cleanedPublisher === "Googlemybusiness" ? "Google" : cleanedPublisher;
+
+  const truncatedText =
+    postText.length < 110 ? postText : postText.slice(0, 110) + "...";
 
   return (
     <Card>
@@ -54,7 +58,7 @@ export default function SocialPostCard({
         </div>
         <img src={postImage} className="w-full object-cover" />
         <p className="self-stretch text-gray-700 text-base font-lato-regular">
-          {postText}
+          {truncatedText}
         </p>
         <div className="flex justify-between items-center self-stretch">
           <div className="flex gap-1 items-center">
@@ -63,19 +67,19 @@ export default function SocialPostCard({
               {publisherName}
             </span>
           </div>
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             <div className="flex gap-1 items-center text-gray-700 text-base font-lato-regular">
-              <HeartIcon />
+              <FaHeart />
               <span>1</span>
             </div>
             <div className="flex gap-1 items-center text-gray-700 text-base font-lato-regular">
-              <CommentBubbleIcon />
+              <FaCommentAlt />
               <span>0</span>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="justify-start items-center gap-4 inline-flex">
-          <ClockIcon />
+          <FaClock className="text-gray-700" />
           <div className="text-gray-700 text-base font-lato-regular leading-tight">
             {formatUtcDate(datePosted)}
           </div>
