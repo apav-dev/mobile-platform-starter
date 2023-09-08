@@ -82,8 +82,6 @@ const Reviews = () => {
   const commentMutation = useMutation({
     mutationFn: createReviewComment,
     onError: (error) => {
-      // TODO: handle error
-      console.error(error);
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
@@ -92,7 +90,6 @@ const Reviews = () => {
       });
     },
     onSuccess: (response) => {
-      console.log(response);
       if (!response.meta.errors) {
         const reviewId = Object.keys(formData)[0];
         toast({
@@ -109,6 +106,7 @@ const Reviews = () => {
           ),
         });
       } else {
+        // TODO: throw error from api function to handle this in the onError callback
         toast({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",

@@ -7,7 +7,6 @@ export default async function entityReviews(
   request: SitesHttpRequest
 ): Promise<SitesHttpResponse> {
   const { method, pathParams, queryParams } = request;
-  console.log("request", request);
 
   switch (method) {
     case "GET":
