@@ -160,6 +160,7 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
             <button
               className="text-blue text-base font-lato-regular hover:underline"
               onClick={handleCancel}
+              type="button"
             >
               Cancel
             </button>

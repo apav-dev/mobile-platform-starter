@@ -10,7 +10,7 @@ export default async function entityReviews(
 
   switch (method) {
     case "GET":
-      return getEntityReviews(queryParams, pathParams.id);
+      return getEntityReviews(queryParams, pathParams.entityId);
     default:
       return { body: "Method not allowed", headers: {}, statusCode: 405 };
   }
@@ -18,16 +18,16 @@ export default async function entityReviews(
 
 async function getEntityReviews(
   queryParams: { [key: string]: string },
-  id?: string
+  entityId?: string
 ): Promise<SitesHttpResponse> {
-  if (!id) {
-    return { body: "Missing entity id", headers: {}, statusCode: 400 };
+  if (!entityId) {
+    return { body: "Missing entityId", headers: {}, statusCode: 400 };
   }
 
   const params = new URLSearchParams({
     api_key: YEXT_PUBLIC_MGMT_API_KEY,
     v: "20230901",
-    entityIds: id,
+    entityIds: entityId,
   });
 
   const validatedQueryParams = validateAndStringifyQueryParams(queryParams);

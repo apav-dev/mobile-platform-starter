@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useEffect, useState } from "react";
 import "../index.css";
 import {
@@ -8,25 +7,26 @@ import {
   TemplateRenderProps,
   TemplateProps,
 } from "@yext/pages";
-import { useQuery } from "@tanstack/react-query";
-import { fetchLocation, fetchReviews } from "../utils/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createReviewComment, fetchLocation, fetchReviews } from "../utils/api";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-} from "@radix-ui/react-dropdown-menu";
+} from "../components/Dropdown";
 import { StarsIcon } from "../components/icons/StarsIcon";
 import { ContentContainer } from "../components/ContentContainer";
 import { Heading } from "../components/Heading";
-import { ReviewCard } from "../components/cards/ReviewCard";
+import { ReviewCard, ReviewCardSkeleton } from "../components/cards/ReviewCard";
 import { DownChevronIcon } from "../components/icons/DownChevronIcon";
-import { LeftChevronIcon } from "../components/icons/LeftChevronIcon";
-import { RightChevronIcon } from "../components/icons/RightChevronIcon";
+import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { Main } from "../components/layouts/Main";
 import { PageContextProvider } from "../components/utils/usePageContext";
 import { twMerge } from "tailwind-merge";
+import { useToast } from "../components/utils/useToast";
+import { ToastAction } from "../components/Toast";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return `reviews`;
@@ -49,6 +49,8 @@ export interface EntityReviewProps {
 const pageSizes = [5, 10, 25, 50];
 
 const Reviews = () => {
+  const { toast } = useToast();
+
   const [entityId, setEntityId] = useState<string | null>(null);
   const [pageSize, setPageSize] = useState(pageSizes[0]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -56,7 +58,7 @@ const Reviews = () => {
   const [prevPageTokens, setPrevPageTokens] = useState<string[]>([]);
   const [startIndex, setStartIndex] = useState<number>(1); // Starting index of current page
   const [formData, setFormData] = useState<Record<string, any>>({});
-  const [editId, setEditId] = useState("");
+  const [editId, setEditId] = useState<number | string>("");
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -76,6 +78,60 @@ const Reviews = () => {
     retry: false,
     queryFn: () => fetchLocation(entityId),
   });
+
+  const commentMutation = useMutation({
+    mutationFn: createReviewComment,
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    },
+    onSuccess: (response) => {
+      if (!response.meta.errors) {
+        const reviewId = Object.keys(formData)[0];
+        toast({
+          title: "Comment Submitted!",
+          description: "Comment successfully submitted for review",
+          duration: 5000,
+          action: (
+            <ToastAction
+              altText="View Review"
+              onClick={() => setEditId(Number(reviewId) ?? "")}
+            >
+              View Review
+            </ToastAction>
+          ),
+        });
+      } else {
+        // TODO: throw error from api function to handle this in the onError callback
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "There was a problem with your request.",
+        });
+      }
+
+      setFormData({});
+      setTimeout(() => reviewsQuery.refetch(), 1000);
+    },
+  });
+
+  useEffect(() => {
+    // check how many keys are in the formData object. If greater than 1, log an error
+    if (Object.keys(formData).length > 1) {
+      console.error(
+        "The formData object should only have one key-value pair. Please check the ReviewCard component."
+      );
+    } else if (entityId && Object.keys(formData).length === 1) {
+      // If there is only one key-value pair, then it is the comment to be submitted. the key is the reviewId
+      const reviewId = Object.keys(formData)[0];
+      const content = formData[reviewId];
+      commentMutation.mutate({ entityId, reviewId, content });
+    }
+  }, [formData]);
 
   const handleNext = () => {
     if (reviewsQuery.data?.response.nextPageToken) {
@@ -130,88 +186,135 @@ const Reviews = () => {
           { name: "Reviews" },
         ]}
       >
-        {reviews && (
+        {reviewsQuery.isLoading ? (
+          <ContentContainer>
+            <div className="flex flex-col gap-y-4">
+              <Heading title={"Reviews"} icon={<StarsIcon />} />
+              <div className="relative flex flex-col gap-y-2">
+                <div className="flex flex-col gap-y-4">
+                  {[...Array(pageSize)].map((_, index) => (
+                    <ReviewCardSkeleton key={index} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </ContentContainer>
+        ) : (
           <ContentContainer
             containerClassName={twMerge(editId && "overflow-y-hidden")}
           >
             <div className="flex flex-col gap-y-4">
               <Heading title={"Reviews"} icon={<StarsIcon />} />
-              <div className="relative flex flex-col gap-y-2">
-                {reviews.map((review) => (
-                  <ReviewCard
-                    key={review.id}
-                    review={review}
-                    entityAddress={entityAddress}
-                    entityName={entityName}
-                  />
-                ))}
-                <div className="justify-between items-start gap-4 flex">
-                  <div className="justify-start items-center gap-2 flex">
-                    <div className="text-gray-700 text-base font-lato-regular leading-tight">
-                      Show
-                    </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-start items-center gap-2 inline-flex font-lato-regular">
-                        <div className="flex gap-x-2 ">
-                          {pageSize}
-                          <div className="my-auto">
-                            <DownChevronIcon />
+              <>
+                {reviewsQuery?.data?.response?.count &&
+                reviewsQuery.data.response.count > 0 ? (
+                  <div className="relative flex flex-col gap-y-2">
+                    {reviews?.map((review) => (
+                      <ReviewCard
+                        key={review.id}
+                        review={review}
+                        entityAddress={entityAddress}
+                        entityName={entityName}
+                      />
+                    ))}
+                    <div className="justify-between items-start gap-4 flex">
+                      <div className="justify-start items-center gap-2 flex">
+                        <div className="text-gray-700 text-base font-lato-regular leading-tight">
+                          Show
+                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-start items-center gap-2 inline-flex font-lato-regular">
+                            <div className="flex gap-x-2 ">
+                              {pageSize}
+                              <div className="my-auto">
+                                <DownChevronIcon />
+                              </div>
+                            </div>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="font-lato-regular bg-white min-w-[6rem]">
+                            {pageSizes
+                              .filter((size) => size !== pageSize)
+                              .map((size) => (
+                                <DropdownMenuItem
+                                  key={size}
+                                  onSelect={() => setPageSize(size)}
+                                >
+                                  <DropdownMenuLabel>{size}</DropdownMenuLabel>
+                                </DropdownMenuItem>
+                              ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                      <div className="justify-start items-center gap-2 flex pb-8">
+                        <div className="text-gray-700 text-base font-lato leading-tight">
+                          <span className="font-lato-bold">
+                            {startIndex}-{endIndex}
+                          </span>
+                          <span className="font-lato-regular"> of</span>
+                          <span className="font-lato-bold"> {count}</span>
+                        </div>
+                        <div className="justify-center items-center flex">
+                          <div className="self-stretch justify-start items-start gap-px inline-flex">
+                            <button
+                              className={twMerge(
+                                "w-11 h-11 px-2 py-1.5 bg-zinc-200 rounded-tl-[3px] rounded-bl-[3px] justify-center items-center gap-2.5 flex",
+                                prevPageTokens.length === 0 && "bg-gray-100"
+                              )}
+                              onClick={handlePrev}
+                              disabled={prevPageTokens.length === 0}
+                            >
+                              <FaChevronLeft
+                                className={twMerge(
+                                  "h-3 w-3",
+                                  prevPageTokens.length === 0 && "text-gray-400"
+                                )}
+                              />
+                            </button>
+                            <button
+                              className={twMerge(
+                                "w-11 h-11 px-2 py-1.5 bg-zinc-200 rounded-tr-[3px] rounded-br-[3px] justify-center items-center gap-2.5 flex",
+                                (reviewsQuery.data?.response.nextPageToken ===
+                                  undefined ||
+                                  endIndex === count) &&
+                                  "bg-gray-100"
+                              )}
+                              onClick={handleNext}
+                              disabled={
+                                reviewsQuery.data?.response.nextPageToken ===
+                                  undefined || endIndex === count
+                              }
+                            >
+                              <FaChevronRight
+                                className={twMerge(
+                                  "h-3 w-3",
+                                  (reviewsQuery.data?.response.nextPageToken ===
+                                    undefined ||
+                                    endIndex === count) &&
+                                    "text-gray-400"
+                                )}
+                              />
+                            </button>
                           </div>
                         </div>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="font-lato-regular bg-white min-w-[6rem]">
-                        {pageSizes
-                          .filter((size) => size !== pageSize)
-                          .map((size) => (
-                            <DropdownMenuItem
-                              key={size}
-                              onSelect={() => setPageSize(size)}
-                            >
-                              <DropdownMenuLabel>{size}</DropdownMenuLabel>
-                            </DropdownMenuItem>
-                          ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                  <div className="justify-start items-center gap-2 flex pb-8">
-                    <div className="text-gray-700 text-base font-lato leading-tight">
-                      <span className="font-lato-bold">
-                        {startIndex}-{endIndex}
-                      </span>
-                      <span className="font-lato-regular"> of</span>
-                      <span className="font-lato-bold"> {count}</span>
-                    </div>
-                    <div className="justify-center items-center flex">
-                      <div className="self-stretch justify-start items-start gap-px inline-flex">
-                        <button
-                          className={twMerge(
-                            "w-11 h-11 px-2 py-1.5 bg-gray-100 rounded-tl-[3px] rounded-bl-[3px] justify-center items-center gap-2.5 flex",
-                            prevPageTokens.length === 0 && "bg-zinc-200"
-                          )}
-                          onClick={handlePrev}
-                          disabled={prevPageTokens.length === 0}
-                        >
-                          <LeftChevronIcon />
-                        </button>
-                        <button
-                          className={twMerge(
-                            "w-11 h-11 px-2 py-1.5 bg-zinc-200 rounded-tr-[3px] rounded-br-[3px] justify-center items-center gap-2.5 flex",
-                            reviewsQuery.data?.response.nextPageToken ===
-                              undefined && "bg-gray-100"
-                          )}
-                          onClick={handleNext}
-                          disabled={
-                            reviewsQuery.data?.response.nextPageToken ===
-                            undefined
-                          }
-                        >
-                          <RightChevronIcon />
-                        </button>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                ) : (
+                  <>
+                    <div className="px-4 justify-center items-center flex flex-col gap-y-4">
+                      <div className="text-gray-700 text-base font-lato-bold leading-tight">
+                        {`No reviews submitted for entity ${entityId}`}
+                      </div>
+                      <a
+                        className="text-blue text-base font-lato-regular hover:underline"
+                        href="/"
+                      >
+                        Return Home
+                      </a>
+                    </div>
+                  </>
+                )}
+              </>
             </div>
           </ContentContainer>
         )}
