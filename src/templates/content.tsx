@@ -8,7 +8,7 @@ import {
   TemplateRenderProps,
   TemplateProps,
 } from "@yext/pages";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Heading } from "../components/Heading";
 import { ContentContainer } from "../components/ContentContainer";
 import { HolidayHoursCard } from "../components/cards/HolidayHoursCard";
@@ -19,8 +19,10 @@ import { TextCard } from "../components/cards/TextCard";
 import { LocationPinIcon } from "../components/icons/LocationPinIcon";
 import { Main } from "../components/layouts/Main";
 import { PageContextProvider } from "../components/utils/usePageContext";
-import { fetchLocation } from "../utils/api";
+import { editLocation, fetchLocation } from "../utils/api";
 import { twMerge } from "tailwind-merge";
+import { toast } from "../components/utils/useToast";
+import { set } from "date-fns";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return "content";
@@ -36,6 +38,11 @@ export const getHeadConfig: GetHeadConfig<
   };
 };
 
+// TODO: submit and toast
+// TODO: handle error
+// TODO: handle loading
+// TODO: Upload Images from Phone
+// TODO: Upload Images from Assets
 const Content = () => {
   const [formData, setFormData] = React.useState<Record<string, any>>({});
   const [entityId, setEntityId] = useState<string | null>(null);
@@ -47,18 +54,40 @@ const Content = () => {
     setEntityId(entityId);
   }, []);
 
-  const { isLoading, isError, data, error } = useQuery({
+  const contentQuery = useQuery({
     queryKey: ["entityId", entityId],
-    enabled: !!entityId,
+    enabled: !!entityId && Object.keys(formData).length === 0,
     retry: false,
     queryFn: () => fetchLocation(entityId),
   });
 
-  const location = data?.response.docs?.[0];
+  const location = contentQuery.data?.response;
+
+  const contentMutation = useMutation({
+    mutationFn: editLocation,
+    onError: (error) => {
+      // toast({
+      //   variant: "destructive",
+      //   title: "Uh oh! Something went wrong.",
+      //   description: "There was a problem with your request.",
+      //   action: <ToastAction altText="Try again">Try again</ToastAction>,
+      // });
+    },
+    onSuccess: (response) => {
+      setFormData({});
+      contentQuery.refetch();
+      toast({
+        title: "Entity Updated",
+        description: "Successfully updated entity.",
+        duration: 5000,
+      });
+    },
+  });
 
   useEffect(() => {
-    // TODO: submit form data
-    console.log("formData", formData);
+    if (entityId && Object.keys(formData).length > 0) {
+      contentMutation.mutate({ entityId, location: formData });
+    }
   }, [formData]);
 
   return (
@@ -92,7 +121,7 @@ const Content = () => {
               <div className="justify-start items-center gap-2 inline-flex">
                 <div className="text-gray-700 font-lato-bold">ID:</div>
                 <div className="text-gray-700 font-lato-regular">
-                  {location.id}
+                  {location.meta.id}
                 </div>
                 <div className="text-gray-700 text-[13px] font-bold">|</div>
                 <div className="justify-start items-center gap-2 flex">
@@ -100,7 +129,7 @@ const Content = () => {
                   <div className="inline-flex items-center gap-1">
                     <LocationPinIcon />
                     <div className="text-gray-700 font-lato-regular">
-                      {location.meta.entityType.id}
+                      {location.meta.entityType}
                     </div>
                   </div>
                 </div>

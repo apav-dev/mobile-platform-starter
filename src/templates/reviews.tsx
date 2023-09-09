@@ -8,7 +8,11 @@ import {
   TemplateProps,
 } from "@yext/pages";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createReviewComment, fetchLocation, fetchReviews } from "../utils/api";
+import {
+  createReviewComment,
+  fetchLocationFromContentApi,
+  fetchReviews,
+} from "../utils/api";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -76,7 +80,7 @@ const Reviews = () => {
     queryKey: ["entityId", entityId],
     enabled: !!entityId,
     retry: false,
-    queryFn: () => fetchLocation(entityId),
+    queryFn: () => fetchLocationFromContentApi(entityId),
   });
 
   const commentMutation = useMutation({

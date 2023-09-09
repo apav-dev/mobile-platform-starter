@@ -19,7 +19,38 @@ import {
 
 export const fetchLocation = async (
   entityId: string
-): Promise<YextResponse<YextContent<Location>>> => {
+): Promise<YextResponse<Location>> => {
+  const response = await fetch(`api/entity/${entityId}`);
+  console.log(response);
+  const data = await response.json();
+  return data;
+};
+
+export const editLocation = async ({
+  entityId,
+  location,
+}: {
+  entityId: string;
+  location: Partial<Location>;
+}): Promise<YextResponse<Location>> => {
+  const response = await fetch(`api/entity/${entityId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(location),
+  });
+  if (response.status !== 200) {
+    throw new Error("Failed to update location");
+  } else {
+    const data = await response.json();
+    return data;
+  }
+};
+
+export const fetchLocationFromContentApi = async (
+  entityId: string
+): Promise<YextResponse<Location>> => {
   const response = await fetch(
     `https://cdn.yextapis.com/v2/accounts/me/content/locations?api_key=${YEXT_PUBLIC_CONTENT_API_KEY}&v=20230817&id=${entityId}`
   );

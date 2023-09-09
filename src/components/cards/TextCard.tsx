@@ -8,6 +8,8 @@ import EditPanel from "../EditPanel";
 import Header from "../Header";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { Heading } from "../Heading";
+import { render } from "react-dom";
+import { renderEntityText } from "../utils/renderEntityText";
 
 export interface TextCardProps {
   title: string;
@@ -46,7 +48,7 @@ export const TextCard = ({
         <div className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2">
           {title}
         </div>
-        <div className="text-gray-700 font-lato-regular">{value}</div>
+        {renderEntityText(value ?? "")}
       </Card>
       <EditPanel open={editId === fieldId}>
         <Header
