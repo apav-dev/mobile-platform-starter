@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState } from "react";
 import { YextIcon } from "./icons/YextIcon";
 import { MenuIcon } from "./icons/MenuIcon";
@@ -15,27 +14,27 @@ const footerLinks = [
   {
     icon: HomeIcon,
     title: "Home",
-    link: "#",
+    link: "/",
   },
   {
     icon: GraphIcon,
     title: "Content",
-    link: "#",
+    link: "/content",
   },
   {
     icon: SocialIcon,
     title: "Social",
-    link: "#",
+    link: "/social",
   },
   {
     icon: StarsIcon,
     title: "Reviews",
-    link: "#",
+    link: "/reviews",
   },
   {
     icon: AnalyticsIcon,
     title: "Analytics",
-    link: "#",
+    link: "/analytics",
   },
 ];
 

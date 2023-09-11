@@ -8,8 +8,8 @@ import EditPanel from "../EditPanel";
 import Header from "../Header";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { Heading } from "../Heading";
-import { render } from "react-dom";
 import { renderEntityText } from "../utils/renderEntityText";
+import Skeleton from "../Skeleton";
 
 export interface TextCardProps {
   title: string;
@@ -19,6 +19,15 @@ export interface TextCardProps {
   minLen?: number;
   maxLen?: number;
 }
+
+export const TextCardSkeleton = () => {
+  return (
+    <Card containerClassName="flex flex-col gap-y-4">
+      <Skeleton className="w-20 h-3" />
+      <Skeleton className="w-[170px] h-3" />
+    </Card>
+  );
+};
 
 export const TextCard = ({
   title,

@@ -73,12 +73,22 @@ export const HolidayHoursForm = React.forwardRef<
       form.setValue(`${id}.holidayHours`, holidayHours);
     };
 
-    const onDelete = (
+    const handleDeleteHolidayHours = (
       e: React.MouseEvent<HTMLButtonElement>,
       index: number
     ) => {
       const holidayHours = form.getValues(id).holidayHours;
       holidayHours.splice(index, 1);
+      form.setValue(`${id}.holidayHours`, holidayHours);
+    };
+
+    const handleAddHolidayHours = () => {
+      const holidayHours = form.getValues(id).holidayHours;
+      const today = new Date();
+      holidayHours.push({
+        date: today.toISOString().split("T")[0],
+        isClosed: true,
+      });
       form.setValue(`${id}.holidayHours`, holidayHours);
     };
 
@@ -99,6 +109,13 @@ export const HolidayHoursForm = React.forwardRef<
     return (
       <Form {...form}>
         <FormLabel className="font-lato-bold text-base">{label}</FormLabel>
+        <button
+          type="button"
+          onClick={handleAddHolidayHours}
+          className="px-4 my-3 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular"
+        >
+          + Add Holiday Hours
+        </button>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
           className="space-y-3 mt-4"
@@ -120,7 +137,7 @@ export const HolidayHoursForm = React.forwardRef<
                         index={index}
                         onValueChange={onValueChange}
                         value={holidayHour}
-                        onDelete={onDelete}
+                        onDelete={handleDeleteHolidayHours}
                       />
                     )}
                   />

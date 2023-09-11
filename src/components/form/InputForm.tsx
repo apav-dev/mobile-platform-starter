@@ -74,6 +74,7 @@ const InputForm = React.forwardRef<HTMLInputElement, InputProps>(
         ...prev,
         [id]: values[id],
       }));
+      // form.setValue(id, values[id]);
       form.reset();
     };
 

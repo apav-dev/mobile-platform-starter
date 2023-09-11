@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Card } from "../Card";
 import { FormLabel, FormMessage } from "./Form";
 import { RadioGroup, RadioGroupItem } from "../Radio";

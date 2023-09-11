@@ -65,6 +65,7 @@ const Reviews = () => {
   const [editId, setEditId] = useState<number | string>("");
 
   useEffect(() => {
+    debugger;
     const urlParams = new URLSearchParams(window.location.search);
     const entityId = urlParams.get("entityId");
     setEntityId(entityId);
