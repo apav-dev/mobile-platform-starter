@@ -64,7 +64,7 @@ const Content = () => {
   const contentQuery = useQuery({
     queryKey: ["entityId", entityId],
     // TODO: why is this refetching on photo upload?
-    enabled: !!entityId && Object.keys(formData).length === 0 && !editId,
+    enabled: !!entityId,
     retry: false,
     queryFn: () => fetchLocation(entityId),
   });
@@ -82,7 +82,7 @@ const Content = () => {
     },
     onSuccess: (response) => {
       setFormData({});
-      // contentQuery.refetch();
+      contentQuery.refetch();
       toast({
         title: "Entity Updated",
         description: "Successfully updated entity.",
@@ -93,7 +93,6 @@ const Content = () => {
 
   useEffect(() => {
     if (entityId && Object.keys(formData).length > 0) {
-      console.log("formData", formData);
       contentMutation.mutate({ entityId, location: formData });
     }
   }, [formData]);
