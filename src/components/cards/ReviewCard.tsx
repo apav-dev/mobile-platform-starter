@@ -16,12 +16,42 @@ import { Heading } from "../Heading";
 import Header from "../Header";
 import { usePageContext } from "../utils/usePageContext";
 import { formatUtcDate } from "../../utils/formatUtcDate";
+import { useEffect } from "react";
+import Skeleton from "../Skeleton";
 
 export interface ReviewCardProps {
   review: Review;
   entityName?: string;
   entityAddress?: Address;
 }
+
+export const ReviewCardSkeleton = () => {
+  return (
+    <Card containerClassName="flex flex-col gap-y-4">
+      <div className="justify-between items-center gap-4 inline-flex">
+        <div className="flex gap-x-4">
+          <Skeleton className="rounded-full h-5 w-5" />
+          <div className="flex-col gap-y-1 justify-center items-start inline-flex">
+            <Skeleton className="w-[170px] h-4" />
+            <Skeleton className="w-[170px] h-3" />
+          </div>
+        </div>
+      </div>
+      <Skeleton className="w-20" />
+      <div className="flex flex-col gap-y-1">
+        <Skeleton className="w-full h-3" />
+        <Skeleton className="w-full h-3" />
+        <Skeleton className="w-fulla h-3" />
+      </div>
+      <div className="justify-start items-center gap-4 inline-flex">
+        <Skeleton className="w-[170px] h-4" />
+      </div>
+      <div className="justify-start items-center gap-4 inline-flex">
+        <Skeleton className="w-[170px] h-4" />
+      </div>
+    </Card>
+  );
+};
 
 {
   /* TODO: Handle comments */
@@ -37,6 +67,12 @@ export const ReviewCard = ({
     e?.stopPropagation();
     setEditId?.("");
   };
+
+  useEffect(() => {
+    if (formData[review.id.toString()]) {
+      setEditId?.("");
+    }
+  }, [formData, review]);
 
   // address string where parts of the address are separated by commas and parts maybe missing so don't use commas to separate and don't show undefined parts
   const addressStr = entityAddress
@@ -190,12 +226,24 @@ export const ReviewCard = ({
               </div>
             </div>
           ))}
-          <TextareaForm
-            id={"content"}
-            submitButtonLabel="Submit Response"
-            placeholder="Write a Response..."
-            onCancel={handleCancel}
-          />
+          {review.comments?.length === 0 ? (
+            <TextareaForm
+              id={review.id.toString()}
+              submitButtonLabel="Submit Response"
+              placeholder="Write a Response..."
+              onCancel={handleCancel}
+            />
+          ) : (
+            <div className="px-4 justify-center items-center flex">
+              <button
+                className="text-blue text-base font-lato-regular hover:underline"
+                onClick={handleCancel}
+                type="button"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
         </ContentContainer>
       </EditPanel>
     </div>

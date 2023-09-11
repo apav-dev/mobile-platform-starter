@@ -68,6 +68,7 @@ const InputForm = React.forwardRef<HTMLInputElement, InputProps>(
 
     // 2. Define a submit handler.
     const handleSubmit = (values: z.infer<typeof formSchema>) => {
+      console.log("values", values);
       // Do something with the form values.
       // ✅ This will be type-safe and validated.
       setFormData((prev) => ({
@@ -117,6 +118,7 @@ const InputForm = React.forwardRef<HTMLInputElement, InputProps>(
             <button
               className="text-blue text-base font-lato-regular hover:underline"
               onClick={handleCancel}
+              type="button"
             >
               Cancel
             </button>

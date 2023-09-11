@@ -70,3 +70,30 @@ export const fetchSocialPosts = async (
   const data = await response.json();
   return data;
 };
+
+export const createReviewComment = async ({
+  entityId,
+  reviewId,
+  content,
+}: {
+  entityId: string;
+  reviewId: string;
+  content: string;
+}): Promise<YextResponse<{ id: string }>> => {
+  const response = await fetch(
+    `/api/entity/${entityId}/review/${reviewId}/comment`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        content,
+        parentId: reviewId,
+      }),
+    }
+  );
+
+  const data = await response.json();
+  return data;
+};
