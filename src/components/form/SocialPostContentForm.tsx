@@ -73,6 +73,7 @@ const SocialPostContentForm = ({ cancelFunc }) => {
           </label>
           <Textarea
             defaultValue={formData.postText || null}
+            placeholder="Write your post content here..."
             maxLength={maxContentLength}
             id="postText"
             {...register("postText", {
@@ -129,7 +130,7 @@ const SocialPostContentForm = ({ cancelFunc }) => {
                 {...restCtaField}
                 classNames={{
                   control: () =>
-                    "bg-gray-300 text-gray-700 text-base font-lato-regular rounded-sm flex w-full py-4 px-8",
+                    "bg-gray-300 text-gray-700 text-base font-lato-regular rounded-sm flex w-full py-3 px-4",
                   menu: () =>
                     "bg-white rounded-sm shadow border border-zinc-200 mt-2 p-4",
                   menuList: () =>
@@ -140,7 +141,7 @@ const SocialPostContentForm = ({ cancelFunc }) => {
                 <input
                   type="text"
                   {...register("ctaUrl")}
-                  className="border-zinc-200 border p-4 rounded-sm font-lato-regular text-base text-gray-500"
+                  className="border-zinc-200 border py-3 px-4 rounded-sm font-lato-regular text-base text-gray-500"
                   placeholder="Enter URL"
                 />
               )}
@@ -148,7 +149,7 @@ const SocialPostContentForm = ({ cancelFunc }) => {
                 <input
                   type="text"
                   {...register("ctaPhone")}
-                  className="border-zinc-200 border p-4 rounded-sm font-lato-regular text-base text-gray-500"
+                  className="border-zinc-200 border py-3 px-4 rounded-sm font-lato-regular text-base text-gray-500"
                   placeholder="Phone Number"
                 />
               )}
@@ -162,7 +163,10 @@ const SocialPostContentForm = ({ cancelFunc }) => {
           )}
         </div>
         <div className="flex flex-col gap-2 mt-6">
-          <Button variant={"brand-primary"}>
+          <Button
+            variant={"brand-primary"}
+            disabled={addingGoogleInfo || (!formData.postText && !watchText)}
+          >
             <input type="submit" value="Continue" />
           </Button>
           <Button
@@ -180,7 +184,7 @@ const SocialPostContentForm = ({ cancelFunc }) => {
             <span>Back</span>
           </Button>
           <Button
-            className="text-blue font-lato-regular text-base"
+            className="text-blue font-lato-regular text-base w-fit self-center"
             onClick={cancelFunc}
           >
             <span>Cancel</span>

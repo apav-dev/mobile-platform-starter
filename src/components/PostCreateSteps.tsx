@@ -40,7 +40,7 @@ const PostCreateSteps = ({ currentStep }: PostCreateStepProps) => {
           )}
         />
       </div>
-      <div className="font-lato-regular flex justify-between px-4">
+      <div className="font-lato-regular flex justify-between px-4 text-sm">
         <span className="text-blue">{stepNameMap[`${currentStep}`]}</span>
         <span className="text-gray-500">{`(Step ${currentStep} of 4)`}</span>
       </div>

@@ -22,6 +22,7 @@ const PublisherSelectForm = ({ cancelFunc }) => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormInput>();
   const onSubmit: SubmitHandler<FormInput> = (data) => {
@@ -31,6 +32,9 @@ const PublisherSelectForm = ({ cancelFunc }) => {
     }));
     setCreatePostStep(2);
   };
+
+  const watchPublishers = watch("publishers", []);
+  console.log("watch", watchPublishers);
 
   return (
     <>
@@ -77,11 +81,14 @@ const PublisherSelectForm = ({ cancelFunc }) => {
               At least one publisher must be selected
             </span>
           )}
-          <Button variant={"brand-primary"}>
+          <Button
+            variant={"brand-primary"}
+            disabled={!(watchPublishers.length > 0) && !formData.publishers}
+          >
             <input type="submit" value="Continue" />
           </Button>
           <Button
-            className="text-blue font-lato-regular text-base"
+            className="text-blue font-lato-regular text-base w-fit self-center"
             onClick={cancelFunc}
           >
             <div>Cancel</div>
