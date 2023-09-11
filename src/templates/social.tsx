@@ -23,7 +23,7 @@ import { Heading } from "../components/Heading";
 import { LeftChevronIcon } from "../components/icons/LeftChevronIcon";
 import { RightChevronIcon } from "../components/icons/RightChevronIcon";
 import { Main } from "../components/layouts/Main";
-import { PageContextProvider } from "../components/utils/usePageContext";
+import { PageContextProvider } from "../components/utils/useSocialPageContext";
 import { twMerge } from "tailwind-merge";
 import { Button } from "../components/Button";
 import SocialPostCard from "../components/cards/SocialPostCard";
@@ -50,13 +50,13 @@ export interface EntityReviewProps {
 
 const Social = () => {
   const [entityId, setEntityId] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
   const [pageToken, setPageToken] = useState<string | undefined>(undefined);
   const [prevPageTokens, setPrevPageTokens] = useState<string[]>([]);
   const [startIndex, setStartIndex] = useState<number>(1); // Starting index of current page
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [editId, setEditId] = useState("");
-  const [creatingPost, setCreatingPost] = useState(true);
+  const [creatingPost, setCreatingPost] = useState(false);
+  const [createPostStep, setCreatePostStep] = useState(0);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -103,7 +103,8 @@ const Social = () => {
   const entityName = entityQuery.data?.response.docs?.[0]?.name;
   const entityAddress = entityQuery.data?.response.docs?.[0]?.address;
   const socialPosts = socialsQuery.data?.response.posts;
-  console.log("social posts", socialPosts);
+  // console.log("social posts", socialPosts);
+  console.log(formData);
 
   if (entityQuery.isLoading) {
     return (
@@ -139,6 +140,10 @@ const Social = () => {
         setFormData,
         editId,
         setEditId,
+        creatingPost,
+        createPostStep,
+        setCreatePostStep,
+        setCreatingPost,
       }}
     >
       <Main
@@ -172,7 +177,10 @@ const Social = () => {
                 <Heading title={"Social Posts"} icon={<SocialIcon />} />
                 <Button
                   variant="brand-primary"
-                  onClick={() => setCreatingPost(true)}
+                  onClick={() => {
+                    setCreatingPost(true);
+                    setCreatePostStep(1);
+                  }}
                 >
                   + Create New Post
                 </Button>

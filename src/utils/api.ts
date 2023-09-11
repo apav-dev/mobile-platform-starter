@@ -56,7 +56,7 @@ export const fetchSocialPosts = async (
   pageToken?: string
 ): Promise<YextResponse<any>> => {
   const params = new URLSearchParams({
-    api_key: YEXT_PUBLIC_MGMT_API_KEY,
+    api_key: YEXT_PUBLIC_SOCIAL_TEST_API_KEY,
     v: "20230901",
     entityIds: entityId,
   });

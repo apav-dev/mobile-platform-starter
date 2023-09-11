@@ -6,8 +6,10 @@ module.exports = {
         blue: "#1564F9",
         "gray-300": "#E1E5E8",
         "gray-400": "#C4CBD0",
+        "gray-500": "#686F7D",
         "gray-700": "#374151",
         "gray-900": "#111827",
+        error: "#BA031C",
       },
       screens: {
         xs: "375px",
