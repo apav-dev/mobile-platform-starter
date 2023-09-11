@@ -64,7 +64,8 @@ const Content = () => {
   const contentQuery = useQuery({
     queryKey: ["entityId", entityId],
     // TODO: why is this refetching on photo upload?
-    enabled: !!entityId,
+    // enabled: !!entityId,
+    // enabled: false,
     retry: false,
     queryFn: () => fetchLocation(entityId),
   });
@@ -119,7 +120,7 @@ const Content = () => {
           { name: location?.name ?? "" },
         ]}
       >
-        {contentQuery.isLoading || contentQuery.isRefetching ? (
+        {contentQuery.isLoading ? (
           <ContentContainer>
             <div className="flex flex-col gap-y-4">
               <HeadingSkeleton />

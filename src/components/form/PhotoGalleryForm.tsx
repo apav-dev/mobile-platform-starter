@@ -125,8 +125,6 @@ export const PhotoGalleryForm = React.forwardRef<
   };
 
   const handleAddImage = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
     const images = form.getValues(id);
     images.push({
       image: {

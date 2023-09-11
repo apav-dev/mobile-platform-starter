@@ -19,7 +19,7 @@ const footerLinks = [
   {
     icon: GraphIcon,
     title: "Content",
-    link: "/content",
+    link: "/content?entityId=facility-2",
   },
   {
     icon: SocialIcon,
@@ -29,7 +29,7 @@ const footerLinks = [
   {
     icon: StarsIcon,
     title: "Reviews",
-    link: "/reviews",
+    link: "/reviews?entityId=facility-2",
   },
   {
     icon: AnalyticsIcon,
