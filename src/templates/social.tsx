@@ -20,15 +20,16 @@ import {
 import { SocialIcon } from "../components/icons/SocialIcon";
 import { ContentContainer } from "../components/ContentContainer";
 import { Heading } from "../components/Heading";
-import { LeftChevronIcon } from "../components/icons/LeftChevronIcon";
-import { RightChevronIcon } from "../components/icons/RightChevronIcon";
 import { Main } from "../components/layouts/Main";
 import { PageContextProvider } from "../components/utils/useSocialPageContext";
 import { twMerge } from "tailwind-merge";
 import { Button } from "../components/Button";
 import SocialPostCard from "../components/cards/SocialPostCard";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { IoShareSocialOutline } from "react-icons/io5";
 import SocialPostCreationForm from "../components/form/SocialPostCreationForm";
+import { FaNode } from "react-icons/fa";
+import { BsNodePlus } from "react-icons/bs";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return `social`;
@@ -174,7 +175,10 @@ const Social = () => {
               <SocialPostCreationForm entityId={entityId} />
             ) : (
               <div className="flex flex-col gap-y-4">
-                <Heading title={"Social Posts"} icon={<SocialIcon />} />
+                <Heading
+                  title={"Social Posts"}
+                  icon={<IoShareSocialOutline className="text-xl" />}
+                />
                 <Button
                   variant="brand-primary"
                   onClick={() => {

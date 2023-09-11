@@ -7,6 +7,7 @@ import SocialPostContentForm from "./SocialPostContentForm";
 import { usePageContext } from "../utils/useSocialPageContext";
 import { twMerge } from "tailwind-merge";
 import PostCreateSteps from "../PostCreateSteps";
+import { IoShareSocialOutline } from "react-icons/io5";
 
 const SocialPostCreationForm = ({ entityId }) => {
   const {
@@ -28,9 +29,14 @@ const SocialPostCreationForm = ({ entityId }) => {
   }, [formData]);
 
   return (
-    <div className="flex flex-col gap-y-4">
-      <Heading title={"Create New Post"} icon={<SocialIcon />} />
-      <div className="w-full border-t border-gray-300" />
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
+        <Heading
+          title={"Create New Post"}
+          icon={<IoShareSocialOutline className="text-xl" />}
+        />
+        <div className="w-full border-t border-gray-300" />
+      </div>
       <PostCreateSteps currentStep={createPostStep} />
       {createPostStep === 1 && (
         <PublisherSelectForm cancelFunc={handleCancel} />

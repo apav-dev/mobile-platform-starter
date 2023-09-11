@@ -34,9 +34,11 @@ const PublisherSelectForm = ({ cancelFunc }) => {
 
   return (
     <>
-      <h3 className="font-lato-bold text-gray-700 text-xl">Select Publisher</h3>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
+        <h3 className="font-lato-bold text-gray-700 text-xl">
+          Select Publisher
+        </h3>
+        <div className="flex flex-col gap-2 mb-2">
           <label htmlFor="google" className="flex">
             <input
               {...register("publishers", { required: true })}
