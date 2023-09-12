@@ -13,6 +13,8 @@ type PageContextType = {
   setCreatingPost: (creatingPost: boolean) => void;
   createPostStep: number;
   setCreatePostStep: (step: number) => void;
+  addingCta: boolean;
+  setAddingCta: (addingCta: boolean) => void;
 };
 
 // TODO: edit mode by field id

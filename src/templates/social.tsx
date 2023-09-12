@@ -58,12 +58,17 @@ const Social = () => {
   const [editId, setEditId] = useState("");
   const [creatingPost, setCreatingPost] = useState(false);
   const [createPostStep, setCreatePostStep] = useState(0);
+  const [addingCta, setAddingCta] = React.useState(false);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const entityId = urlParams.get("entityId");
     setEntityId(entityId);
   }, []);
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   const socialsQuery = useQuery(
     ["socials", entityId, pageToken],
@@ -104,8 +109,6 @@ const Social = () => {
   const entityName = entityQuery.data?.response.docs?.[0]?.name;
   const entityAddress = entityQuery.data?.response.docs?.[0]?.address;
   const socialPosts = socialsQuery.data?.response.posts;
-  // console.log("social posts", socialPosts);
-  console.log(formData);
 
   if (entityQuery.isLoading) {
     return (
@@ -145,6 +148,8 @@ const Social = () => {
         createPostStep,
         setCreatePostStep,
         setCreatingPost,
+        addingCta,
+        setAddingCta,
       }}
     >
       <Main

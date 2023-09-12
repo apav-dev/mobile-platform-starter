@@ -15,3 +15,11 @@
 input[name="publishers"]:checked + span {
   border: solid #1564f9 2px;
 }
+
+input[name="publishSchedule"]:checked + span {
+  border: solid #1564f9 2px;
+}
+
+input[name="publishSchedule"]:checked + div {
+  border: solid #1564f9 2px;
+}

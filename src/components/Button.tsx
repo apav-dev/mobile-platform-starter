@@ -21,12 +21,14 @@ const buttonVariants = cva(
         "brand-primary": "bg-gray-700 text-white text-base font-lato-regular",
         "brand-secondary":
           "bg-gray-300 text-gray-700 text-base font-lato-regular",
+        "brand-cancel": "text-blue text-base font-lato-regular self-center",
       },
       size: {
         default: "px-4 py-3 rounded-sm",
         sm: "h-9 rounded-sm px-3",
         lg: "h-11 rounded-sm px-8",
         icon: "h-10 w-10",
+        cancel: "p-0 w-fit",
       },
     },
     defaultVariants: {

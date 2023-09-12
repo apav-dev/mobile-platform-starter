@@ -2,8 +2,6 @@ import * as React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "../Button";
 import { usePageContext } from "../utils/useSocialPageContext";
-import { BsGoogle } from "react-icons/bs";
-import { FaGoogle } from "react-icons/fa";
 import { FacebookIcon } from "../icons/FacebookIcon";
 import { GoogleIcon } from "../icons/GoogleIcon";
 
@@ -16,13 +14,15 @@ interface FormInput {
   publishers: PublisherEnum[];
 }
 
-const PublisherSelectForm = ({ cancelFunc }) => {
-  const { formData, setFormData, setCreatePostStep } = usePageContext();
+const PublisherSelectForm = () => {
+  const { formData, setFormData, setCreatePostStep, setCreatingPost } =
+    usePageContext();
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<FormInput>();
   const onSubmit: SubmitHandler<FormInput> = (data) => {
@@ -33,8 +33,15 @@ const PublisherSelectForm = ({ cancelFunc }) => {
     setCreatePostStep(2);
   };
 
+  const handleCancel = (e?: React.MouseEvent<HTMLButtonElement>) => {
+    e?.stopPropagation();
+    setFormData({});
+    setCreatePostStep(0);
+    setCreatingPost(false);
+    reset();
+  };
+
   const watchPublishers = watch("publishers", []);
-  console.log("watch", watchPublishers);
 
   return (
     <>
@@ -87,11 +94,8 @@ const PublisherSelectForm = ({ cancelFunc }) => {
           >
             <input type="submit" value="Continue" />
           </Button>
-          <Button
-            className="text-blue font-lato-regular text-base w-fit self-center"
-            onClick={cancelFunc}
-          >
-            <div>Cancel</div>
+          <Button variant="brand-cancel" size="cancel" onClick={handleCancel}>
+            <span>Cancel</span>
           </Button>
         </div>
       </form>

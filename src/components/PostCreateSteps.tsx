@@ -9,12 +9,13 @@ const PostCreateSteps = ({ currentStep }: PostCreateStepProps) => {
   const stepNameMap = {
     "1": "1. Select Publisher",
     "2": "2. Post Content",
-    "3": "3. Publish Post",
+    "3": "3. Additional Options",
+    "4": "4. Publish Post",
   };
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex px-4 justify-between">
+      <div className="flex justify-between">
         <div
           className={twMerge(
             "w-1/5 border-b-2 border-gray-500",
@@ -40,7 +41,7 @@ const PostCreateSteps = ({ currentStep }: PostCreateStepProps) => {
           )}
         />
       </div>
-      <div className="font-lato-regular flex justify-between px-4 text-sm">
+      <div className="font-lato-regular flex justify-between text-sm">
         <span className="text-blue">{stepNameMap[`${currentStep}`]}</span>
         <span className="text-gray-500">{`(Step ${currentStep} of 4)`}</span>
       </div>
