@@ -62,8 +62,10 @@ export default function PublisherSelectForm() {
       console.log(formData);
       fetch("/api/createPost", {
         method: "POST",
-        body: JSON.stringify({ ...formData }),
-      }).then((response) => console.log(response.json()));
+        body: JSON.stringify({ data: formData }),
+      })
+        .then((response) => response.json())
+        .then((data) => console.log("data", data));
     } else {
       console.log("not ready to submit");
     }

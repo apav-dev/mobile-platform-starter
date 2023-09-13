@@ -1,5 +1,5 @@
 import { SitesHttpRequest, SitesHttpResponse } from "@yext/pages/*";
-import { fetch } from "@yext/pages/util";
+import { fetch, getRuntime } from "@yext/pages/util";
 
 type PostBody = {
   entityIds: string;
@@ -23,12 +23,19 @@ export default async function post(
 ): Promise<SitesHttpResponse> {
   const { method, body } = request;
 
-  // TODO: Parse body after it is fixed in Pages 1.0.0-rc.3
-  const postBody = body as unknown as Record<string, any>;
+  // TODO: Remove and only parse body after rc.3 is released
+  const runtime = getRuntime();
+  let bodyObj = {};
+  console.log(body);
+  if (runtime.name === "node") {
+    bodyObj = body;
+  } else if (runtime.name === "deno" && body) {
+    bodyObj = JSON.parse(body);
+  }
 
   switch (method) {
     case "POST":
-      return createPost(postBody);
+      return createPost(bodyObj);
     default:
       return { body: "Method not allowed", headers: {}, statusCode: 405 };
   }
@@ -46,27 +53,32 @@ async function createPost(
   }
 
   const postApiBody: PostBody = {
-    entityIds: postBody.entityId,
-    publisher: postBody.publisher,
-    text: postBody.postText,
+    entityIds: postBody.data.entityId,
+    publisher: postBody.data.publisher,
+    text: postBody.data.postText,
   };
 
-  if (postBody.photoUrls) {
-    postApiBody.photoUrls = postBody.photoUrls;
+  if (postBody.data.photoUrls) {
+    postApiBody.photoUrls = postBody.data.photoUrls;
   }
 
-  if (postBody.publishSchedule === "later") {
-    postApiBody.postDate = `${postBody.scheduleDate.getUTCFullYear()}:${postBody.scheduleDate.getUTCMonth()}:${postBody.scheduleDate.getUTCDate()} ${
-      postBody.scheduleTime
-    }`;
+  if (postBody.data.publishSchedule === "later") {
+    const postDate = new Date(postBody.data.scheduleDate);
+    const timeValues = postBody.data.scheduleTime.split(":", 2);
+    const newHours = timeValues[0];
+    const newMinutes = timeValues[1];
+    postDate.setHours(newHours);
+    postDate.setMinutes(newMinutes);
+    const utcDate = postDate.toUTCString();
+    postApiBody.postDate = `${utcDate}`;
   }
 
-  if (postBody.publisher === "GOOGLEMYBUSINESS") {
+  if (postBody.data.publisher === "GOOGLEMYBUSINESS") {
     postApiBody.clickthroughUrl =
-      postBody.googleCtaType === "CALL"
-        ? postBody.googleCtaPhone
-        : postBody.googleCtaUrl;
-    postApiBody.callToActionType = postBody.googleCtaType;
+      postBody.data.googleCtaType === "CALL"
+        ? postBody.data.googleCtaPhone
+        : postBody.data.googleCtaUrl;
+    postApiBody.callToActionType = postBody.data.googleCtaType;
   }
 
   //   const mgmtApiResp = await fetch(

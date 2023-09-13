@@ -24,6 +24,30 @@
         "functionName": "PagesGenerator"
       },
       {
+        "pluginName": "social-82940",
+        "event": "API",
+        "functionName": "default",
+        "apiPath": "api/social",
+        "sourceFiles": [
+          {
+            "root": "dist/functions/social-82940",
+            "pattern": "*{.js,.ts}"
+          }
+        ]
+      },
+      {
+        "pluginName": "createPost-72629",
+        "event": "API",
+        "functionName": "default",
+        "apiPath": "api/createPost",
+        "sourceFiles": [
+          {
+            "root": "dist/functions/createPost-72629",
+            "pattern": "*{.js,.ts}"
+          }
+        ]
+      },
+      {
         "pluginName": "entityId-88921",
         "event": "API",
         "functionName": "default",
@@ -63,7 +87,11 @@
   },
   "dependencies": {
     "installDepsCmd": "npm install",
-    "requiredFiles": ["package.json", "package-lock.json", ".npmrc"]
+    "requiredFiles": [
+      "package.json",
+      "package-lock.json",
+      ".npmrc"
+    ]
   },
   "buildArtifacts": {
     "buildCmd": "npm run build:local"

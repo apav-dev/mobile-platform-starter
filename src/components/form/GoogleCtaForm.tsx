@@ -36,14 +36,23 @@ export default function GoogleCtaForm() {
     setSchedulePost,
     ctaType,
     setCtaType,
+    addingCta,
+    setAddingCta,
   } = usePageContext();
 
   const FormSchema = z.object({
-    ctaType: z.enum(["BOOK", "ORDER", "BUY", "LEARN_MORE", "SIGN_UP", "CALL"], {
-      required_error: "Type is required.",
-    }),
+    addCta: z.boolean(),
+    ctaType: addingCta
+      ? z.enum(["BOOK", "ORDER", "BUY", "LEARN_MORE", "SIGN_UP", "CALL"], {
+          required_error: "Type is required.",
+        })
+      : z
+          .enum(["BOOK", "ORDER", "BUY", "LEARN_MORE", "SIGN_UP", "CALL"], {
+            required_error: "Type is required.",
+          })
+          .optional(),
     ctaUrl:
-      ctaType !== "CALL"
+      addingCta && ctaType !== "CALL"
         ? z
             .string({ required_error: "Call To Action URL required." })
             .trim()
@@ -51,17 +60,19 @@ export default function GoogleCtaForm() {
         : z
             .string({ required_error: "Call To Action URL required." })
             .trim()
-            .url()
             .optional(),
-    ctaPhone: ctaType === "CALL" ? z.string() : z.string().optional(),
+    ctaPhone:
+      addingCta && ctaType === "CALL"
+        ? z.string().min(10, "Invalid Phone Number")
+        : z.string().optional(),
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      ctaPhone: formData.googleCtaPhone ? formData.googleCtaPhone : "",
-      ctaUrl: formData.googleCtaUrl ? formData.googleCtaUrl : "",
-      ctaType: formData.googleCtaType && formData.googleCtaType,
+      addCta: addingCta,
+      ctaPhone: "",
+      ctaUrl: "",
     },
   });
 
@@ -85,81 +96,107 @@ export default function GoogleCtaForm() {
   };
 
   const currentCtaType = form.watch("ctaType");
-  const currentCtaUrl = form.watch("ctaUrl");
-  const currentCtaPhone = form.watch("ctaPhone");
+
+  React.useEffect(() => {
+    setCtaType(currentCtaType);
+  }, [currentCtaType]);
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full flex flex-col gap-2"
+        className="w-full flex flex-col gap-8"
       >
         <FormField
           control={form.control}
-          name="ctaType"
+          name="addCta"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-base font-lato-regular text-gray-700">
+            <FormItem className="flex gap-2 items-center space-y-0">
+              <FormControl>
+                <Switch
+                  checked={addingCta}
+                  onCheckedChange={() => {
+                    if (addingCta) {
+                      form.reset();
+                    }
+                    setAddingCta(!addingCta);
+                  }}
+                />
+              </FormControl>
+              <FormDescription className="text-base font-lato-bold text-gray-700 text-xl">
                 Add Google Call To Action
-              </FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                onOpenChange={() => setIsSelecting(!isSelecting)}
-              >
-                <FormControl>
-                  <SelectTrigger className="rounded-sm py-3 px-4 bg-gray-300 font-lato-regular text-base text-gray-700">
-                    <SelectValue placeholder="Select Call To Action Type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent className="bg-white rounded-sm z-100">
-                  <SelectItem value="BOOK" className="text-base">
-                    Book
-                  </SelectItem>
-                  <SelectItem value="ORDER" className="text-base">
-                    Order
-                  </SelectItem>
-                  <SelectItem value="BUY" className="text-base">
-                    Buy
-                  </SelectItem>
-                  <SelectItem value="LEARN_MORE" className="text-base">
-                    Learn More
-                  </SelectItem>
-                  <SelectItem value="SIGN_UP" className="text-base">
-                    Sign up
-                  </SelectItem>
-                  <SelectItem value="CALL" className="text-base">
-                    Call
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
+              </FormDescription>
             </FormItem>
           )}
         />
-        {ctaType !== "CALL" && currentCtaType !== "CALL" && (
-          <FormField
-            control={form.control}
-            name="ctaUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-lato-regular text-gray-700">
-                  URL
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter URL"
-                    {...field}
-                    className="rounded-sm py-3 px-4 font-lato-regular text-base text-gray-700"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
-        {ctaType === "CALL" ||
-          (currentCtaType === "CALL" && (
+        <div className="flex flex-col gap-2">
+          {addingCta && (
+            <FormField
+              control={form.control}
+              name="ctaType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-lato-regular text-gray-700">
+                    Call To Action Type
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    onOpenChange={() => setIsSelecting(!isSelecting)}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="rounded-sm py-3 px-4 bg-gray-300 font-lato-regular text-base text-gray-700">
+                        <SelectValue placeholder="Select Call To Action Type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="bg-white rounded-sm z-100">
+                      <SelectItem value="BOOK" className="text-base">
+                        Book
+                      </SelectItem>
+                      <SelectItem value="ORDER" className="text-base">
+                        Order
+                      </SelectItem>
+                      <SelectItem value="BUY" className="text-base">
+                        Buy
+                      </SelectItem>
+                      <SelectItem value="LEARN_MORE" className="text-base">
+                        Learn More
+                      </SelectItem>
+                      <SelectItem value="SIGN_UP" className="text-base">
+                        Sign up
+                      </SelectItem>
+                      <SelectItem value="CALL" className="text-base">
+                        Call
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          {addingCta && ctaType !== "CALL" && currentCtaType !== "CALL" && (
+            <FormField
+              control={form.control}
+              name="ctaUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-lato-regular text-gray-700">
+                    URL
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter URL"
+                      {...field}
+                      className="rounded-sm py-3 px-4 font-lato-regular text-base text-gray-700"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          {addingCta && (currentCtaType === "CALL" || ctaType === "CALL") && (
             <FormField
               control={form.control}
               name="ctaPhone"
@@ -179,8 +216,9 @@ export default function GoogleCtaForm() {
                 </FormItem>
               )}
             />
-          ))}
-        <div className="mt-8 flex flex-col gap-2">
+          )}
+        </div>
+        <div className="flex flex-col gap-2">
           <Button
             variant="brand-primary"
             className="w-full"
@@ -192,12 +230,6 @@ export default function GoogleCtaForm() {
           <Button
             variant={"brand-secondary"}
             onClick={() => {
-              setFormData((prevState) => ({
-                ...prevState,
-                googleCtaType: currentCtaType,
-                googleCtaUrl: currentCtaUrl,
-                googleCtaPhone: currentCtaPhone,
-              }));
               setCreatePostStep(2);
             }}
             disabled={isSelecting}
@@ -274,22 +306,22 @@ export default function GoogleCtaForm() {
 //       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-12">
 //         <div className="flex flex-col gap-4">
 //           <div className="flex gap-2">
-//             <Switch
-//               id="google-cta"
-//               checked={addingCta}
-//               onCheckedChange={() => {
-//                 if (addingCta) {
-//                   reset();
-//                   setFormData((prevState) => ({
-//                     ...prevState,
-//                     googleCtaType: undefined,
-//                     googleCtaUrl: undefined,
-//                     googleCtaPhone: undefined,
-//                   }));
-//                 }
-//                 setAddingCta(!addingCta);
-//               }}
-//             />
+// <Switch
+//   id="google-cta"
+//   checked={addingCta}
+//   onCheckedChange={() => {
+//     if (addingCta) {
+//       reset();
+//       setFormData((prevState) => ({
+//         ...prevState,
+//         googleCtaType: undefined,
+//         googleCtaUrl: undefined,
+//         googleCtaPhone: undefined,
+//       }));
+//     }
+//     setAddingCta(!addingCta);
+//   }}
+// />
 //             <label
 //               htmlFor="google-cta"
 //               className="text-base font-lato-regular text-gray-700"
