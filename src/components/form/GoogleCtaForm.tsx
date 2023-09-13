@@ -96,6 +96,8 @@ export default function GoogleCtaForm() {
   };
 
   const currentCtaType = form.watch("ctaType");
+  const currentCtaUrl = form.watch("ctaUrl");
+  const currentCtaPhone = form.watch("ctaPhone");
 
   React.useEffect(() => {
     setCtaType(currentCtaType);
@@ -230,6 +232,12 @@ export default function GoogleCtaForm() {
           <Button
             variant={"brand-secondary"}
             onClick={() => {
+              setFormData((prevState) => ({
+                ...prevState,
+                googleCtaType: currentCtaType,
+                googleCtaUrl: currentCtaUrl,
+                googleCtaPhone: currentCtaPhone,
+              }));
               setCreatePostStep(2);
             }}
             disabled={isSelecting}
