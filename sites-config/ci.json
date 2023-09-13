@@ -24,37 +24,37 @@
         "functionName": "PagesGenerator"
       },
       {
-        "pluginName": "id-81494",
+        "pluginName": "entityId-88921",
         "event": "API",
         "functionName": "default",
-        "apiPath": "api/entity/{{id}}",
+        "apiPath": "api/entity/{{entityId}}",
         "sourceFiles": [
           {
-            "root": "dist/functions/id-81494",
+            "root": "dist/functions/entityId-88921",
             "pattern": "*{.js,.ts}"
           }
         ]
       },
       {
-        "pluginName": "reviews-86166",
+        "pluginName": "reviews-70867",
         "event": "API",
         "functionName": "default",
-        "apiPath": "api/entity/{{id}}/reviews",
+        "apiPath": "api/entity/{{entityId}}/reviews",
         "sourceFiles": [
           {
-            "root": "dist/functions/reviews-86166",
+            "root": "dist/functions/reviews-70867",
             "pattern": "*{.js,.ts}"
           }
         ]
       },
       {
-        "pluginName": "comment-72919",
+        "pluginName": "comment-75410",
         "event": "API",
         "functionName": "default",
-        "apiPath": "api/entity/{{id}}/review/{{id}}/comment",
+        "apiPath": "api/entity/{{entityId}}/review/{{reviewId}}/comment",
         "sourceFiles": [
           {
-            "root": "dist/functions/comment-72919",
+            "root": "dist/functions/comment-75410",
             "pattern": "*{.js,.ts}"
           }
         ]
