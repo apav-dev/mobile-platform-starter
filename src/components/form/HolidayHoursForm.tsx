@@ -97,7 +97,6 @@ export const HolidayHoursForm = React.forwardRef<
         ...prev,
         [id]: values[id],
       }));
-      form.reset();
     };
 
     const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {

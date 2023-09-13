@@ -70,7 +70,11 @@ const Content = () => {
     queryFn: () => fetchLocation(entityId),
   });
 
-  const location = contentQuery.data?.response;
+  const location =
+    contentQuery.data?.response &&
+    Object.keys(contentQuery.data?.response).length > 0
+      ? contentQuery.data?.response
+      : undefined;
 
   const contentMutation = useMutation({
     mutationFn: editLocation,
@@ -164,7 +168,7 @@ const Content = () => {
                   <div className="justify-start items-center gap-2 inline-flex">
                     <div className="text-gray-700 font-lato-bold">ID:</div>
                     <div className="text-gray-700 font-lato-regular">
-                      {location.meta.id}
+                      {location.meta?.id}
                     </div>
                     <div className="text-gray-700 text-[13px] font-bold">|</div>
                     <div className="justify-start items-center gap-2 flex">
@@ -172,7 +176,7 @@ const Content = () => {
                       <div className="inline-flex items-center gap-1">
                         <LocationPinIcon />
                         <div className="text-gray-700 font-lato-regular">
-                          {location.meta.entityType}
+                          {location.meta?.entityType}
                         </div>
                       </div>
                     </div>

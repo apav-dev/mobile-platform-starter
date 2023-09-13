@@ -94,7 +94,7 @@ const Reviews = () => {
       });
     },
     onSuccess: (response) => {
-      if (!response.meta.errors) {
+      if (response.meta.errors?.length === 0) {
         const reviewId = Object.keys(formData)[0];
         toast({
           title: "Comment Submitted!",
