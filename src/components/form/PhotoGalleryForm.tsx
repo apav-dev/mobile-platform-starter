@@ -19,6 +19,8 @@ import {
 import { useState } from "react";
 import { usePageContext } from "../utils/usePageContext";
 import { v4 as uuidv4 } from "uuid";
+import { uploadImageToCloudinary } from "../../utils/api";
+import { toast } from "../utils/useToast";
 
 export interface PhotoGalleryFormProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -78,7 +80,6 @@ export const PhotoGalleryForm = React.forwardRef<
       ...prev,
       [id]: values[id],
     }));
-    form.reset();
   };
 
   const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -102,28 +103,27 @@ export const PhotoGalleryForm = React.forwardRef<
       const file = e.target.files?.[0];
 
       if (file) {
-        // 1. Validate the file type (though `accept` already does some of this)
-        const validTypes = ["image/jpeg", "image/png"];
-        if (!validTypes.includes(file.type)) {
-          alert("Invalid file type");
-          return;
-        }
-
-        // 2. Preview the image
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          if (typeof reader.result === "string") {
-            setImagePreview(reader.result);
-          }
-        };
-        reader.readAsDataURL(file);
+        uploadImageToCloudinary(file)
+          .then((response) => {
+            // setImagePreview(response.secure_url);
+            // console.log(response);
+            setImagePreview(response.secure_url);
+          })
+          .catch((error) => {
+            console.log(error);
+            toast({
+              variant: "destructive",
+              title: "Failed to upload image",
+              description: "Please choose a different image.",
+            });
+          });
       }
     } else if (uploadType === "url") {
       setImagePreview(e.target.value);
     }
   };
 
-  const handleAddImage = () => {
+  const handleAddImage = (e) => {
     const images = form.getValues(id);
     images.push({
       image: {
@@ -228,21 +228,21 @@ export const PhotoGalleryForm = React.forwardRef<
             )}
             {uploadType !== "none" && (
               <DialogFooter className="flex-col gap-y-4">
-                <button
+                <DialogTrigger
                   type="button"
                   className="px-4 py-3 bg-gray-700 rounded-[3px] justify-center items-center gap-2 flex w-full text-white font-lato-regular"
-                  onClick={handleAddImage}
+                  onClick={(e) => handleAddImage(e)}
                 >
                   Add Photo
-                </button>
+                </DialogTrigger>
                 <div className="px-4 justify-center items-center flex">
                   <DialogTrigger
                     type="button"
                     className="text-blue text-base font-lato-regular hover:underline"
-                    onClick={() => {
-                      setImagePreview(null);
-                      setUploadType("none");
-                    }}
+                    // onClick={() => {
+                    //   setImagePreview(null);
+                    //   setUploadType("none");
+                    // }}
                   >
                     Cancel
                   </DialogTrigger>

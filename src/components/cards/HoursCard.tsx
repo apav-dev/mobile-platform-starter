@@ -14,6 +14,7 @@ import { sortIntervalsByStartTime } from "../../utils/sortIntervalsByStartTime";
 import Header from "../Header";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { Heading } from "../Heading";
+import Skeleton from "../Skeleton";
 
 export interface HoursCardProps {
   title: string;
@@ -29,6 +30,22 @@ export interface HoursCardProps {
     holidayHours?: HolidayHourType[];
   };
 }
+
+export const HoursCardSkeleton = () => {
+  return (
+    <Card containerClassName="flex flex-col gap-y-4">
+      <Skeleton className="w-20 h-3" />
+      <div className="flex flex-col gap-y-1">
+        {Array.from({ length: 7 }).map((_, i) => (
+          <div className="flex gap-x-4">
+            <Skeleton className="w-10 h-3" />
+            <Skeleton className="w-14 h-3" />
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+};
 
 export const HoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
   const { formData, entityMeta, setEditId, editId } = usePageContext();

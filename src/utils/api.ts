@@ -6,20 +6,39 @@ import {
   YextResponse,
 } from "../types/yext";
 
-// TODO: use MGMT API when it return CORS headers OR I can use serverless with 1.0.0 rc
-// export const fetchLocation = async (
-//   entityId: string
-// ): Promise<YextResponse<Location>> => {
-//   const response = await fetch(
-//     `https://api.yextapis.com/v2/accounts/me/entities/${entityId}?api_key=${YEXT_PUBLIC_MGMT_API_KEY}&v=20230817`
-//   );
-//   const data = await response.json();
-//   return data;
-// };
-
 export const fetchLocation = async (
   entityId: string
-): Promise<YextResponse<YextContent<Location>>> => {
+): Promise<YextResponse<Location>> => {
+  const response = await fetch(`api/entity/${entityId}`);
+  const data = await response.json();
+  return data;
+};
+
+export const editLocation = async ({
+  entityId,
+  location,
+}: {
+  entityId: string;
+  location: Partial<Location>;
+}): Promise<YextResponse<Location>> => {
+  const response = await fetch(`api/entity/${entityId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(location),
+  });
+  if (response.status !== 200) {
+    throw new Error("Failed to update location");
+  } else {
+    const data = await response.json();
+    return data;
+  }
+};
+
+export const fetchLocationFromContentApi = async (
+  entityId: string
+): Promise<YextResponse<Location>> => {
   const response = await fetch(
     `https://cdn.yextapis.com/v2/accounts/me/content/locations?api_key=${YEXT_PUBLIC_CONTENT_API_KEY}&v=20230817&id=${entityId}`
   );
@@ -94,6 +113,28 @@ export const createReviewComment = async ({
     }
   );
 
+  const data = await response.json();
+  return data;
+};
+
+export const uploadImageToCloudinary = async (
+  image: File
+): Promise<CloudinaryAsset> => {
+  const formData = new FormData();
+  formData.append("file", image);
+  formData.append("upload_preset", "mobile_platform");
+
+  const response = await fetch(
+    "https://api.cloudinary.com/v1_1/yext/image/upload",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to upload image");
+  }
   const data = await response.json();
   return data;
 };

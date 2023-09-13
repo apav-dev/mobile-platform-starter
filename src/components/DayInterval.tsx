@@ -1,7 +1,7 @@
-import * as React from "react";
 import { v4 as uuidv4 } from "uuid";
 import { DayIntervalType as DayIntervalType } from "../types/yext";
 import { isClosedInterval } from "./form/HoursForm";
+import { formatTime } from "../utils/formatTime";
 
 export interface DayIntervalProps {
   day: string;
@@ -27,7 +27,7 @@ export const DayInterval = ({ day, intervals }: DayIntervalProps) => {
               key={uuidv4()}
               className="text-gray-700 text-base font-lato-regular leading-tight"
             >
-              {`${interval.start} to ${interval.end}`}
+              {`${formatTime(interval.start)} to ${formatTime(interval.end)}`}
             </div>
           ))}
         </div>

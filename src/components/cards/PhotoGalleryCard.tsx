@@ -10,12 +10,22 @@ import { PhotoGalleryForm } from "../form/PhotoGalleryForm";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { Heading } from "../Heading";
 import Header from "../Header";
+import Skeleton from "../Skeleton";
 
 export interface PhotoGalleryCardProps {
   title: string;
   fieldId: string;
   images: GalleryImage[];
 }
+
+export const PhotoGalleryCardSkeleton = () => {
+  return (
+    <Card containerClassName="flex flex-col gap-y-4">
+      <Skeleton className="w-20 h-3" />
+      <Skeleton className="mx-auto h-80 w-64" />
+    </Card>
+  );
+};
 
 export const PhotoGalleryCard = ({
   title,

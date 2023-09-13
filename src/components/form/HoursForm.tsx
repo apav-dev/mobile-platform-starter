@@ -72,7 +72,6 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
         ...prev,
         [id]: values[id],
       }));
-      form.reset();
     };
 
     const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {

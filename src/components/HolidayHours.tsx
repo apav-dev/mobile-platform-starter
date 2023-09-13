@@ -1,4 +1,3 @@
-import * as React from "react";
 import HolidayInterval from "./HolidayInterval";
 import { v4 as uuidv4 } from "uuid";
 

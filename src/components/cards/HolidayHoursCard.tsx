@@ -13,6 +13,7 @@ import { HolidayHours } from "../HolidayHours";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { Heading } from "../Heading";
 import Header from "../Header";
+import Skeleton from "../Skeleton";
 
 export interface HoursCardProps {
   title: string;
@@ -28,6 +29,22 @@ export interface HoursCardProps {
     holidayHours?: HolidayHourType[];
   };
 }
+
+export const HoildayHoursCardSkeleton = () => {
+  return (
+    <Card containerClassName="flex flex-col gap-y-4">
+      <Skeleton className="w-20 h-3" />
+      <div className="flex flex-col gap-y-1">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div className="flex">
+            <Skeleton className="w-20 h-3 mr-20" />
+            <Skeleton className="w-20 h-3" />
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+};
 
 export const HolidayHoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
   if (!hours.holidayHours) {

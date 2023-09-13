@@ -41,7 +41,7 @@ export const ReviewCardSkeleton = () => {
       <div className="flex flex-col gap-y-1">
         <Skeleton className="w-full h-3" />
         <Skeleton className="w-full h-3" />
-        <Skeleton className="w-fulla h-3" />
+        <Skeleton className="w-full h-3" />
       </div>
       <div className="justify-start items-center gap-4 inline-flex">
         <Skeleton className="w-[170px] h-4" />

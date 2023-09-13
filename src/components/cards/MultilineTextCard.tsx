@@ -8,12 +8,28 @@ import EditPanel from "../EditPanel";
 import Header from "../Header";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { Heading } from "../Heading";
+import { renderEntityText } from "../utils/renderEntityText";
+import Skeleton from "../Skeleton";
 
 export interface MulitlineCardProps {
   title: string;
   fieldId: string;
   value?: string;
 }
+
+export const MultilineTextCardSkeleton = () => {
+  return (
+    <Card containerClassName="flex flex-col gap-y-4">
+      <Skeleton className="w-20 h-3" />
+      <div className="flex flex-col gap-y-1">
+        <Skeleton className="w-full h-3" />
+        <Skeleton className="w-full h-3" />
+        <Skeleton className="w-full h-3" />
+        <Skeleton className="w-full h-3" />
+      </div>
+    </Card>
+  );
+};
 
 export const MultilineTextCard = ({
   title,
@@ -40,7 +56,7 @@ export const MultilineTextCard = ({
         <div className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2">
           {title}
         </div>
-        <div className=" text-gray-700 text-sm font-lato-regular">{value}</div>
+        {renderEntityText(value ?? "", "text-sm")}
       </Card>
       <EditPanel open={editId === fieldId}>
         <Header
