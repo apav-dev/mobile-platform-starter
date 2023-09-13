@@ -1,21 +1,23 @@
 import { SitesHttpRequest, SitesHttpResponse } from "@yext/pages/*";
-import { fetch } from "@yext/pages/util";
+import { fetch, getRuntime } from "@yext/pages/util";
 
 export default async function comment(
   request: SitesHttpRequest
 ): Promise<SitesHttpResponse> {
   const { method, pathParams, body } = request;
 
-  // TODO: Parse body after it is fixed in Pages 1.0.0-rc.3
-  const commentBody = body as unknown as Record<string, any>;
+  // TODO: Remove and only parse body after rc.3 is released
+  const runtime = getRuntime();
+  let bodyObj = {};
+  if (runtime.name === "node") {
+    bodyObj = body;
+  } else if (runtime.name === "deno" && body) {
+    bodyObj = JSON.parse(body);
+  }
 
   switch (method) {
     case "POST":
-      return createComment(
-        pathParams.entityId,
-        pathParams.reviewId,
-        commentBody
-      );
+      return createComment(pathParams.entityId, pathParams.reviewId, bodyObj);
     default:
       return { body: "Method not allowed", headers: {}, statusCode: 405 };
   }

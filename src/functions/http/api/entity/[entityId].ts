@@ -1,18 +1,25 @@
 import { SitesHttpRequest, SitesHttpResponse } from "@yext/pages/*";
-import { fetch } from "@yext/pages/util";
+import { fetch, getRuntime } from "@yext/pages/util";
 
 export default async function entity(
   request: SitesHttpRequest
 ): Promise<SitesHttpResponse> {
   const { method, pathParams, body } = request;
-  console.log(method);
-  console.log(body);
+
+  // TODO: Remove and only parse body after rc.3 is released
+  const runtime = getRuntime();
+  let bodyObj = {};
+  if (runtime.name === "node") {
+    bodyObj = body;
+  } else if (runtime.name === "deno" && body) {
+    bodyObj = JSON.parse(body);
+  }
 
   switch (method) {
     case "GET":
       return getEntity(pathParams.entityId);
     case "PUT":
-      return updateEntity(pathParams.entityId, body);
+      return updateEntity(pathParams.entityId, bodyObj);
     default:
       return { body: "Method not allowed", headers: {}, statusCode: 405 };
   }
