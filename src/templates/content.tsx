@@ -76,31 +76,31 @@ const Content = () => {
       ? contentQuery.data?.response
       : undefined;
 
-  const contentMutation = useMutation({
-    mutationFn: editLocation,
-    onError: (error) => {
-      toast({
-        variant: "destructive",
-        title: "Failed to Edit Entity",
-        description: "There was a problem with your request.",
-      });
-    },
-    onSuccess: (response) => {
-      setFormData({});
-      contentQuery.refetch();
-      toast({
-        title: "Entity Updated",
-        description: "Successfully updated entity.",
-        duration: 5000,
-      });
-    },
-  });
+  // const contentMutation = useMutation({
+  //   mutationFn: editLocation,
+  //   onError: (error) => {
+  //     toast({
+  //       variant: "destructive",
+  //       title: "Failed to Edit Entity",
+  //       description: "There was a problem with your request.",
+  //     });
+  //   },
+  //   onSuccess: (response) => {
+  //     setFormData({});
+  //     contentQuery.refetch();
+  //     toast({
+  //       title: "Entity Updated",
+  //       description: "Successfully updated entity.",
+  //       duration: 5000,
+  //     });
+  //   },
+  // });
 
-  useEffect(() => {
-    if (entityId && Object.keys(formData).length > 0) {
-      contentMutation.mutate({ entityId, location: formData });
-    }
-  }, [formData]);
+  // useEffect(() => {
+  //   if (entityId && Object.keys(formData).length > 0) {
+  //     contentMutation.mutate({ entityId, location: formData });
+  //   }
+  // }, [formData]);
 
   return (
     <PageContextProvider
