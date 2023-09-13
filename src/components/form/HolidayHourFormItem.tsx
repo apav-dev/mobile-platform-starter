@@ -67,7 +67,6 @@ export const HolidayHourFormItem = ({
     intervalIndex: number
   ) => {
     if (!value.isClosed) {
-      debugger;
       const newStart = e.target.value;
       const intervals = value.openIntervals?.map((interval, i) => {
         if (i === intervalIndex) {

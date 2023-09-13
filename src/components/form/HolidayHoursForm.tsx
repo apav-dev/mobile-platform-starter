@@ -68,7 +68,6 @@ export const HolidayHoursForm = React.forwardRef<
     });
 
     const onValueChange = (index: number, value: HolidayHourType) => {
-      debugger;
       const holidayHours = form.getValues(id).holidayHours;
       holidayHours[index] = value;
       form.setValue(`${id}.holidayHours`, holidayHours);

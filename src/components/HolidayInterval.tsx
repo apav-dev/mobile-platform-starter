@@ -1,5 +1,4 @@
-import * as React from "react";
-
+import { formatTime } from "../utils/formatTime";
 import { HolidayHourType } from "../types/yext";
 import { getDayOfWeek } from "../utils/getDayOfWeek";
 
@@ -8,10 +7,6 @@ export interface DayIntervalProps {
 }
 
 const HolidayInterval = ({ holiday }: DayIntervalProps) => {
-  // TODO: Handle multiple intervals
-  const open = holiday.openIntervals?.[0]?.start;
-  const close = holiday.openIntervals?.[0]?.end;
-
   const date = `${holiday.date.replace(/-/g, "/")} (${getDayOfWeek(
     holiday.date
   )})`;
@@ -22,7 +17,20 @@ const HolidayInterval = ({ holiday }: DayIntervalProps) => {
         {date}
       </div>
       <div className="text-gray-700 text-base font-lato-regular leading-tight">
-        {holiday.isClosed ? "Closed" : `${open} to ${close}`}
+        {holiday.isClosed ? (
+          "Closed"
+        ) : (
+          <>
+            {holiday.openIntervals?.map((interval) => (
+              <div
+                key={`${date}-${interval.start}`}
+                className="text-gray-700 text-base font-lato-regular leading-tight"
+              >
+                {`${formatTime(interval.start)} to ${formatTime(interval.end)}`}
+              </div>
+            ))}
+          </>
+        )}
       </div>
     </div>
   );
