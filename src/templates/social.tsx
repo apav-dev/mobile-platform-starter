@@ -32,7 +32,7 @@ import { FaNode } from "react-icons/fa";
 import { BsNodePlus } from "react-icons/bs";
 
 export const getPath: GetPath<TemplateProps> = () => {
-  return `social`;
+  return "social";
 };
 
 export const getHeadConfig: GetHeadConfig<
@@ -59,6 +59,8 @@ const Social = () => {
   const [creatingPost, setCreatingPost] = useState(false);
   const [createPostStep, setCreatePostStep] = useState(0);
   const [addingCta, setAddingCta] = React.useState(false);
+  const [schedulePost, setSchedulePost] = React.useState(false);
+  const [ctaType, setCtaType] = React.useState("");
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -150,6 +152,10 @@ const Social = () => {
         setCreatingPost,
         addingCta,
         setAddingCta,
+        schedulePost,
+        setSchedulePost,
+        ctaType,
+        setCtaType,
       }}
     >
       <Main

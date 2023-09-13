@@ -15,6 +15,10 @@ type PageContextType = {
   setCreatePostStep: (step: number) => void;
   addingCta: boolean;
   setAddingCta: (addingCta: boolean) => void;
+  schedulePost: boolean;
+  setSchedulePost: (schedulePost: boolean) => void;
+  ctaType: string;
+  setCtaType: (ctaType: string) => void;
 };
 
 // TODO: edit mode by field id

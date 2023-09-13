@@ -1,105 +1,119 @@
 import * as React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Button } from "../Button";
 import { usePageContext } from "../utils/useSocialPageContext";
+import * as z from "zod";
+import { RadioGroup, RadioGroupItem } from "../Radio";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../form/Form";
 import { FacebookIcon } from "../icons/FacebookIcon";
 import { GoogleIcon } from "../icons/GoogleIcon";
-
-enum PublisherEnum {
-  google = "GOOGLEMYBUSINESS",
-  facebook = "FACEBOOK",
-}
-
-interface FormInput {
-  publishers: PublisherEnum[];
-}
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const PublisherSelectForm = () => {
-  const { formData, setFormData, setCreatePostStep, setCreatingPost } =
-    usePageContext();
-
   const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    formState: { errors },
-  } = useForm<FormInput>();
-  const onSubmit: SubmitHandler<FormInput> = (data) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      publishers: data.publishers,
+    setFormData,
+    setCreatePostStep,
+    formData,
+    setCreatingPost,
+    setSchedulePost,
+  } = usePageContext();
+
+  const FormSchema = z.object({
+    publisher: z.enum(["GOOGLEMYBUSINESS", "FACEBOOK"]),
+  });
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      publisher: formData.publisher && formData.publisher,
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    setFormData((prev: Record<string, any>) => ({
+      ...prev,
+      publisher: data.publisher,
     }));
     setCreatePostStep(2);
-  };
+    form.reset();
+  }
 
   const handleCancel = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.stopPropagation();
     setFormData({});
     setCreatePostStep(0);
     setCreatingPost(false);
-    reset();
+    form.reset();
   };
 
-  const watchPublishers = watch("publishers", []);
-
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-        <h3 className="font-lato-bold text-gray-700 text-xl">
-          Select Publisher
-        </h3>
-        <div className="flex flex-col gap-2 mb-2">
-          <label htmlFor="google" className="flex">
-            <input
-              {...register("publishers", { required: true })}
-              type="checkbox"
-              value="GOOGLEMYBUSINESS"
-              id="google"
-              name="publishers"
-              defaultChecked={formData.publishers?.includes("GOOGLEMYBUSINESS")}
-              className="appearance-none"
-            />{" "}
-            <span className="bg-white rounded-lg shadow border border-zinc-200 flex items-center gap-2 p-4 grow font-lato-regular text-gray-700">
-              <GoogleIcon />
-              Google
-            </span>
-          </label>
-          <label htmlFor="facebook" className="flex">
-            <input
-              {...register("publishers", { required: true })}
-              type="checkbox"
-              value="FACEBOOK"
-              id="facebook"
-              name="publishers"
-              defaultChecked={formData.publishers?.includes("FACEBOOK")}
-              className="appearance-none"
-            />{" "}
-            <span className="bg-white rounded-lg shadow border border-zinc-200 flex items-center gap-2 p-4 grow font-lato-regular text-gray-700">
-              {" "}
-              <FacebookIcon />
-              Facebook
-            </span>
-          </label>
-        </div>
-        <div className="flex flex-col gap-2">
-          {errors.publishers && (
-            <span className="font-lato-regular text-base text-error">
-              At least one publisher must be selected
-            </span>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="gap-8 flex flex-col"
+      >
+        <FormField
+          control={form.control}
+          name="publisher"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel className="text-xl font-lato-bold text-gray-700">
+                Select Publisher
+              </FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-col gap-2"
+                >
+                  <FormItem className="flex items-center">
+                    <FormControl>
+                      <RadioGroupItem
+                        value="GOOGLEMYBUSINESS"
+                        onClick={() => setSchedulePost(false)}
+                        className="peer hidden"
+                      />
+                    </FormControl>
+                    <FormLabel className="font-lato-regular text-base text-gray-700 w-full border border-2 rounded-lg py-3 px-4 peer-aria-checked:border-blue flex items-center gap-2">
+                      <GoogleIcon />
+                      Google
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center">
+                    <FormControl>
+                      <RadioGroupItem
+                        value="FACEBOOK"
+                        onClick={() => setSchedulePost(true)}
+                        className="peer hidden"
+                      />
+                    </FormControl>
+                    <FormLabel className="font-lato-regular text-base text-gray-700 w-full border border-2 rounded-lg py-3 px-4 peer-aria-checked:border-blue flex items-center gap-2">
+                      <FacebookIcon />
+                      Facebook
+                    </FormLabel>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-          <Button
-            variant={"brand-primary"}
-            disabled={!(watchPublishers.length > 0) && !formData.publishers}
-          >
-            <input type="submit" value="Continue" />
+        />
+        <div className="flex flex-col gap-2">
+          <Button variant={"brand-primary"} className="w-full" type="submit">
+            Continue
           </Button>
           <Button variant="brand-cancel" size="cancel" onClick={handleCancel}>
             <span>Cancel</span>
           </Button>
         </div>
       </form>
-    </>
+    </Form>
   );
 };
 
