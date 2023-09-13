@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export interface IntervalFormCardProps {
   label: string;
-  index: number;
+  hourIndex: number;
   onValueChange: (index: number, value: HolidayHourType) => void;
   value?: HolidayHourType;
   onDelete?: (
@@ -26,7 +26,7 @@ export interface IntervalFormCardProps {
 
 export const HolidayHourFormItem = ({
   label,
-  index,
+  hourIndex,
   onValueChange,
   value,
   onDelete,
@@ -35,12 +35,12 @@ export const HolidayHourFormItem = ({
 
   const onRadioChange = (radioValue: string) => {
     if (radioValue === "closed") {
-      onValueChange(index, {
+      onValueChange(hourIndex, {
         isClosed: true,
         date: value.date,
       });
     } else {
-      onValueChange(index, {
+      onValueChange(hourIndex, {
         isClosed: false,
         date: value.date,
         openIntervals: [
@@ -55,7 +55,7 @@ export const HolidayHourFormItem = ({
 
   const onDateChange = (date: Date | undefined) => {
     const dateStr = date?.toISOString().split("T")[0];
-    onValueChange(index, {
+    onValueChange(hourIndex, {
       date: dateStr || "",
       isClosed: value.isClosed,
       openIntervals: value.openIntervals,
@@ -64,12 +64,13 @@ export const HolidayHourFormItem = ({
 
   const handleStartChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    index: number
+    intervalIndex: number
   ) => {
     if (!value.isClosed) {
+      debugger;
       const newStart = e.target.value;
       const intervals = value.openIntervals?.map((interval, i) => {
-        if (i === index) {
+        if (i === intervalIndex) {
           return {
             start: newStart,
             end: interval.end,
@@ -78,7 +79,7 @@ export const HolidayHourFormItem = ({
         return interval;
       });
 
-      onValueChange(index, {
+      onValueChange(hourIndex, {
         ...value,
         openIntervals: intervals,
       });
@@ -87,12 +88,12 @@ export const HolidayHourFormItem = ({
 
   const handleEndChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    index: number
+    intervalIndex: number
   ) => {
     if (!value.isClosed) {
       const newEnd = e.target.value;
       const intervals = value.openIntervals?.map((interval, i) => {
-        if (i === index) {
+        if (i === intervalIndex) {
           return {
             start: interval.start,
             end: newEnd,
@@ -101,7 +102,7 @@ export const HolidayHourFormItem = ({
         return interval;
       });
 
-      onValueChange(index, {
+      onValueChange(hourIndex, {
         ...value,
         openIntervals: intervals,
       });
@@ -110,7 +111,7 @@ export const HolidayHourFormItem = ({
 
   const handleAddInterval = () => {
     if (!value.isClosed) {
-      onValueChange(index, {
+      onValueChange(hourIndex, {
         ...value,
         openIntervals: [
           ...(value.openIntervals ?? []),
@@ -124,12 +125,12 @@ export const HolidayHourFormItem = ({
   };
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    onDelete?.(e, index);
+    onDelete?.(e, hourIndex);
   };
 
   const handleRemoveLastInterval = () => {
     if (!value.isClosed) {
-      onValueChange(index, {
+      onValueChange(hourIndex, {
         ...value,
         openIntervals: value.openIntervals?.slice(0, -1),
       });
@@ -202,7 +203,7 @@ export const HolidayHourFormItem = ({
         </div>
         {value.isClosed ? null : (
           <>
-            {value.openIntervals?.map((interval, index) => (
+            {value.openIntervals?.map((interval, intervalIndex) => (
               <div key={uuidv4()} className="flex flex-col gap-y-3">
                 <div className="gap-3 flex flex-col xs:flex-row xs:gap-2">
                   <div className="flex flex-col flex-1">
@@ -213,7 +214,7 @@ export const HolidayHourFormItem = ({
                       type="time"
                       step={60}
                       className="font-lato-regular text-[13px] text-gray-500  h-8"
-                      onChange={(e) => handleStartChange(e, index)}
+                      onChange={(e) => handleStartChange(e, intervalIndex)}
                       value={interval.start}
                     />
                   </div>
@@ -225,13 +226,13 @@ export const HolidayHourFormItem = ({
                       type="time"
                       step={60}
                       className="font-lato-regular text-[13px] h-8 text-gray-500"
-                      onChange={(e) => handleEndChange(e, index)}
+                      onChange={(e) => handleEndChange(e, intervalIndex)}
                       value={interval.end}
                     />
                   </div>
                   {value.openIntervals &&
                   value.openIntervals?.length > 1 &&
-                  index === value.openIntervals.length - 1 ? (
+                  intervalIndex === value.openIntervals.length - 1 ? (
                     <button
                       type="button"
                       onClick={handleRemoveLastInterval}
