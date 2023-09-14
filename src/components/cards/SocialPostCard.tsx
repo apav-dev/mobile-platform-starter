@@ -4,8 +4,35 @@ import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { FacebookIcon } from "../icons/FacebookIcon";
 import { formatUtcDate } from "../../utils/formatUtcDate";
 import { FaClock, FaCommentAlt, FaHeart } from "react-icons/fa";
+import Skeleton from "../Skeleton";
 
-export default function SocialPostCard({
+export const SocialCardSkeleton = () => {
+  return (
+    <Card containerClassName="flex flex-col gap-y-4">
+      <div className="justify-between items-center gap-4 inline-flex">
+        <div className="flex gap-x-4">
+          <Skeleton className="rounded-full h-5 w-5" />
+          <div className="flex-col gap-y-1 justify-center items-start inline-flex">
+            <Skeleton className="w-[170px] h-4" />
+            <Skeleton className="w-[170px] h-3" />
+          </div>
+        </div>
+      </div>
+      <Skeleton className="w-full h-40" />
+      <div className="flex flex-col gap-y-1">
+        <Skeleton className="w-full h-3" />
+        <Skeleton className="w-full h-3" />
+        <Skeleton className="w-1/2 h-3" />
+      </div>
+      <div className="justify-start items-center gap-4 inline-flex">
+        <Skeleton className="rounded-full h-5 w-5" />
+        <Skeleton className="w-2/3 h-4" />
+      </div>
+    </Card>
+  );
+};
+
+export function SocialPostCard({
   entityName,
   entityAddress,
   postText,

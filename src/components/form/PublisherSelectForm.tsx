@@ -26,7 +26,9 @@ const PublisherSelectForm = () => {
   } = usePageContext();
 
   const FormSchema = z.object({
-    publisher: z.enum(["GOOGLEMYBUSINESS", "FACEBOOK"]),
+    publisher: z.enum(["GOOGLEMYBUSINESS", "FACEBOOK"], {
+      required_error: "Select a publisher",
+    }),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -49,6 +51,7 @@ const PublisherSelectForm = () => {
     setFormData({});
     setCreatePostStep(0);
     setCreatingPost(false);
+    setSchedulePost(false);
     form.reset();
   };
 
@@ -76,7 +79,6 @@ const PublisherSelectForm = () => {
                     <FormControl>
                       <RadioGroupItem
                         value="GOOGLEMYBUSINESS"
-                        onClick={() => setSchedulePost(false)}
                         className="peer hidden"
                       />
                     </FormControl>
@@ -89,7 +91,6 @@ const PublisherSelectForm = () => {
                     <FormControl>
                       <RadioGroupItem
                         value="FACEBOOK"
-                        onClick={() => setSchedulePost(true)}
                         className="peer hidden"
                       />
                     </FormControl>
@@ -104,7 +105,7 @@ const PublisherSelectForm = () => {
             </FormItem>
           )}
         />
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           <Button variant={"brand-primary"} className="w-full" type="submit">
             Continue
           </Button>

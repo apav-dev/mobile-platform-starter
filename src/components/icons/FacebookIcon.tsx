@@ -9,7 +9,7 @@ export const FacebookIcon = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g id="Facebook" clip-path="url(#clip0_317_895)">
+      <g id="Facebook" clipPath="url(#clip0_317_895)">
         <path
           id="Vector"
           d="M8.00003 15.1441C11.9449 15.1441 15.1429 11.9461 15.1429 8.00126C15.1429 4.05636 11.9449 0.858398 8.00003 0.858398C4.05514 0.858398 0.857178 4.05636 0.857178 8.00126C0.857178 11.9461 4.05514 15.1441 8.00003 15.1441Z"

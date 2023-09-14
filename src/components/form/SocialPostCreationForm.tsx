@@ -12,14 +12,13 @@ import GoogleCtaForm from "./GoogleCtaForm";
 import SchedulePostForm from "./SchedulePostForm";
 
 const SocialPostCreationForm = ({ entityId }) => {
-  const { createPostStep, setCreatePostStep, setFormData, setCreatingPost } =
-    usePageContext();
+  const { createPostStep } = usePageContext();
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
         <Heading
-          title={"Create New Post"}
+          title={"Create Post"}
           icon={<IoShareSocialOutline className="text-xl" />}
         />
         <div className="w-full border-t border-gray-300" />

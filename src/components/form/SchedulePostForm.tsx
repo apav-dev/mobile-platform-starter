@@ -25,7 +25,6 @@ export default function PublisherSelectForm() {
   const {
     setFormData,
     setCreatePostStep,
-    formData,
     setCreatingPost,
     schedulePost,
     setSchedulePost,
@@ -54,28 +53,32 @@ export default function PublisherSelectForm() {
       scheduleTime: data.scheduleTime,
       readyToSubmit: true,
     }));
+    setCreatingPost(false);
+    setCreatePostStep(0);
+    setSchedulePost(false);
     form.reset();
   }
 
-  React.useEffect(() => {
-    if (formData.readyToSubmit) {
-      console.log(formData);
-      fetch("/api/createPost", {
-        method: "POST",
-        body: JSON.stringify({ data: formData }),
-      })
-        .then((response) => response.json())
-        .then((data) => console.log("data", data));
-    } else {
-      console.log("not ready to submit");
-    }
-  }, [formData.readyToSubmit]);
+  // React.useEffect(() => {
+  //   if (formData.readyToSubmit) {
+  //     console.log(formData);
+  //     fetch("/api/createPost", {
+  //       method: "POST",
+  //       body: JSON.stringify({ data: formData }),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => console.log("data", data));
+  //   } else {
+  //     console.log("not ready to submit");
+  //   }
+  // }, [formData.readyToSubmit]);
 
   const handleCancel = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.stopPropagation();
     setFormData({});
     setCreatePostStep(0);
     setCreatingPost(false);
+    setSchedulePost(false);
     form.reset();
   };
 
@@ -201,13 +204,14 @@ export default function PublisherSelectForm() {
             </div>
           </div>
         )}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           <Button variant={"brand-primary"} className="w-full" type="submit">
             Create Post
           </Button>
           <Button
             variant={"brand-secondary"}
             onClick={() => {
+              setSchedulePost(false);
               setCreatePostStep(3);
             }}
           >
