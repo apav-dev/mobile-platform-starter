@@ -41,23 +41,17 @@ export default function GoogleCtaForm() {
     addCta: z.boolean(),
     ctaType: addingCta
       ? z.enum(["BOOK", "ORDER", "BUY", "LEARN_MORE", "SIGN_UP", "CALL"], {
-          required_error: "Type is required.",
+          required_error: "Type is required",
         })
       : z
           .enum(["BOOK", "ORDER", "BUY", "LEARN_MORE", "SIGN_UP", "CALL"], {
-            required_error: "Type is required.",
+            required_error: "Type is required",
           })
           .optional(),
     ctaUrl:
       addingCta && ctaType !== "CALL"
-        ? z
-            .string({ required_error: "Call To Action URL required." })
-            .trim()
-            .url()
-        : z
-            .string({ required_error: "Call To Action URL required." })
-            .trim()
-            .optional(),
+        ? z.string({ required_error: "URL is required" }).trim().url()
+        : z.string({ required_error: "URL is required" }).trim().optional(),
     ctaPhone:
       addingCta && ctaType === "CALL"
         ? z.string().min(10, "Invalid Phone Number")

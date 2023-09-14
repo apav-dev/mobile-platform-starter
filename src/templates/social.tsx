@@ -88,7 +88,6 @@ const Social = () => {
   const postMutation = useMutation({
     mutationFn: createSocialPost,
     onError: (error) => {
-      console.log("mutation error:", error);
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",

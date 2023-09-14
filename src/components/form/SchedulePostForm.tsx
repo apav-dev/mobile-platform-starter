@@ -59,20 +59,6 @@ export default function PublisherSelectForm() {
     form.reset();
   }
 
-  // React.useEffect(() => {
-  //   if (formData.readyToSubmit) {
-  //     console.log(formData);
-  //     fetch("/api/createPost", {
-  //       method: "POST",
-  //       body: JSON.stringify({ data: formData }),
-  //     })
-  //       .then((response) => response.json())
-  //       .then((data) => console.log("data", data));
-  //   } else {
-  //     console.log("not ready to submit");
-  //   }
-  // }, [formData.readyToSubmit]);
-
   const handleCancel = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.stopPropagation();
     setFormData({});
