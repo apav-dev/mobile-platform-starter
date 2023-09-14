@@ -11,7 +11,6 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createSocialPost,
-  fetchLocation,
   fetchLocationFromContentApi,
   fetchSocialPosts,
 } from "../utils/api";

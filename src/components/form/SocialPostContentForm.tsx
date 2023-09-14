@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { Textarea } from "../Textarea";
 import { Button } from "../Button";
 import { usePageContext } from "../utils/useSocialPageContext";
-// import { PhotoUploadForm } from "./PhotoUploadForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
@@ -30,10 +29,6 @@ import { toast } from "../utils/useToast";
 import { TrashIcon } from "../icons/TrashIcon";
 import { Card } from "../Card";
 import { Input } from "../Input";
-
-// interface FormInput {
-//   postText: string;
-// }
 
 type UploadType = "none" | "url" | "file";
 

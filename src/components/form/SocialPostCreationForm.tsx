@@ -1,11 +1,8 @@
 import * as React from "react";
 import { Heading } from "../Heading";
-import { SocialIcon } from "../icons/SocialIcon";
-import { useForm, SubmitHandler } from "react-hook-form";
 import PublisherSelectForm from "./PublisherSelectForm";
 import SocialPostContentForm from "./SocialPostContentForm";
 import { usePageContext } from "../utils/useSocialPageContext";
-import { twMerge } from "tailwind-merge";
 import PostCreateSteps from "../PostCreateSteps";
 import { IoShareSocialOutline } from "react-icons/io5";
 import GoogleCtaForm from "./GoogleCtaForm";
