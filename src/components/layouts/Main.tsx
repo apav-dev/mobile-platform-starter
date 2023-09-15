@@ -7,15 +7,16 @@ import { Toaster } from "../Toaster";
 export interface MainProps {
   children?: React.ReactNode;
   breadcrumbs?: Link[];
+  entityId: string;
 }
 
-export const Main = ({ children, breadcrumbs }: MainProps) => {
+export const Main = ({ children, breadcrumbs, entityId }: MainProps) => {
   return (
     <>
       <div className="min-h-screen">
         <Header breadcrumbs={breadcrumbs} />
         <div className="pb-[60px]">{children}</div>
-        <Footer />
+        <Footer entityId={entityId} />
       </div>
       <Toaster />
     </>

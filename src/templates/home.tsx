@@ -70,7 +70,7 @@ const Home = () => {
   }, []);
 
   return (
-    <Main>
+    <Main entityId={permissionedEntity}>
       <ContentContainer containerClassName="py-8">
         <div className="flex flex-col items-center gap-y-8">
           <img
