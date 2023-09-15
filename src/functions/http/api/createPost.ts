@@ -51,7 +51,6 @@ async function createPost(
     };
   }
 
-  console.log(postBody);
   const postApiBody: PostBody = {
     entityIds: [postBody.data.entityId],
     publisher: postBody.data.publisher,
@@ -73,7 +72,10 @@ async function createPost(
     postApiBody.postDate = `${utcDate}`;
   }
 
-  if (postBody.data.publisher === "GOOGLEMYBUSINESS") {
+  if (
+    postBody.data.publisher === "GOOGLEMYBUSINESS" &&
+    postBody.data.googleCtaType
+  ) {
     postApiBody.clickthroughUrl =
       postBody.data.googleCtaType === "CALL"
         ? postBody.data.googleCtaPhone
@@ -81,7 +83,6 @@ async function createPost(
     postApiBody.callToActionType = postBody.data.googleCtaType;
   }
 
-  console.log(postApiBody);
   const mgmtApiResp = await fetch(
     `https://api.yextapis.com/v2/accounts/me/posts?api_key=${YEXT_PUBLIC_MGMT_API_KEY}&v=20230901`,
     {

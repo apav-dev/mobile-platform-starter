@@ -68,9 +68,9 @@ const Social = () => {
     setEntityId(entityId);
   }, []);
 
-  useEffect(() => {
-    console.log(formData);
-  }, [entityId]);
+  // useEffect(() => {
+  //   console.log(formData);
+  // }, [formData]);
 
   const socialsQuery = useQuery(
     ["socials", entityId, pageToken],
