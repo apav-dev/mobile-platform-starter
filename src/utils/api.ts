@@ -6,6 +6,27 @@ import {
   YextResponse,
 } from "../types/yext";
 
+interface FormData {
+  publisher?: "GOOGLEMYBUSINESS" | "FACEBOOK";
+  postText?: string;
+  photoUrl?: string | undefined;
+  googleCtaUrl?: string;
+  googleCtaType?:
+    | "BOOK"
+    | "ORDER"
+    | "BUY"
+    | "LEARN_MORE"
+    | "SIGN_UP"
+    | "CALL"
+    | undefined;
+  googleCtaPhone?: string;
+  publishSchedule?: "now" | "later";
+  publishTime?: string;
+  publishDate?: Date;
+  readyToSubmit?: boolean;
+  entityId: string;
+}
+
 export const fetchLocation = async (
   entityId: string
 ): Promise<YextResponse<Location>> => {
@@ -68,6 +89,28 @@ export const fetchReviews = async (
   return data;
 };
 
+export const submitReviewResponse = async () => {};
+
+export const fetchSocialPosts = async (
+  entityId: string,
+  pageToken?: string
+): Promise<YextResponse<any>> => {
+  const params = new URLSearchParams({
+    api_key: YEXT_PUBLIC_MGMT_API_KEY,
+    v: "20230901",
+    entityIds: entityId,
+  });
+
+  if (pageToken) {
+    params.append("pageToken", pageToken);
+  }
+
+  const response = await fetch(`/api/social?${params.toString()}`);
+
+  const data = await response.json();
+  return data;
+};
+
 export const createReviewComment = async ({
   entityId,
   reviewId,
@@ -92,6 +135,22 @@ export const createReviewComment = async ({
   );
 
   const data = await response.json();
+  return data;
+};
+
+export const createSocialPost = async (
+  formData: FormData
+): Promise<YextResponse<any>> => {
+  const response = await fetch("/api/createPost", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ data: formData }),
+  });
+  const data = await response.json();
+  console.log("response status:", response.status);
+  console.log("returning data from social post create!", data);
   return data;
 };
 
