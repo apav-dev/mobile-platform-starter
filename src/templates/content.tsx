@@ -32,6 +32,7 @@ import { editLocation, fetchLocation } from "../utils/api";
 import { twMerge } from "tailwind-merge";
 import { toast } from "../components/utils/useToast";
 import Skeleton from "../components/Skeleton";
+import { useTranslation } from "react-i18next";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return "content";
@@ -54,6 +55,8 @@ const Content = () => {
   const [formData, setFormData] = React.useState<Record<string, any>>({});
   const [entityId, setEntityId] = useState<string | null>(null);
   const [editId, setEditId] = useState("");
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -205,7 +208,7 @@ const Content = () => {
                     hours={location.hours}
                   />
                   <HolidayHoursCard
-                    title="Holiday Hours"
+                    title={t("Holiday Hours")}
                     fieldId="holidayHours"
                     hours={location.hours}
                   />
