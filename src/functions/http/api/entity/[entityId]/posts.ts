@@ -1,5 +1,7 @@
 import { SitesHttpRequest, SitesHttpResponse } from "@yext/pages/*";
 import { fetch, getRuntime } from "@yext/pages/util";
+import { z, ZodObject, ZodSchema, ZodTypeAny } from "zod";
+import { format } from "date-fns";
 
 type PostBody = {
   entityIds: string[];
@@ -18,10 +20,10 @@ type PostBody = {
     | "SIGN_UP";
 };
 
-export default async function post(
+export default async function posts(
   request: SitesHttpRequest
 ): Promise<SitesHttpResponse> {
-  const { method, body } = request;
+  const { method, body, queryParams, pathParams } = request;
 
   // TODO: Remove and only parse body after rc.3 is released
   const runtime = getRuntime();
@@ -33,15 +35,40 @@ export default async function post(
   }
 
   switch (method) {
+    case "GET":
+      return getEntityPosts(queryParams, pathParams.entityId);
     case "POST":
-      return createPost(bodyObj);
+      return createPost(bodyObj, pathParams.entityId);
     default:
       return { body: "Method not allowed", headers: {}, statusCode: 405 };
   }
 }
 
+async function getEntityPosts(
+  queryParams: {
+    [key: string]: string;
+  },
+  entityId: string
+): Promise<SitesHttpResponse> {
+  const params = new URLSearchParams(queryParams);
+  params.append("entityIds", entityId);
+
+  const reqUrl = `https://api.yext.com/v2/accounts/me/posts?${params}`;
+
+  const mgmtApiResp = await fetch(reqUrl);
+
+  const resp = await mgmtApiResp.json();
+
+  return {
+    body: JSON.stringify(resp),
+    headers: {},
+    statusCode: 200,
+  };
+}
+
 async function createPost(
-  postBody: Record<string, any>
+  postBody: Record<string, any>,
+  entityId: string
 ): Promise<SitesHttpResponse> {
   if (!postBody || !postBody.data) {
     return {
@@ -52,7 +79,7 @@ async function createPost(
   }
 
   const postApiBody: PostBody = {
-    entityIds: [postBody.data.entityId],
+    entityIds: [entityId],
     publisher: postBody.data.publisher,
     text: postBody.data.postText,
   };

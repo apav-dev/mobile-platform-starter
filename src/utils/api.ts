@@ -113,14 +113,15 @@ export const fetchSocialPosts = async (
   const params = new URLSearchParams({
     api_key: YEXT_PUBLIC_MGMT_API_KEY,
     v: "20230901",
-    entityIds: entityId,
   });
 
   if (pageToken) {
     params.append("pageToken", pageToken);
   }
 
-  const response = await fetch(`/api/social?${params.toString()}`);
+  const response = await fetch(
+    `/api/entity/${entityId}/posts?${params.toString()}`
+  );
 
   const data = await response.json();
   return data;
@@ -156,7 +157,7 @@ export const createReviewComment = async ({
 export const createSocialPost = async (
   formData: FormData
 ): Promise<YextResponse<any>> => {
-  const response = await fetch("/api/createPost", {
+  const response = await fetch(`/api/entity/${formData.entityId}/posts`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -204,7 +205,7 @@ export const fetchAnalyticsForEntity = async (
   const formattedStartDate = `${startDate.getFullYear()}-${startMonth
     .toString()
     .padStart(2, "0")}-${startDate.getDate().toString().padStart(2, "0")}`;
-  const response = await fetch("/api/analytics", {
+  const response = await fetch(`/api/entity/${entityId}/analytics`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -217,7 +218,7 @@ export const fetchAnalyticsForEntity = async (
         "NEW_REVIEWS",
       ],
       filters: {
-        locationIds: [entityId],
+        locationIds: [],
         startDate: formattedStartDate,
         endDate: formattedEndDate,
       },

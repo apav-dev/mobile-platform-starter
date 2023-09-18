@@ -1,6 +1,5 @@
 import { SitesHttpRequest, SitesHttpResponse } from "@yext/pages/*";
 import { fetch, getRuntime } from "@yext/pages/util";
-import post from "./createPost";
 
 type Metrics = "PAGE_VIEWS" | "TOTAL_LISTINGS_IMPRESSIONS" | "AVERAGE_RATING";
 ("NEW_REVIEWS");
@@ -22,7 +21,7 @@ type PostBody = {
 export default async function analytics(
   request: SitesHttpRequest
 ): Promise<SitesHttpResponse> {
-  const { method, body } = request;
+  const { method, body, pathParams } = request;
 
   // TODO: Remove and only parse body after rc.3 is released
   const runtime = getRuntime();
@@ -35,14 +34,15 @@ export default async function analytics(
 
   switch (method) {
     case "POST":
-      return fetchAnalytics(bodyObj);
+      return fetchAnalytics(bodyObj, pathParams.entityId);
     default:
       return { body: "Method not allowed", headers: {}, statusCode: 405 };
   }
 }
 
 async function fetchAnalytics(
-  postBody: Record<string, any>
+  postBody: Record<string, any>,
+  entityId: string
 ): Promise<SitesHttpResponse> {
   if (!postBody) {
     return {
@@ -51,7 +51,9 @@ async function fetchAnalytics(
       statusCode: 400,
     };
   }
-  console.log(postBody);
+  const newBody = postBody;
+  postBody.filters.locationIds.push(entityId);
+  console.log(newBody);
   const mgmtApiResp = await fetch(
     `https://api.yextapis.com/v2/accounts/me/analytics/reports?api_key=${YEXT_PUBLIC_MGMT_API_KEY}&v=20230901`,
     {
@@ -59,7 +61,7 @@ async function fetchAnalytics(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(postBody),
+      body: JSON.stringify(newBody),
     }
   );
 
