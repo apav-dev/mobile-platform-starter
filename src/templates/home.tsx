@@ -13,10 +13,11 @@ import ProductCard from "../components/ProductCard";
 import { GraphIcon } from "../components/icons/GraphIcon";
 import { StarsIcon } from "../components/icons/StarsIcon";
 import { SocialIcon } from "../components/icons/SocialIcon";
-import { MessageBubbleIcon } from "../components/icons/MessageBubbleIcon";
 import { AnalyticsIcon } from "../components/icons/AnalyticsIcon";
 import platformImgUrl from "../assets/images/platform.png";
 import Skeleton from "../components/Skeleton";
+import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 
 export const getPath: GetPath<TemplateRenderProps> = () => {
   return `index.html`;
@@ -35,10 +36,11 @@ export const getHeadConfig: GetHeadConfig<
 const runtime = getRuntime();
 
 const Home = () => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = React.useState(true);
   const [permissionedEntity, setPermissionedEntity] = React.useState("#");
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function fetchPermissionedEntity() {
       try {
         const token = window?.YEXT_TOKENS?.AUTH_SEARCH.token;
