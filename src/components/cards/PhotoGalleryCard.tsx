@@ -53,7 +53,7 @@ export const PhotoGalleryCard = ({
       <Card>
         <div
           onClick={() => setEditId?.(fieldId)}
-          className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2"
+          className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2 "
         >
           {title}
         </div>

@@ -1,10 +1,9 @@
+import { forwardRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import * as React from "react";
 import { Form, FormField, FormLabel } from "./Form";
 import { Input } from "../Input";
-import { GalleryImage } from "../../types/yext";
 import { Card } from "../Card";
 import { TrashIcon } from "../icons/TrashIcon";
 import {
@@ -16,11 +15,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../Dialog";
-import { useState } from "react";
 import { usePageContext } from "../utils/usePageContext";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImageToCloudinary } from "../../utils/api";
 import { toast } from "../utils/useToast";
+
+import { GalleryImage } from "../../types/yext";
 
 export interface PhotoGalleryFormProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -32,7 +32,7 @@ export interface PhotoGalleryFormProps
 
 type UploadType = "none" | "url" | "file";
 
-export const PhotoGalleryForm = React.forwardRef<
+export const PhotoGalleryForm = forwardRef<
   HTMLInputElement,
   PhotoGalleryFormProps
 >(({ className, type, id, label, initialImages, onCancel, ...props }, ref) => {
@@ -71,12 +71,8 @@ export const PhotoGalleryForm = React.forwardRef<
     },
   });
 
-  // 2. Define a submit handler.
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated
-    console.log(values);
-    setFormData((prev) => ({
+    setFormData((prev: GalleryImage[]) => ({
       ...prev,
       [id]: values[id],
     }));
@@ -123,7 +119,9 @@ export const PhotoGalleryForm = React.forwardRef<
     }
   };
 
-  const handleAddImage = (e) => {
+  const handleAddImage = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     const images = form.getValues(id);
     images.push({
       image: {
@@ -185,69 +183,43 @@ export const PhotoGalleryForm = React.forwardRef<
                 </div>
               </>
             )}
-            {uploadType === "file" && (
+            {uploadType !== "none" && (
               <>
+                <div className="grid w-full max-w-sm items-center gap-1.5">
+                  <Input
+                    id={uploadType === "file" ? "new-image" : "new-image-url"}
+                    type={uploadType}
+                    accept={uploadType === "file" ? ".jpeg,.jpg,.png" : ""}
+                    onChange={handleImagePreview}
+                  />
+                </div>
                 {imagePreview && (
                   <>
                     <img
                       src={imagePreview}
                       alt="Preview"
-                      className="h-40 w-40 object-cover rounded-[3px]"
+                      className="h-40 w-40 object-cover rounded-[3px] mx-auto"
                     />
                   </>
                 )}
-                <div className="grid w-full max-w-sm items-center gap-1.5">
-                  <Input
-                    id="new-image"
-                    type="file"
-                    accept=".jpeg,.jpg,.png"
-                    onChange={handleImagePreview}
-                  />
-                </div>
-              </>
-            )}
-            {uploadType === "url" && (
-              <>
-                <div className="grid w-full max-w-sm items-center gap-1.5">
-                  <Input
-                    id="new-image-url"
-                    type="text"
-                    placeholder="Enter image URL"
-                    value={imagePreview || ""}
-                    onChange={handleImagePreview}
-                  />
-                </div>
-                {imagePreview && (
-                  <img
-                    src={imagePreview}
-                    alt="Preview from URL"
-                    className="h-40 w-40 object-cover rounded-[3px]"
-                  />
-                )}
-              </>
-            )}
-            {uploadType !== "none" && (
-              <DialogFooter className="flex-col gap-y-4">
-                <DialogTrigger
-                  type="button"
-                  className="px-4 py-3 bg-gray-700 rounded-[3px] justify-center items-center gap-2 flex w-full text-white font-lato-regular"
-                  onClick={(e) => handleAddImage(e)}
-                >
-                  Add Photo
-                </DialogTrigger>
-                <div className="px-4 justify-center items-center flex">
+                <DialogFooter className="flex-col gap-y-4">
                   <DialogTrigger
                     type="button"
-                    className="text-blue text-base font-lato-regular hover:underline"
-                    // onClick={() => {
-                    //   setImagePreview(null);
-                    //   setUploadType("none");
-                    // }}
+                    className="px-4 py-3 bg-gray-700 rounded-[3px] justify-center items-center gap-2 flex w-full text-white font-lato-regular"
+                    onClick={(e) => handleAddImage(e)}
                   >
-                    Cancel
+                    Add Photo
                   </DialogTrigger>
-                </div>
-              </DialogFooter>
+                  <div className="px-4 justify-center items-center flex">
+                    <DialogTrigger
+                      type="button"
+                      className="text-blue text-base font-lato-regular hover:underline"
+                    >
+                      Cancel
+                    </DialogTrigger>
+                  </div>
+                </DialogFooter>
+              </>
             )}
           </DialogContent>
         </Dialog>
@@ -261,13 +233,11 @@ export const PhotoGalleryForm = React.forwardRef<
                   <div className="self-stretch rounded-[3px] justify-between items-center gap-4 flex">
                     <div className="flex gap-x-4">
                       <img
-                        // layout="fixed"
                         width={60}
                         height={60}
                         src={galleryImage.image.url}
                       />
                       <div className="flex flex-col justify-center max-w-[120px] xs:max-w-[180px]">
-                        {/* This wrapper ensures the maximum width considering the image and some gap */}
                         <span className="text-gray-700 text-base font-lato-bold truncate">
                           {galleryImage.image.url}
                         </span>

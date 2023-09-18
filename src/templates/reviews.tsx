@@ -31,6 +31,8 @@ import { PageContextProvider } from "../components/utils/usePageContext";
 import { twMerge } from "tailwind-merge";
 import { useToast } from "../components/utils/useToast";
 import { ToastAction } from "../components/Toast";
+import { ReviewFilters } from "../components/ReviewFilters";
+import { ReviewFilterProvider } from "../components/utils/useReviewFilterContext";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return `reviews`;
@@ -63,6 +65,14 @@ const Reviews = () => {
   const [startIndex, setStartIndex] = useState<number>(1); // Starting index of current page
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [editId, setEditId] = useState<number | string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [ratingRange, setRatingRange] = useState<[number, number]>([1, 5]);
+  const [filterPanelOpen, setFilterPanelOpen] = useState<boolean>(false);
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setRatingRange([1, 5]);
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -71,8 +81,8 @@ const Reviews = () => {
   }, []);
 
   const reviewsQuery = useQuery(
-    ["reviews", entityId, pageToken, pageSize],
-    () => fetchReviews(entityId, pageSize, pageToken),
+    ["reviews", entityId, pageToken, pageSize, searchQuery, ratingRange],
+    () => fetchReviews(entityId, pageSize, pageToken, searchQuery, ratingRange),
     { keepPreviousData: true, enabled: !!entityId }
   );
 
@@ -209,6 +219,19 @@ const Reviews = () => {
           >
             <div className="flex flex-col gap-y-4">
               <Heading title={"Reviews"} icon={<StarsIcon />} />
+              <ReviewFilterProvider
+                value={{
+                  searchQuery,
+                  setSearchQuery,
+                  ratingRange,
+                  setRatingRange,
+                  filterPanelOpen,
+                  setFilterPanelOpen,
+                  clearFilters,
+                }}
+              >
+                <ReviewFilters />
+              </ReviewFilterProvider>
               <>
                 {reviewsQuery?.data?.response?.count &&
                 reviewsQuery.data.response.count > 0 ? (
