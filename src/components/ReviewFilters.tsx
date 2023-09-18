@@ -7,6 +7,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "./form/Form";
 import { Input } from "./Input";
@@ -16,6 +17,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useReviewFilterContext } from "./utils/useReviewFilterContext";
 import { cn } from "../utils/cn";
 import { Slider } from "./Slider";
+import { Checkbox } from "./Checkbox";
+import { RadioGroup, RadioGroupItem } from "./Radio";
 
 const SearchFormSchema = z.object({
   reviewContent: z.string(),
@@ -172,6 +175,247 @@ const ReviewRatingSlider = () => {
   );
 };
 
+export const publisherOptions = [
+  {
+    id: "FIRSTPARTY",
+    label: "First-Party",
+  },
+  {
+    id: "GOOGLEMYBUSINESS",
+    label: "Google",
+  },
+  {
+    id: "FACEBOOK",
+    label: "Facebook",
+  },
+] as const;
+
+const PublisherFormSchema = z.object({
+  publisherIds: z
+    .array(z.string())
+    .refine((value) => value.some((item) => item), {
+      message: "You must select at least one publisher",
+    }),
+});
+
+// TODO: Validate that at least one publisher is selected and show error message
+export function PublisherSelector() {
+  const { publisherIds, setPublisherIds, setFilterPanelOpen } =
+    useReviewFilterContext();
+
+  const form = useForm<z.infer<typeof PublisherFormSchema>>({
+    resolver: zodResolver(PublisherFormSchema),
+    defaultValues: {
+      publisherIds,
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof PublisherFormSchema>) {
+    setPublisherIds(data.publisherIds);
+    setFilterPanelOpen(false);
+  }
+
+  function handleCancel() {
+    setFilterPanelOpen(false);
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="publisherIds"
+          render={() => (
+            <FormItem className="space-y-6">
+              {publisherOptions.map((option) => (
+                <FormField
+                  key={option.id}
+                  control={form.control}
+                  name="publisherIds"
+                  render={({ field }) => {
+                    return (
+                      <FormItem
+                        key={option.id}
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(option.id)}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([...field.value, option.id])
+                                : field.onChange(
+                                    field.value?.filter(
+                                      (value) => value !== option.id
+                                    )
+                                  );
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-lato-regular">
+                          {option.label}
+                        </FormLabel>
+                      </FormItem>
+                    );
+                  }}
+                />
+              ))}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          variant="brand-primary"
+          className="w-full"
+          type="submit"
+          // disabled={isSelecting}
+        >
+          Search
+        </Button>
+        <Button
+          variant="brand-cancel"
+          size="cancel"
+          className="text-center w-full"
+          onClick={handleCancel}
+          // disabled={isSelecting}
+        >
+          <span>Cancel</span>
+        </Button>
+      </form>
+    </Form>
+  );
+}
+
+export enum AwaitingResponseType {
+  NO_RESPONSE = "NO_RESPONSE",
+  REVIEW = "REVIEW",
+  COMMENT = "COMMENT",
+  REVIEW_OR_COMMENT = "REVIEW_OR_COMMENT",
+}
+
+const awaitingResponseOptions = [
+  {
+    label: "No Response",
+    value: AwaitingResponseType.NO_RESPONSE,
+  },
+  {
+    label: "Review",
+    value: AwaitingResponseType.REVIEW,
+  },
+  {
+    label: "Comment",
+    value: AwaitingResponseType.COMMENT,
+  },
+  {
+    label: "Review or Comment",
+    value: AwaitingResponseType.REVIEW_OR_COMMENT,
+  },
+] as const;
+
+const valuesTuple: [string, string, string, string] =
+  awaitingResponseOptions.map((option) => option.value) as any;
+
+const ResponseFormSchema = z.object({
+  awaitingResponse: z.enum(valuesTuple, {
+    required_error: "You need to select a notification type.",
+  }),
+});
+
+export function AwaitingResponseSelector() {
+  const { setFilterPanelOpen, awaitingResponse, setAwaitingResponse } =
+    useReviewFilterContext();
+
+  const form = useForm<z.infer<typeof ResponseFormSchema>>({
+    resolver: zodResolver(ResponseFormSchema),
+    defaultValues: {
+      awaitingResponse,
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof ResponseFormSchema>) {
+    setAwaitingResponse(data.awaitingResponse);
+    setFilterPanelOpen(false);
+  }
+
+  function handleCancel() {
+    setFilterPanelOpen(false);
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="awaitingResponse"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-col space-y-1"
+                >
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem
+                        value={AwaitingResponseType.NO_RESPONSE}
+                      />
+                    </FormControl>
+                    <FormLabel className="font-normal">No Response</FormLabel>
+                  </FormItem>
+
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value={AwaitingResponseType.REVIEW} />
+                    </FormControl>
+                    <FormLabel className="font-normal">Review</FormLabel>
+                  </FormItem>
+
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value={AwaitingResponseType.COMMENT} />
+                    </FormControl>
+                    <FormLabel className="font-normal">Comment</FormLabel>
+                  </FormItem>
+
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem
+                        value={AwaitingResponseType.REVIEW_OR_COMMENT}
+                      />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      Review or Comment
+                    </FormLabel>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          variant="brand-primary"
+          className="w-full"
+          type="submit"
+          // disabled={isSelecting}
+        >
+          Search
+        </Button>
+        <Button
+          variant="brand-cancel"
+          size="cancel"
+          className="text-center w-full"
+          onClick={handleCancel}
+          // disabled={isSelecting}
+        >
+          <span>Cancel</span>
+        </Button>
+      </form>
+    </Form>
+  );
+}
+
 export const ReviewFilters = () => {
   const [filterTitle, setFilterTitle] = useState("");
   const [filterDescription, setFilterDescription] = useState("");
@@ -183,6 +427,8 @@ export const ReviewFilters = () => {
     setFilterPanelOpen,
     ratingRange,
     clearFilters,
+    publisherIds,
+    awaitingResponse,
   } = useReviewFilterContext();
 
   const handleFilterClick = (
@@ -202,9 +448,15 @@ export const ReviewFilters = () => {
   };
 
   const FilterButton = ({
+    title,
+    description,
+    filterComponent,
     children,
     className,
   }: {
+    title: string;
+    description: string;
+    filterComponent: React.ReactNode;
     children: React.ReactNode;
     className?: string;
   }) => (
@@ -213,9 +465,7 @@ export const ReviewFilters = () => {
         "px-3 py-1.5 bg-white rounded-[15px] border border-zinc-200 justify-center items-center gap-2 flex text-gray-700 font-lato-regular leading-tight whitespace-nowrap",
         className
       )}
-      onClick={() =>
-        handleFilterClick("Rating", "Filter by Rating", <ReviewRatingSlider />)
-      }
+      onClick={() => handleFilterClick(title, description, filterComponent)}
     >
       {children}
     </Button>
@@ -224,31 +474,38 @@ export const ReviewFilters = () => {
   return (
     <>
       <div className="justify-start items-center gap-2 flex flex-wrap">
-        <Button
+        <FilterButton
+          title="Search"
+          description="Search for review content by keyword"
           className={cn(
             "px-2 py-1 bg-white rounded-[15px] border border-zinc-200 justify-center items-center gap-2.5 flex",
             searchQuery && "px-3 py-1.5 bg-zinc-200"
           )}
-          onClick={() =>
-            handleFilterClick(
-              "Search",
-              "Search Review Content",
-              <ReviewSearchForm />
-            )
-          }
+          filterComponent={<ReviewSearchForm />}
         >
           {searchQuery ? (
             <span className="text-gray-900 font-lato-regular leading-tight whitespace-nowrap">{`"${searchQuery}"`}</span>
           ) : (
             <FaSearch className="text-gray-700 w-4 h-4" />
           )}
-        </Button>
+        </FilterButton>
         {ratingRange[0] === 1 && ratingRange[1] === 5 ? (
-          <FilterButton>All Ratings</FilterButton>
+          <FilterButton
+            title="Review Rating"
+            description="Filter Reviews by rating"
+            filterComponent={<ReviewRatingSlider />}
+          >
+            All Ratings
+          </FilterButton>
         ) : (
           <>
             {ratingRange[0] === ratingRange[1] ? (
-              <FilterButton className="bg-zinc-200">
+              <FilterButton
+                className="bg-zinc-200"
+                title="Review Rating"
+                description="Filter Reviews by rating"
+                filterComponent={<ReviewRatingSlider />}
+              >
                 {Array.from({ length: ratingRange[0] }).map((_, i) => (
                   <FaStar key={i} className="text-gray-700 w-2.5 2.5" />
                 ))}
@@ -256,7 +513,12 @@ export const ReviewFilters = () => {
             ) : (
               <>
                 {ratingRange[0] > 1 && (
-                  <FilterButton className="bg-zinc-200">
+                  <FilterButton
+                    className="bg-zinc-200"
+                    title="Review Rating"
+                    description="Filter Reviews by rating"
+                    filterComponent={<ReviewRatingSlider />}
+                  >
                     {Array.from({ length: ratingRange[0] }).map((_, i) => (
                       <FaStar key={i} className="text-gray-700 w-2.5 2.5" />
                     ))}
@@ -264,7 +526,12 @@ export const ReviewFilters = () => {
                   </FilterButton>
                 )}
                 {ratingRange[1] < 5 && (
-                  <FilterButton className="bg-zinc-200">
+                  <FilterButton
+                    className="bg-zinc-200"
+                    title="Review Rating"
+                    description="Filter Reviews by rating"
+                    filterComponent={<ReviewRatingSlider />}
+                  >
                     {Array.from({ length: ratingRange[1] }).map((_, i) => (
                       <FaStar key={i} className="text-gray-700 w-2.5 2.5" />
                     ))}
@@ -276,12 +543,54 @@ export const ReviewFilters = () => {
           </>
         )}
 
-        <Button className="px-3 py-1.5 bg-white rounded-[15px] border border-zinc-200 justify-center items-center gap-2 flex text-gray-700 font-lato-regular leading-tight whitespace-nowrap">
-          No Response
-        </Button>
-        <Button className="px-3 py-1.5 bg-white rounded-[15px] border border-zinc-200 justify-center items-center gap-2 flex text-gray-700 font-lato-regular leading-tight whitespace-nowrap">
-          All Publishers
-        </Button>
+        <FilterButton
+          className={cn(
+            "px-3 py-1.5 bg-white rounded-[15px] border border-zinc-200 justify-center items-center gap-2 flex text-gray-700 font-lato-regular leading-tight whitespace-nowrap",
+            awaitingResponse !== AwaitingResponseType.NO_RESPONSE &&
+              "bg-zinc-200"
+          )}
+          title="Awaiting Response"
+          description="Filter by reviews awaiting a response"
+          filterComponent={<AwaitingResponseSelector />}
+        >
+          {
+            awaitingResponseOptions.find(
+              (option) => option.value === awaitingResponse
+            )?.label
+          }
+        </FilterButton>
+
+        {publisherIds.length === publisherOptions.length ? (
+          <FilterButton
+            className="px-3 py-1.5 bg-white rounded-[15px] border border-zinc-200 justify-center items-center gap-2 flex text-gray-700 font-lato-regular leading-tight whitespace-nowrap"
+            title="Review Rating"
+            description="Filter Reviews by rating"
+            filterComponent={<PublisherSelector />}
+          >
+            All Publishers
+          </FilterButton>
+        ) : (
+          // button per publisher
+          <>
+            {publisherIds.map((id) => {
+              const publisher = publisherOptions.find(
+                (publisher) => publisher.id === id
+              );
+              if (!publisher) return null;
+              return (
+                <FilterButton
+                  key={publisher.id}
+                  className="bg-zinc-200"
+                  title="Review Rating"
+                  description="Filter Reviews by rating"
+                  filterComponent={<PublisherSelector />}
+                >
+                  {publisher.label}
+                </FilterButton>
+              );
+            })}
+          </>
+        )}
         <Button
           className="text-blue font-lato-regular leading-tight hover:underline"
           onClick={handleCancel}

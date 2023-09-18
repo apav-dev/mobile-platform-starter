@@ -133,7 +133,7 @@ function validateAndStringifyQueryParams(queryParams: {
         })
         .optional(),
       reviewContent: z.string().optional(),
-      publisherIds: z.array(z.string()).optional(),
+      publisherIds: z.string().optional(),
       awaitingResponse: z
         .enum(["REVIEW", "COMMENT", "REVIEW_OR_COMMENT"])
         .optional(),

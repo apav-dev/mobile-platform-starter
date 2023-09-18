@@ -1,10 +1,5 @@
-import {
-  Location,
-  Review,
-  ReviewResponse,
-  YextContent,
-  YextResponse,
-} from "../types/yext";
+import { AwaitingResponseType } from "../components/ReviewFilters";
+import { Location, ReviewResponse, YextResponse } from "../types/yext";
 
 interface FormData {
   publisher?: "GOOGLEMYBUSINESS" | "FACEBOOK";
@@ -72,7 +67,9 @@ export const fetchReviews = async (
   limit?: number,
   pageToken?: string,
   searchQuery?: string,
-  ratingRange?: [number, number]
+  ratingRange?: [number, number],
+  publisherIds?: string[],
+  awaitingResponse?: AwaitingResponseType
 ): Promise<YextResponse<ReviewResponse>> => {
   const params = new URLSearchParams({
     api_key: YEXT_PUBLIC_CONTENT_API_KEY,
@@ -94,6 +91,17 @@ export const fetchReviews = async (
     if (ratingRange[1] < 5) {
       params.append("maxRating", ratingRange[1].toString());
     }
+  }
+
+  if (publisherIds) {
+    params.append("publisherIds", publisherIds.toString());
+  }
+
+  if (
+    awaitingResponse &&
+    awaitingResponse !== AwaitingResponseType.NO_RESPONSE
+  ) {
+    params.append("awaitingResponse", awaitingResponse);
   }
 
   const response = await fetch(

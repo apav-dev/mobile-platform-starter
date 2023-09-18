@@ -31,7 +31,11 @@ import { PageContextProvider } from "../components/utils/usePageContext";
 import { twMerge } from "tailwind-merge";
 import { useToast } from "../components/utils/useToast";
 import { ToastAction } from "../components/Toast";
-import { ReviewFilters } from "../components/ReviewFilters";
+import {
+  AwaitingResponseType,
+  ReviewFilters,
+  publisherOptions,
+} from "../components/ReviewFilters";
 import { ReviewFilterProvider } from "../components/utils/useReviewFilterContext";
 
 export const getPath: GetPath<TemplateProps> = () => {
@@ -54,6 +58,8 @@ export interface EntityReviewProps {
 
 const pageSizes = [5, 10, 25, 50];
 
+const publisherOptionIds = publisherOptions.map((option) => option.id);
+
 const Reviews = () => {
   const { toast } = useToast();
 
@@ -68,10 +74,16 @@ const Reviews = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [ratingRange, setRatingRange] = useState<[number, number]>([1, 5]);
   const [filterPanelOpen, setFilterPanelOpen] = useState<boolean>(false);
+  const [responseType, setResponseType] = useState<AwaitingResponseType>(
+    AwaitingResponseType.NO_RESPONSE
+  );
+  const [publisherIds, setPublisherIds] =
+    useState<string[]>(publisherOptionIds);
 
   const clearFilters = () => {
     setSearchQuery("");
     setRatingRange([1, 5]);
+    setPublisherIds(publisherOptionIds);
   };
 
   useEffect(() => {
@@ -81,8 +93,26 @@ const Reviews = () => {
   }, []);
 
   const reviewsQuery = useQuery(
-    ["reviews", entityId, pageToken, pageSize, searchQuery, ratingRange],
-    () => fetchReviews(entityId, pageSize, pageToken, searchQuery, ratingRange),
+    [
+      "reviews",
+      entityId,
+      pageToken,
+      pageSize,
+      searchQuery,
+      ratingRange,
+      publisherIds,
+      responseType,
+    ],
+    () =>
+      fetchReviews(
+        entityId,
+        pageSize,
+        pageToken,
+        searchQuery,
+        ratingRange,
+        publisherIds,
+        responseType
+      ),
     { keepPreviousData: true, enabled: !!entityId }
   );
 
@@ -228,6 +258,10 @@ const Reviews = () => {
                   filterPanelOpen,
                   setFilterPanelOpen,
                   clearFilters,
+                  publisherIds,
+                  setPublisherIds,
+                  awaitingResponse: responseType,
+                  setAwaitingResponse: setResponseType,
                 }}
               >
                 <ReviewFilters />

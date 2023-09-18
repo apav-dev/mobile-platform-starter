@@ -1,4 +1,5 @@
 import { createCtx } from "../../utils/createContext";
+import { AwaitingResponseType } from "../ReviewFilters";
 
 type ReviewFilterContextType = {
   searchQuery: string;
@@ -7,6 +8,10 @@ type ReviewFilterContextType = {
   setRatingRange: (range: [number, number]) => void;
   filterPanelOpen: boolean;
   setFilterPanelOpen: (open: boolean) => void;
+  publisherIds: string[];
+  setPublisherIds: (ids: string[]) => void;
+  awaitingResponse: AwaitingResponseType;
+  setAwaitingResponse: (awaitingResponse: AwaitingResponseType) => void;
   clearFilters: () => void;
 };
 
