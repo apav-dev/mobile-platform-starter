@@ -70,7 +70,7 @@ const Home = () => {
   }, []);
 
   return (
-    <Main>
+    <Main entityId={permissionedEntity}>
       <ContentContainer containerClassName="py-8">
         <div className="flex flex-col items-center gap-y-8">
           <img
@@ -113,19 +113,13 @@ const Home = () => {
               icon={<SocialIcon />}
               title="Social"
               description="View and create social posts for Google, Facebook, Instagram, and Twitter."
-              link="#"
-            />
-            <ProductCard
-              icon={<MessageBubbleIcon />}
-              title="Q&A"
-              description="View top metrics such as impressions and average rating for your business."
-              link="#"
+              link={`/social?entityId=${permissionedEntity}`}
             />
             <ProductCard
               icon={<AnalyticsIcon />}
               title="Analytics"
               description="View top metrics such as impressions and average rating for your business."
-              link="#"
+              link={`/analytics?entityId=${permissionedEntity}`}
             />
           </div>
         )}

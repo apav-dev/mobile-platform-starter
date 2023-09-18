@@ -121,14 +121,15 @@ export const fetchSocialPosts = async (
   const params = new URLSearchParams({
     api_key: YEXT_PUBLIC_MGMT_API_KEY,
     v: "20230901",
-    entityIds: entityId,
   });
 
   if (pageToken) {
     params.append("pageToken", pageToken);
   }
 
-  const response = await fetch(`/api/social?${params.toString()}`);
+  const response = await fetch(
+    `/api/entity/${entityId}/posts?${params.toString()}`
+  );
 
   const data = await response.json();
   return data;
@@ -164,7 +165,7 @@ export const createReviewComment = async ({
 export const createSocialPost = async (
   formData: FormData
 ): Promise<YextResponse<any>> => {
-  const response = await fetch("/api/createPost", {
+  const response = await fetch(`/api/entity/${formData.entityId}/posts`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -172,8 +173,6 @@ export const createSocialPost = async (
     body: JSON.stringify({ data: formData }),
   });
   const data = await response.json();
-  console.log("response status:", response.status);
-  console.log("returning data from social post create!", data);
   return data;
 };
 
@@ -195,6 +194,45 @@ export const uploadImageToCloudinary = async (
   if (response.status !== 200) {
     throw new Error("Failed to upload image");
   }
+  const data = await response.json();
+  return data;
+};
+
+export const fetchAnalyticsForEntity = async (
+  entityId: string,
+  dateRange: number
+): Promise<YextResponse<any>> => {
+  const endDate = new Date();
+  const endMonth = endDate.getMonth() + 1;
+  const formattedEndDate = `${endDate.getFullYear()}-${endMonth
+    .toString()
+    .padStart(2, "0")}-${endDate.getDate().toString().padStart(2, "0")}`;
+  const startDate = new Date();
+  startDate.setDate(endDate.getDate() - dateRange);
+  const startMonth = startDate.getMonth() + 1;
+  const formattedStartDate = `${startDate.getFullYear()}-${startMonth
+    .toString()
+    .padStart(2, "0")}-${startDate.getDate().toString().padStart(2, "0")}`;
+  const response = await fetch(`/api/entity/${entityId}/analytics`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      metrics: [
+        "STOREPAGES_PAGEVIEWS",
+        "TOTAL_LISTINGS_IMPRESSIONS",
+        "AVERAGE_RATING",
+        "NEW_REVIEWS",
+      ],
+      filters: {
+        locationIds: [],
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+      },
+      dimensions: ["ENTITY_IDS"],
+    }),
+  });
   const data = await response.json();
   return data;
 };

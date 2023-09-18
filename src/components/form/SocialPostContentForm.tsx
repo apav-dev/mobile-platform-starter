@@ -110,7 +110,6 @@ const SocialPostContentForm = () => {
   };
 
   const handleAddImage = (e) => {
-    console.log(imagePreview);
     if (imagePreview) {
       form.setValue("photoUrl", imagePreview);
     } else {

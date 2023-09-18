@@ -10,37 +10,41 @@ import { HomeIcon } from "./icons/HomeIcon";
 import { motion } from "framer-motion";
 import { XIcon } from "./icons/XIcon";
 
-const footerLinks = [
-  {
-    icon: HomeIcon,
-    title: "Home",
-    link: "/",
-  },
-  {
-    icon: GraphIcon,
-    title: "Content",
-    link: "/content?entityId=facility-2",
-  },
-  {
-    icon: SocialIcon,
-    title: "Social",
-    link: "/social",
-  },
-  {
-    icon: StarsIcon,
-    title: "Reviews",
-    link: "/reviews?entityId=facility-2",
-  },
-  {
-    icon: AnalyticsIcon,
-    title: "Analytics",
-    link: "/analytics",
-  },
-];
+type FooterProps = {
+  entityId: string;
+};
 
-const Footer = () => {
+const Footer = ({ entityId }: FooterProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuHidden, setMenuHidden] = useState(true);
+
+  const footerLinks = [
+    {
+      icon: HomeIcon,
+      title: "Home",
+      link: "/",
+    },
+    {
+      icon: GraphIcon,
+      title: "Content",
+      link: `content?entityId=${entityId}`,
+    },
+    {
+      icon: SocialIcon,
+      title: "Social",
+      link: `social?entityId=${entityId}`,
+    },
+    {
+      icon: StarsIcon,
+      title: "Reviews",
+      link: `reviews?entityId=${entityId}`,
+    },
+    {
+      icon: AnalyticsIcon,
+      title: "Analytics",
+      link: `analytics?entityId=${entityId}`,
+    },
+  ];
 
   return (
     <div className="fixed bottom-0 w-full z-40">
