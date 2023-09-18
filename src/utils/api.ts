@@ -70,7 +70,9 @@ export const fetchLocationFromContentApi = async (
 export const fetchReviews = async (
   entityId: string,
   limit?: number,
-  pageToken?: string
+  pageToken?: string,
+  searchQuery?: string,
+  ratingRange?: [number, number]
 ): Promise<YextResponse<ReviewResponse>> => {
   const params = new URLSearchParams({
     api_key: YEXT_PUBLIC_CONTENT_API_KEY,
@@ -79,6 +81,19 @@ export const fetchReviews = async (
 
   if (pageToken) {
     params.append("pageToken", pageToken);
+  }
+
+  if (searchQuery) {
+    params.append("reviewContent", searchQuery);
+  }
+
+  if (ratingRange) {
+    if (ratingRange[0] > 1) {
+      params.append("minRating", ratingRange[0].toString());
+    }
+    if (ratingRange[1] < 5) {
+      params.append("maxRating", ratingRange[1].toString());
+    }
   }
 
   const response = await fetch(
