@@ -226,7 +226,6 @@ export const fetchAnalyticsForEntity = async (
         "NEW_REVIEWS",
       ],
       filters: {
-        locationIds: [],
         startDate: formattedStartDate,
         endDate: formattedEndDate,
       },

@@ -52,7 +52,7 @@ async function fetchAnalytics(
     };
   }
   const newBody = postBody;
-  postBody.filters.locationIds.push(entityId);
+  postBody.filters.locationIds = [entityId];
   console.log(newBody);
   const mgmtApiResp = await fetch(
     `https://api.yextapis.com/v2/accounts/me/analytics/reports?api_key=${YEXT_PUBLIC_MGMT_API_KEY}&v=20230901`,

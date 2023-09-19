@@ -24,30 +24,6 @@
         "functionName": "PagesGenerator"
       },
       {
-        "pluginName": "social-82940",
-        "event": "API",
-        "functionName": "default",
-        "apiPath": "api/social",
-        "sourceFiles": [
-          {
-            "root": "dist/functions/social-82940",
-            "pattern": "*{.js,.ts}"
-          }
-        ]
-      },
-      {
-        "pluginName": "createPost-72629",
-        "event": "API",
-        "functionName": "default",
-        "apiPath": "api/createPost",
-        "sourceFiles": [
-          {
-            "root": "dist/functions/createPost-72629",
-            "pattern": "*{.js,.ts}"
-          }
-        ]
-      },
-      {
         "pluginName": "entityId-88921",
         "event": "API",
         "functionName": "default",
@@ -67,6 +43,30 @@
         "sourceFiles": [
           {
             "root": "dist/functions/reviews-70867",
+            "pattern": "*{.js,.ts}"
+          }
+        ]
+      },
+      {
+        "pluginName": "posts-52757",
+        "event": "API",
+        "functionName": "default",
+        "apiPath": "api/entity/{{entityId}}/posts",
+        "sourceFiles": [
+          {
+            "root": "dist/functions/posts-52757",
+            "pattern": "*{.js,.ts}"
+          }
+        ]
+      },
+      {
+        "pluginName": "analytics-52062",
+        "event": "API",
+        "functionName": "default",
+        "apiPath": "api/entity/{{entityId}}/analytics",
+        "sourceFiles": [
+          {
+            "root": "dist/functions/analytics-52062",
             "pattern": "*{.js,.ts}"
           }
         ]
