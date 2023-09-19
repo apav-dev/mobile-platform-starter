@@ -24,6 +24,7 @@ export default async function analytics(
   const { method, body, pathParams } = request;
 
   // TODO: Remove and only parse body after rc.3 is released
+  console.log("body from request:", body);
   const runtime = getRuntime();
   let bodyObj = {};
   if (runtime.name === "node") {
