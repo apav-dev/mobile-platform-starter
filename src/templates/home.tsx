@@ -18,6 +18,7 @@ import platformImgUrl from "../assets/images/platform.png";
 import Skeleton from "../components/Skeleton";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
+import permissionedEntity from "../components/utils/permissionedEntity";
 
 export const getPath: GetPath<TemplateRenderProps> = () => {
   return `index.html`;
@@ -33,46 +34,21 @@ export const getHeadConfig: GetHeadConfig<
   };
 };
 
-const runtime = getRuntime();
-
 const Home = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = React.useState(true);
-  const [permissionedEntity, setPermissionedEntity] = React.useState("#");
+  const [authedEntity, setauthedEntity] = React.useState("#");
+  const entityAuth = permissionedEntity();
 
   useEffect(() => {
-    async function fetchPermissionedEntity() {
-      try {
-        const token = window?.YEXT_TOKENS?.AUTH_SEARCH.token;
-        if (!token) {
-          console.log("no token found on window");
-          return;
-        }
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", `Bearer ${token}`);
-        const requestOptions = {
-          method: "GET",
-          headers: myHeaders,
-        };
-        const searchResults = await fetch(
-          "https://cdn.yextapis.com/v2/accounts/me/search/vertical/query?input=locations&locale=en&verticalKey=locations&experienceKey=mobile-starter-search&version=PRODUCTION&v=20230907",
-          requestOptions
-        ).then((response) => response.json());
-        const entityId = searchResults.response.results[0].data.id;
-        setPermissionedEntity(entityId);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
+    if (entityAuth) {
+      setauthedEntity(entityAuth);
+      setIsLoading(false);
     }
-    if (!runtime.isServerSide) {
-      fetchPermissionedEntity();
-    }
-  }, []);
+  }, [entityAuth]);
 
   return (
-    <Main entityId={permissionedEntity}>
+    <Main>
       <ContentContainer containerClassName="py-8">
         <div className="flex flex-col items-center gap-y-8">
           <img
@@ -103,25 +79,25 @@ const Home = () => {
               icon={<GraphIcon />}
               title="Content"
               description="Edit your business information such as address, hours, and description."
-              link={`/content?entityId=${permissionedEntity}`}
+              link={`/content?entityId=${authedEntity}`}
             />
             <ProductCard
               icon={<StarsIcon />}
               title="Reviews"
               description="View your recent reviews, filter, and respond."
-              link={`/reviews?entityId=${permissionedEntity}`}
+              link={`/reviews?entityId=${authedEntity}`}
             />
             <ProductCard
               icon={<SocialIcon />}
               title="Social"
               description="View and create social posts for Google, Facebook, Instagram, and Twitter."
-              link={`/social?entityId=${permissionedEntity}`}
+              link={`/social?entityId=${authedEntity}`}
             />
             <ProductCard
               icon={<AnalyticsIcon />}
               title="Analytics"
               description="View top metrics such as impressions and average rating for your business."
-              link={`/analytics?entityId=${permissionedEntity}`}
+              link={`/analytics?entityId=${authedEntity}`}
             />
           </div>
         )}
