@@ -51,9 +51,10 @@ async function fetchAnalytics(
       statusCode: 400,
     };
   }
+  console.log("initial body", postBody);
   const newBody = postBody;
   postBody.filters.locationIds = [entityId];
-  console.log(newBody);
+  console.log("adjusted body:", newBody);
   const mgmtApiResp = await fetch(
     `https://api.yextapis.com/v2/accounts/me/analytics/reports?api_key=${YEXT_PUBLIC_MGMT_API_KEY}&v=20230901`,
     {
