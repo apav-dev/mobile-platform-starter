@@ -51,6 +51,7 @@ async function fetchAnalytics(
       statusCode: 400,
     };
   }
+  console.log("initial body:", postBody);
   const newBody = postBody;
   postBody.filters.locationIds = [entityId];
   console.log(newBody);
