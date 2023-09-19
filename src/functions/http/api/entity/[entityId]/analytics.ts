@@ -26,13 +26,14 @@ export default async function analytics(
   // TODO: Remove and only parse body after rc.3 is released
   console.log("body from request:", body);
   const runtime = getRuntime();
+  console.log(runtime);
   let bodyObj = {};
   if (runtime.name === "node") {
     bodyObj = body;
   } else if (runtime.name === "deno" && body) {
     bodyObj = JSON.parse(body);
   }
-
+  console.log("runtime adjusted body", bodyObj);
   switch (method) {
     case "POST":
       return fetchAnalytics(bodyObj, pathParams.entityId);
