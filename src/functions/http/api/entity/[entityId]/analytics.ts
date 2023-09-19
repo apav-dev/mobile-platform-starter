@@ -32,6 +32,8 @@ export default async function analytics(
     bodyObj = body;
   } else if (runtime.name === "deno" && body) {
     bodyObj = JSON.parse(body);
+  } else {
+    bodyObj = body;
   }
   console.log("runtime adjusted body", bodyObj);
   switch (method) {
