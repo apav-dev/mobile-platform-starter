@@ -33,9 +33,8 @@ export default async function analytics(
   } else if (runtime.name === "deno" && body) {
     bodyObj = JSON.parse(body);
   } else {
-    bodyObj = body;
+    bodyObj = JSON.parse(body);
   }
-  console.log("runtime adjusted body", bodyObj);
   switch (method) {
     case "POST":
       return fetchAnalytics(bodyObj, pathParams.entityId);
@@ -55,8 +54,7 @@ async function fetchAnalytics(
       statusCode: 400,
     };
   }
-  console.log("initial body", postBody);
-  const newBody = JSON.parse(postBody);
+  const newBody = postBody;
   console.log("newBody", newBody);
   console.log("filters", newBody.filters);
   newBody.filters.locationIds = [entityId];
