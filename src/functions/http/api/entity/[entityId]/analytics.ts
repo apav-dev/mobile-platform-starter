@@ -57,6 +57,8 @@ async function fetchAnalytics(
   }
   console.log("initial body", postBody);
   const newBody = postBody;
+  console.log("newBody", newBody);
+  console.log("filters", newBody.filters);
   newBody.filters.locationIds = [entityId];
   console.log("adjusted body:", newBody);
   const mgmtApiResp = await fetch(
