@@ -24,9 +24,7 @@ export default async function analytics(
   const { method, body, pathParams } = request;
 
   // TODO: Remove and only parse body after rc.3 is released
-  console.log("body from request:", body);
   const runtime = getRuntime();
-  console.log(runtime);
   let bodyObj = {};
   if (runtime.name === "node") {
     bodyObj = body;
@@ -55,10 +53,7 @@ async function fetchAnalytics(
     };
   }
   const newBody = postBody;
-  console.log("newBody", newBody);
-  console.log("filters", newBody.filters);
   newBody.filters.locationIds = [entityId];
-  console.log("adjusted body:", newBody);
   const mgmtApiResp = await fetch(
     `https://api.yextapis.com/v2/accounts/me/analytics/reports?api_key=${YEXT_PUBLIC_MGMT_API_KEY}&v=20230901`,
     {
