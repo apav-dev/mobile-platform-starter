@@ -32,7 +32,7 @@ export default async function posts(
     bodyObj = body;
   } else if (runtime.name === "deno" && body) {
     bodyObj = JSON.parse(body);
-  } else {
+  } else if (body) {
     bodyObj = JSON.parse(body);
   }
 
