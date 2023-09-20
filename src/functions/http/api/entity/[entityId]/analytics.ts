@@ -56,7 +56,7 @@ async function fetchAnalytics(
     };
   }
   console.log("initial body", postBody);
-  const newBody = postBody;
+  const newBody = JSON.parse(postBody);
   console.log("newBody", newBody);
   console.log("filters", newBody.filters);
   newBody.filters.locationIds = [entityId];
