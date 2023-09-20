@@ -29,6 +29,7 @@ import { toast } from "../utils/useToast";
 import { TrashIcon } from "../icons/TrashIcon";
 import { Card } from "../Card";
 import { Input } from "../Input";
+import { useTranslation } from "react-i18next";
 
 type UploadType = "none" | "url" | "file";
 
@@ -43,12 +44,13 @@ const SocialPostContentForm = () => {
     setCreatingPost,
     setSchedulePost,
   } = usePageContext();
+  const { t } = useTranslation();
 
   const FormSchema = z.object({
     postText: z
       .string()
       .max(formData.publisher === "GOOGLEMYBUSINESS" ? 1500 : 5000, {
-        message: "Maximum length exceeded.",
+        message: t("Maximum length exceeded"),
       }),
     photoUrl: z.string().url().optional(),
   });
@@ -99,8 +101,8 @@ const SocialPostContentForm = () => {
             console.log(error);
             toast({
               variant: "destructive",
-              title: "Failed to upload image",
-              description: "Please choose a different image.",
+              title: t("Failed to upload image"),
+              description: t("Please choose a different image"),
             });
           });
       }
@@ -115,8 +117,8 @@ const SocialPostContentForm = () => {
     } else {
       toast({
         variant: "destructive",
-        title: "Failed to upload image",
-        description: "Please choose a different image.",
+        title: t("Failed to upload image"),
+        description: t("Please choose a different image"),
       });
     }
     setImagePreview(null);
@@ -131,7 +133,9 @@ const SocialPostContentForm = () => {
 
   return (
     <Form {...form}>
-      <h2 className="font-lato-bold text-xl text-gray-700">Content</h2>
+      <h2 className="font-lato-bold text-xl text-gray-700">
+        {t("Post Content")}
+      </h2>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="font-lato-regular flex flex-col gap-8 text-base text-gray-700"
@@ -142,10 +146,10 @@ const SocialPostContentForm = () => {
             name="postText"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Post Content</FormLabel>
+                <FormLabel>{t("Text")}</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Enter Post Content"
+                    placeholder={t("Add Text")}
                     className="resize-none"
                     {...field}
                   />
@@ -154,9 +158,9 @@ const SocialPostContentForm = () => {
               </FormItem>
             )}
           />
-          <div className="self-end text-sm text-gray-500 font-lato-regular">{`Characters remaining: ${
-            maxContentLength - watchText.length
-          }`}</div>
+          <div className="self-end text-sm text-gray-500 font-lato-regular">{`${t(
+            "Characters remaining"
+          )}: ${maxContentLength - watchText.length}`}</div>
         </div>
         <div className="flex flex-col gap-2">
           <Dialog
@@ -170,18 +174,18 @@ const SocialPostContentForm = () => {
               disabled={currentPhoto ? true : false}
               className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular disabled:opacity-50"
             >
-              + Add Media
+              {`+ ${t("Add Media")}`}
             </DialogTrigger>
             <DialogContent className="overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all my-8 w-full max-w-sm p-6">
               <DialogHeader>
                 <DialogTitle className="font-lato-regular text-left">
-                  Add Photo
+                  {t("Add Photo")}
                 </DialogTitle>
               </DialogHeader>
               {uploadType === "none" && (
                 <>
                   <DialogDescription className="font-lato-regular text-left">
-                    How would you like to add a photo?
+                    {t("How would you like to add a photo?")}
                   </DialogDescription>
                   <div className="grid w-full max-w-sm items-center gap-1.5 xs:grid-cols-2">
                     <button
@@ -189,14 +193,14 @@ const SocialPostContentForm = () => {
                       className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular"
                       onClick={() => setUploadType("url")}
                     >
-                      Add from URL
+                      {t("Add from URL")}
                     </button>
                     <button
                       type="button"
                       className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular"
                       onClick={() => setUploadType("file")}
                     >
-                      Upload a File
+                      {t("Upload a File")}
                     </button>
                   </div>
                 </>
@@ -228,7 +232,7 @@ const SocialPostContentForm = () => {
                     <Input
                       id="new-image-url"
                       type="text"
-                      placeholder="Enter image URL"
+                      placeholder={t("Enter URL")}
                       value={imagePreview || ""}
                       onChange={handleImagePreview}
                     />
@@ -250,7 +254,7 @@ const SocialPostContentForm = () => {
                     onClick={(e) => handleAddImage(e)}
                     disabled={!imagePreview}
                   >
-                    Add Photo
+                    {t("Add Photo")}
                   </DialogTrigger>
                   <div className="px-4 justify-center items-center flex">
                     <DialogTrigger
@@ -261,7 +265,7 @@ const SocialPostContentForm = () => {
                       //   setUploadType("none");
                       // }}
                     >
-                      Cancel
+                      {t("Cancel")}
                     </DialogTrigger>
                   </div>
                 </DialogFooter>
@@ -306,7 +310,7 @@ const SocialPostContentForm = () => {
         </div>
         <div className="flex flex-col gap-4 mt-6">
           <Button variant={"brand-primary"}>
-            <input type="submit" value="Continue" />
+            <input type="submit" value={t("Continue")} />
           </Button>
           <Button
             variant={"brand-secondary"}
@@ -321,10 +325,10 @@ const SocialPostContentForm = () => {
               setCreatePostStep(1);
             }}
           >
-            <span>Back</span>
+            <span>{t("Back")}</span>
           </Button>
           <Button variant="brand-cancel" size="cancel" onClick={handleCancel}>
-            <span>Cancel</span>
+            <span>{t("Cancel")}</span>
           </Button>
         </div>
       </form>

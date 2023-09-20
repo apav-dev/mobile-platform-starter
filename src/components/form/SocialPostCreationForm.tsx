@@ -7,15 +7,17 @@ import PostCreateSteps from "../PostCreateSteps";
 import { IoShareSocialOutline } from "react-icons/io5";
 import GoogleCtaForm from "./GoogleCtaForm";
 import SchedulePostForm from "./SchedulePostForm";
+import { useTranslation } from "react-i18next";
 
 const SocialPostCreationForm = ({ entityId }) => {
   const { createPostStep } = usePageContext();
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
         <Heading
-          title={"Create Post"}
+          title={t("Create post")}
           icon={<IoShareSocialOutline className="text-xl" />}
         />
         <div className="w-full border-t border-gray-300" />

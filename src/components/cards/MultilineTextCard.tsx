@@ -10,6 +10,7 @@ import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { Heading } from "../Heading";
 import { renderEntityText } from "../utils/renderEntityText";
 import Skeleton from "../Skeleton";
+import { useTranslation } from "react-i18next";
 
 export interface MulitlineCardProps {
   title: string;
@@ -38,6 +39,8 @@ export const MultilineTextCard = ({
 }: MulitlineCardProps) => {
   const { formData, entityMeta, setEditId, editId } = usePageContext();
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     if (formData[fieldId]) {
       setEditId?.("");
@@ -62,11 +65,11 @@ export const MultilineTextCard = ({
         <Header
           breadcrumbs={[
             {
-              name: "Home",
+              name: t("Home"),
               path: "/",
             },
             { name: entityMeta?.name ?? "", onClick: handleCancel },
-            { name: `Edit ${title}` },
+            { name: `${t("Edit")} ${title}` },
           ]}
         />
         <ContentContainer containerClassName="pt-4 pb-20">

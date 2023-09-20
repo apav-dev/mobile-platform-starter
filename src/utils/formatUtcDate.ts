@@ -1,5 +1,5 @@
 // format utc date number to date string in the format of "Month Day, Year, Hour:Minute"
-
+//TODO account for french datetimes
 export const formatUtcDate = (input: number): string => {
   // Create a Date object from the input string
   const date = new Date(input);

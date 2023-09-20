@@ -12,6 +12,7 @@ import {
 } from "./Form";
 import { Input } from "../Input";
 import { usePageContext } from "../utils/usePageContext";
+import { useTranslation } from "react-i18next";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -41,6 +42,7 @@ const InputForm = React.forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const { setFormData } = usePageContext();
+    const { t } = useTranslation();
 
     const minLength = minLen ?? (required ? 1 : 0);
     const maxLength = maxLen ?? 1000;
@@ -50,11 +52,15 @@ const InputForm = React.forwardRef<HTMLInputElement, InputProps>(
         .string()
         .min(minLength, {
           message: required
-            ? `${label} is required`
-            : `${label} must be at least ${minLength} characters`,
+            ? `${label} ${t("is required")}`
+            : `${label} ${t("must be at least")} ${minLength} ${t(
+                "characters"
+              )}`,
         })
         .max(maxLen ?? 1000, {
-          message: `${label} must be less than ${maxLength} characters`,
+          message: `${label} ${t("must be less than")} ${maxLength} ${t(
+            "characters"
+          )}`,
         }),
     });
 
@@ -110,7 +116,9 @@ const InputForm = React.forwardRef<HTMLInputElement, InputProps>(
             formAction="submit"
             className="px-4 py-3 mt-4 bg-gray-700 justify-center items-center flex flex-1 w-full border-none focus:outline-none "
           >
-            <div className="text-white text-base font-lato-regular">Save</div>
+            <div className="text-white text-base font-lato-regular">
+              {t("Save")}
+            </div>
           </button>
           <div className="px-4 justify-center items-center flex">
             <button
@@ -118,7 +126,7 @@ const InputForm = React.forwardRef<HTMLInputElement, InputProps>(
               onClick={handleCancel}
               type="button"
             >
-              Cancel
+              {t("Cancel")}
             </button>
           </div>
         </form>

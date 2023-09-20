@@ -9,6 +9,7 @@ import { AnalyticsIcon } from "./icons/AnalyticsIcon";
 import { HomeIcon } from "./icons/HomeIcon";
 import { motion } from "framer-motion";
 import { XIcon } from "./icons/XIcon";
+import { useTranslation } from "react-i18next";
 
 type FooterProps = {
   entityId: string;
@@ -18,30 +19,32 @@ const Footer = ({ entityId }: FooterProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuHidden, setMenuHidden] = useState(true);
 
+  const { t } = useTranslation();
+
   const footerLinks = [
     {
       icon: HomeIcon,
-      title: "Home",
+      title: t("Home"),
       link: "/",
     },
     {
       icon: GraphIcon,
-      title: "Content",
+      title: t("Content"),
       link: `content?entityId=${entityId}`,
     },
     {
       icon: SocialIcon,
-      title: "Social",
+      title: t("Social"),
       link: `social?entityId=${entityId}`,
     },
     {
       icon: StarsIcon,
-      title: "Reviews",
+      title: t("Reviews"),
       link: `reviews?entityId=${entityId}`,
     },
     {
       icon: AnalyticsIcon,
-      title: "Analytics",
+      title: t("Analytics"),
       link: `analytics?entityId=${entityId}`,
     },
   ];
@@ -81,7 +84,7 @@ const Footer = ({ entityId }: FooterProps) => {
       <div className="bg-gray-900 relative z-10 pl-[15px] w-full pr-1.5 py-2 justify-center items-center gap-4 inline-flex border-t border-gray-700">
         <YextIcon />
         <div className="grow shrink basis-0 text-white text-sm font-bold font-lato-bold">
-          Company Name
+          {t("Company Name")}
         </div>
         <button
           className="justify-start items-center gap-2 flex z-10"

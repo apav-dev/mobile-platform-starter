@@ -1,3 +1,4 @@
+import * as React from "react";
 import { forwardRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +22,7 @@ import { uploadImageToCloudinary } from "../../utils/api";
 import { toast } from "../utils/useToast";
 
 import { GalleryImage } from "../../types/yext";
+import { useTranslation } from "react-i18next";
 
 export interface PhotoGalleryFormProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -40,6 +42,7 @@ export const PhotoGalleryForm = forwardRef<
   const [uploadType, setUploadType] = useState<UploadType>("none");
 
   const { setFormData } = usePageContext();
+  const { t } = useTranslation();
 
   const ThumbnailSchema = z.object({
     url: z.string(),
@@ -109,8 +112,8 @@ export const PhotoGalleryForm = forwardRef<
             console.log(error);
             toast({
               variant: "destructive",
-              title: "Failed to upload image",
-              description: "Please choose a different image.",
+              title: t("Failed to upload image"),
+              description: t("Please choose a different image"),
             });
           });
       }
@@ -152,18 +155,18 @@ export const PhotoGalleryForm = forwardRef<
           defaultOpen={false}
         >
           <DialogTrigger className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular">
-            + Add Media
+            {`+ ${t("Add Media")}`}
           </DialogTrigger>
           <DialogContent className="overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all my-8 w-full max-w-sm p-6">
             <DialogHeader>
               <DialogTitle className="font-lato-regular text-left">
-                Add Photo
+                {t("Add Photo")}
               </DialogTitle>
             </DialogHeader>
             {uploadType === "none" && (
               <>
                 <DialogDescription className="font-lato-regular text-left">
-                  How would you like to add a photo?
+                  {t("How would you like to add a photo?")}
                 </DialogDescription>
                 <div className="grid w-full max-w-sm items-center gap-1.5 xs:grid-cols-2">
                   <button
@@ -171,14 +174,14 @@ export const PhotoGalleryForm = forwardRef<
                     className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular"
                     onClick={() => setUploadType("url")}
                   >
-                    Add from URL
+                    {t("Add from URL")}
                   </button>
                   <button
                     type="button"
                     className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular"
                     onClick={() => setUploadType("file")}
                   >
-                    Upload a File
+                    {t("Upload a File")}
                   </button>
                 </div>
               </>
@@ -208,14 +211,14 @@ export const PhotoGalleryForm = forwardRef<
                     className="px-4 py-3 bg-gray-700 rounded-[3px] justify-center items-center gap-2 flex w-full text-white font-lato-regular"
                     onClick={(e) => handleAddImage(e)}
                   >
-                    Add Photo
+                    {t("Add Photo")}
                   </DialogTrigger>
                   <div className="px-4 justify-center items-center flex">
                     <DialogTrigger
                       type="button"
                       className="text-blue text-base font-lato-regular hover:underline"
                     >
-                      Cancel
+                      {t("Cancel")}
                     </DialogTrigger>
                   </div>
                 </DialogFooter>
@@ -241,6 +244,7 @@ export const PhotoGalleryForm = forwardRef<
                         <span className="text-gray-700 text-base font-lato-bold truncate">
                           {galleryImage.image.url}
                         </span>
+                        {/* TODO check with aaron if this should be hardcoded */}
                         <span className="text-gray-500 text-sm font-lato-regular">
                           10mb
                         </span>
@@ -265,7 +269,9 @@ export const PhotoGalleryForm = forwardRef<
           formAction="submit"
           className="px-4 py-3 mt-4 bg-gray-700 justify-center items-center flex flex-1 w-full border-none focus:outline-none "
         >
-          <div className="text-white text-base font-lato-regular">Save</div>
+          <div className="text-white text-base font-lato-regular">
+            {t("Save")}
+          </div>
         </button>
         <div className="px-4 justify-center items-center flex">
           <button
@@ -273,7 +279,7 @@ export const PhotoGalleryForm = forwardRef<
             className="text-blue text-base font-lato-regular hover:underline"
             onClick={handleCancel}
           >
-            Cancel
+            {t("Cancel")}
           </button>
         </div>
       </form>

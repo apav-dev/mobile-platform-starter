@@ -8,6 +8,7 @@ import { DayIntervalType, HolidayHourType } from "../../types/yext";
 import { IntervalFormItem } from "./IntervalFormItem";
 import { DayIntervalSchema, HolidayHourSchema } from "../../schemas/hours";
 import { v4 as uuidv4 } from "uuid";
+import { useTranslation } from "react-i18next";
 
 export type DayOfWeek =
   | "monday"
@@ -44,6 +45,7 @@ export const isClosedInterval = (
 const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
   ({ className, type, id, label, initialHours, onCancel, ...props }, ref) => {
     const { setFormData } = usePageContext();
+    const { t } = useTranslation();
 
     // Schema for the form
     const formSchema = z.object({
@@ -153,7 +155,9 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
             formAction="submit"
             className="px-4 py-3 mt-4 bg-gray-700 justify-center items-center flex flex-1 w-full border-none focus:outline-none "
           >
-            <div className="text-white text-base font-lato-regular">Save</div>
+            <div className="text-white text-base font-lato-regular">
+              {t("Save")}
+            </div>
           </button>
           <div className="px-4 justify-center items-center flex">
             <button
@@ -161,7 +165,7 @@ const HoursForm = React.forwardRef<HTMLInputElement, HoursFormProps>(
               onClick={handleCancel}
               type="button"
             >
-              Cancel
+              {t("Cancel")}
             </button>
           </div>
         </form>

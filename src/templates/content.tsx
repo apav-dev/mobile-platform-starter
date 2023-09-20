@@ -84,16 +84,16 @@ const Content = () => {
     onError: (error) => {
       toast({
         variant: "destructive",
-        title: "Failed to Edit Entity",
-        description: "There was a problem with your request.",
+        title: t("Failed to Edit Entity"),
+        description: t("There was a problem with your request"),
       });
     },
     onSuccess: (response) => {
       setFormData({});
       contentQuery.refetch();
       toast({
-        title: "Entity Updated",
-        description: "Successfully updated entity.",
+        title: t("Entity Updated"),
+        description: t("Successfully updated entity"),
         duration: 5000,
       });
     },
@@ -133,13 +133,17 @@ const Content = () => {
               <HeadingSkeleton />
               <div className="py-4">
                 <div className="justify-start items-center gap-2 inline-flex">
-                  <div className="text-gray-700 font-lato-bold">ID:</div>
+                  <div className="text-gray-700 font-lato-bold">{`${t(
+                    "ID"
+                  )}:`}</div>
                   <div className="text-gray-700 font-lato-regular">
                     <Skeleton className="w-20 h-3" />
                   </div>
                   <div className="text-gray-700 text-[13px] font-bold">|</div>
                   <div className="justify-start items-center gap-2 flex">
-                    <div className="text-gray-700 font-lato-bold">Type:</div>
+                    <div className="text-gray-700 font-lato-bold">{`${t(
+                      "Type"
+                    )}:`}</div>
                     <div className="inline-flex items-center gap-1">
                       <LocationPinIcon />
                       <div className="text-gray-700 font-lato-regular">
@@ -169,13 +173,17 @@ const Content = () => {
                 <Heading title={location.name} icon={<LocationPinIcon />} />
                 <div className="py-4">
                   <div className="justify-start items-center gap-2 inline-flex">
-                    <div className="text-gray-700 font-lato-bold">ID:</div>
+                    <div className="text-gray-700 font-lato-bold">{`${t(
+                      "ID"
+                    )}:`}</div>
                     <div className="text-gray-700 font-lato-regular">
                       {location.meta?.id}
                     </div>
                     <div className="text-gray-700 text-[13px] font-bold">|</div>
                     <div className="justify-start items-center gap-2 flex">
-                      <div className="text-gray-700 font-lato-bold">Type:</div>
+                      <div className="text-gray-700 font-lato-bold">{`${t(
+                        "Type"
+                      )}:`}</div>
                       <div className="inline-flex items-center gap-1">
                         <LocationPinIcon />
                         <div className="text-gray-700 font-lato-regular">
@@ -187,23 +195,23 @@ const Content = () => {
                 </div>
                 <div className="relative flex flex-col gap-y-2">
                   <TextCard
-                    title="Name"
+                    title={t("Name")}
                     fieldId="name"
                     value={location.name}
                     required
                   />
                   <MultilineTextCard
-                    title="Description"
+                    title={t("Description")}
                     fieldId="description"
                     value={location.description}
                   />
                   <PhotoGalleryCard
-                    title="Photo Gallery"
+                    title={t("Photo Gallery")}
                     fieldId="photoGallery"
                     images={location.photoGallery}
                   />
                   <HoursCard
-                    title="Hours"
+                    title={t("Hours")}
                     fieldId="hours"
                     hours={location.hours}
                   />

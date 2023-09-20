@@ -6,7 +6,6 @@ import {
   HeadConfig,
   TemplateRenderProps,
 } from "@yext/pages";
-import { getRuntime } from "@yext/pages/util";
 import { Main } from "../components/layouts/Main";
 import { ContentContainer } from "../components/ContentContainer";
 import ProductCard from "../components/ProductCard";
@@ -28,7 +27,7 @@ export const getHeadConfig: GetHeadConfig<
   TemplateRenderProps
 > = (): HeadConfig => {
   return {
-    title: "Yext Home",
+    title: "Home",
     charset: "UTF-8",
     viewport: "width=device-width, initial-scale=1",
   };
@@ -58,11 +57,11 @@ const Home = () => {
             height={245}
             width={342}
           />
-          <h1 className="font-lato-regular text-3xl">Welcome to Yext</h1>
+          <h1 className="font-lato-regular text-3xl">{t("Welcome to Yext")}</h1>
           <p className="font-lato-regular">
-            We're excited to have you here. Please note that the mobile version
-            of the platform offers limited functionality compared to the desktop
-            version.
+            {t(
+              "We're excited to have you here. Please note that the mobile version of the platform offers limited functionality compared to the desktop version."
+            )}
           </p>
         </div>
         {isLoading ? (
@@ -77,26 +76,32 @@ const Home = () => {
           <div className="flex flex-col gap-y-6 mt-6">
             <ProductCard
               icon={<GraphIcon />}
-              title="Content"
-              description="Edit your business information such as address, hours, and description."
+              title={t("Content")}
+              description={t(
+                "Edit your business information such as address, hours, and description."
+              )}
               link={`/content?entityId=${authedEntity}`}
             />
             <ProductCard
               icon={<StarsIcon />}
-              title="Reviews"
-              description="View your recent reviews, filter, and respond."
+              title={t("Reviews")}
+              description={t("View your recent reviews, filter, and respond.")}
               link={`/reviews?entityId=${authedEntity}`}
             />
             <ProductCard
               icon={<SocialIcon />}
-              title="Social"
-              description="View and create social posts for Google, Facebook, Instagram, and Twitter."
+              title={t("Social")}
+              description={t(
+                "View and create social posts for Google and Facebook."
+              )}
               link={`/social?entityId=${authedEntity}`}
             />
             <ProductCard
               icon={<AnalyticsIcon />}
-              title="Analytics"
-              description="View top metrics such as impressions and average rating for your business."
+              title={t("Analytics")}
+              description={t(
+                "View top metrics such as impressions and average rating for your business."
+              )}
               link={`/analytics?entityId=${authedEntity}`}
             />
           </div>

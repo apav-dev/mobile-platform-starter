@@ -12,6 +12,7 @@ import { Calendar } from "../Calendar";
 import { format } from "date-fns";
 import { TrashIcon } from "../icons/TrashIcon";
 import { v4 as uuidv4 } from "uuid";
+import { useTranslation } from "react-i18next";
 
 export interface IntervalFormCardProps {
   label: string;
@@ -32,6 +33,8 @@ export const HolidayHourFormItem = ({
   onDelete,
 }: IntervalFormCardProps) => {
   if (!value) return null;
+
+  const { t } = useTranslation();
 
   const onRadioChange = (radioValue: string) => {
     if (radioValue === "closed") {
@@ -156,19 +159,19 @@ export const HolidayHourFormItem = ({
           <div className="flex items-center space-x-3 space-y-0">
             <RadioGroupItem value="closed" />
             <FormLabel className="font-lato-regular text-gray-700">
-              Closed
+              {t("Closed")}
             </FormLabel>
           </div>
           <div className="flex items-center space-x-3 space-y-0">
             <RadioGroupItem value="open" />
             <FormLabel className="font-lato-regular text-gray-700">
-              Open
+              {t("Open")}
             </FormLabel>
           </div>
         </RadioGroup>
         <div className="flex flex-col">
           <Label className="font-lato-regular text-[13px] text-gray-700 pb-1">
-            Date
+            {t("Date")}
           </Label>
           <Popover>
             <PopoverTrigger asChild>
@@ -182,7 +185,7 @@ export const HolidayHourFormItem = ({
                 {localDate ? (
                   format(localDate, "MM/dd/yyyy")
                 ) : (
-                  <span>Pick a date</span>
+                  <span>{t("Pick a date")}</span>
                 )}
                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
               </Button>
@@ -207,7 +210,7 @@ export const HolidayHourFormItem = ({
                 <div className="gap-3 flex flex-col xs:flex-row xs:gap-2">
                   <div className="flex flex-col flex-1">
                     <Label className="font-lato-regular text-[13px] text-gray-700 pb-1">
-                      From
+                      {t("From")}
                     </Label>
                     <Input
                       type="time"
@@ -219,7 +222,7 @@ export const HolidayHourFormItem = ({
                   </div>
                   <div className="flex flex-col flex-1">
                     <Label className="font-lato-regular text-[13px] text-gray-700 pb-1">
-                      To
+                      {t("To")}
                     </Label>
                     <Input
                       type="time"
@@ -252,7 +255,7 @@ export const HolidayHourFormItem = ({
                 className="text-blue text-base font-lato-regular hover:underline"
                 onClick={handleAddInterval}
               >
-                + Add Interval
+                {`+ ${t("Add Interval")}`}
               </button>
             </div>
           </>

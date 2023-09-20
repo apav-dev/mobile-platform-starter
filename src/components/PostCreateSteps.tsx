@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
 
 interface PostCreateStepProps {
@@ -6,11 +7,13 @@ interface PostCreateStepProps {
 }
 
 const PostCreateSteps = ({ currentStep }: PostCreateStepProps) => {
+  const { t } = useTranslation();
+
   const stepNameMap = {
-    "1": "1. Select Publisher",
-    "2": "2. Post Content",
-    "3": "3. Additional Options",
-    "4": "4. Publish Post",
+    "1": `1. ${t("Select Publisher")}`,
+    "2": `2. ${t("Post Content")}`,
+    "3": `3. ${t("Additional Options")}`,
+    "4": `4. ${t("Publish Post")}`,
   };
 
   return (
@@ -43,7 +46,9 @@ const PostCreateSteps = ({ currentStep }: PostCreateStepProps) => {
       </div>
       <div className="font-lato-regular flex justify-between text-sm">
         <span className="text-blue">{stepNameMap[`${currentStep}`]}</span>
-        <span className="text-gray-500">{`(Step ${currentStep} of 4)`}</span>
+        <span className="text-gray-500">{`(${t("Step")} ${currentStep} ${t(
+          "of"
+        )} 4)`}</span>
       </div>
     </div>
   );

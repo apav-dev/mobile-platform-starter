@@ -5,6 +5,7 @@ import {
   DayIntervalType as DayIntervalType,
   HolidayHourType,
 } from "../types/yext";
+import { useTranslation } from "react-i18next";
 
 export interface HoursProps {
   hours: {
@@ -20,15 +21,16 @@ export interface HoursProps {
 }
 
 const Hours = ({ hours }: HoursProps) => {
+  const { t } = useTranslation();
   return (
     <div className="self-stretch flex flex-col justify-start items-start gap-1">
-      <DayInterval day="Mon" intervals={hours.monday} />
-      <DayInterval day="Tue" intervals={hours.tuesday} />
-      <DayInterval day="Wed" intervals={hours.wednesday} />
-      <DayInterval day="Thu" intervals={hours.thursday} />
-      <DayInterval day="Fri" intervals={hours.friday} />
-      <DayInterval day="Sat" intervals={hours.saturday} />
-      <DayInterval day="Sun" intervals={hours.sunday} />
+      <DayInterval day={t("Mon")} intervals={hours.monday} />
+      <DayInterval day={t("Tue")} intervals={hours.tuesday} />
+      <DayInterval day={t("Wed")} intervals={hours.wednesday} />
+      <DayInterval day={t("Thu")} intervals={hours.thursday} />
+      <DayInterval day={t("Fri")} intervals={hours.friday} />
+      <DayInterval day={t("Sat")} intervals={hours.saturday} />
+      <DayInterval day={t("Sun")} intervals={hours.sunday} />
     </div>
   );
 };

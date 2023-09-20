@@ -30,6 +30,7 @@ import SocialPostCreationForm from "../components/form/SocialPostCreationForm";
 import Skeleton from "../components/Skeleton";
 import { FormData } from "../types/social";
 import { toast } from "../components/utils/useToast";
+import { useTranslation } from "react-i18next";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return "social";
@@ -62,6 +63,8 @@ const Social = () => {
   const [schedulePost, setSchedulePost] = React.useState(false);
   const [ctaType, setCtaType] = React.useState("");
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const entityId = urlParams.get("entityId");
@@ -90,23 +93,23 @@ const Social = () => {
     onError: (error) => {
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request.",
+        title: t("Uh oh! Something went wrong."),
+        description: t("There was a problem with your request."),
       });
     },
     onSuccess: (response) => {
       if (response.meta.errors?.length === 0) {
         toast({
-          title: "Post created!",
-          description: "Post successfully submitted",
+          title: t("Success!"),
+          description: t("Post successfully submitted"),
           duration: 5000,
         });
       } else {
         // TODO: throw error from api function to handle this in the onError callback
         toast({
           variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: "There was a problem with your request.",
+          title: t("Uh oh! Something went wrong."),
+          description: t("There was a problem with your request."),
         });
       }
 
@@ -175,18 +178,21 @@ const Social = () => {
           creatingPost
             ? [
                 {
-                  name: "Home",
+                  name: t("Home"),
                   path: "/",
                 },
-                { name: "Social Posts", path: `/social?entityId=${entityId}` },
-                { name: "Create Post" },
+                {
+                  name: t("Social Posts"),
+                  path: `/social?entityId=${entityId}`,
+                },
+                { name: t("Create Post") },
               ]
             : [
                 {
-                  name: "Home",
+                  name: t("Home"),
                   path: "/",
                 },
-                { name: "Social Posts" },
+                { name: t("Social Posts") },
               ]
         }
       >
@@ -196,7 +202,7 @@ const Social = () => {
           >
             <div className="flex flex-col gap-y-4">
               <Heading
-                title={"Social Posts"}
+                title={t("Social Posts")}
                 icon={<IoShareSocialOutline className="text-xl" />}
               />
               <Skeleton className="w-full h-12" />
@@ -218,7 +224,7 @@ const Social = () => {
             ) : (
               <div className="flex flex-col gap-y-4">
                 <Heading
-                  title={"Social Posts"}
+                  title={t("Social Posts")}
                   icon={<IoShareSocialOutline className="text-xl" />}
                 />
                 <Button
@@ -228,7 +234,7 @@ const Social = () => {
                     setCreatePostStep(1);
                   }}
                 >
-                  + Create Post
+                  {`+ ${t("Create post")}`}
                 </Button>
                 <div className="w-full border-t border-gray-400" />
                 <div className="relative flex flex-col gap-y-2">
@@ -305,6 +311,7 @@ const Social = () => {
                     </div>
                   </div>
                 ) : (
+                  // TODO translate
                   <p className="text-base text-gray-700 font-lato-regular flex justify-center">
                     No previous posts were found for this entity.
                   </p>

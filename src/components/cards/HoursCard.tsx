@@ -15,6 +15,7 @@ import Header from "../Header";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { Heading } from "../Heading";
 import Skeleton from "../Skeleton";
+import { useTranslation } from "react-i18next";
 
 export interface HoursCardProps {
   title: string;
@@ -37,7 +38,7 @@ export const HoursCardSkeleton = () => {
       <Skeleton className="w-20 h-3" />
       <div className="flex flex-col gap-y-1">
         {Array.from({ length: 7 }).map((_, i) => (
-          <div className="flex gap-x-4">
+          <div className="flex gap-x-4" key={i}>
             <Skeleton className="w-10 h-3" />
             <Skeleton className="w-14 h-3" />
           </div>
@@ -49,6 +50,7 @@ export const HoursCardSkeleton = () => {
 
 export const HoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
   const { formData, entityMeta, setEditId, editId } = usePageContext();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (formData[fieldId]) {
@@ -76,11 +78,11 @@ export const HoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
         <Header
           breadcrumbs={[
             {
-              name: "Home",
+              name: t("Home"),
               path: "/",
             },
             { name: entityMeta?.name ?? "", onClick: handleCancel },
-            { name: `Edit ${title}` },
+            { name: `${t("Edit")} ${title}` },
           ]}
         />
         <ContentContainer containerClassName="pt-4 pb-20">
@@ -88,7 +90,7 @@ export const HoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
           <div className="pt-4">
             <HoursForm
               id="hours"
-              label="Hours"
+              label={t("Hours")}
               initialHours={sortedHours}
               onCancel={handleCancel}
             />

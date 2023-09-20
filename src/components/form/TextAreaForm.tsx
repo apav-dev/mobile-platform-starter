@@ -12,6 +12,7 @@ import {
 } from "./Form";
 import { usePageContext } from "../utils/usePageContext";
 import { Textarea } from "../Textarea";
+import { useTranslation } from "react-i18next";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -45,6 +46,7 @@ const TextareaForm = React.forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const { setFormData } = usePageContext();
+    const { t } = useTranslation();
 
     const minLength = minLen ?? (required ? 1 : 0);
     const maxLength = maxLen ?? 1000;
@@ -53,11 +55,15 @@ const TextareaForm = React.forwardRef<HTMLInputElement, InputProps>(
         .string()
         .min(minLength, {
           message: required
-            ? `${label} is required`
-            : `${label} must be at least ${minLength} characters`,
+            ? `${label} ${t("is required")}`
+            : `${label} ${t("must be at least")} ${minLength} ${t(
+                "characters"
+              )}`,
         })
         .max(maxLen ?? 1000, {
-          message: `${label} must be less than ${maxLength} characters`,
+          message: `${label} ${t("must be less than")} ${maxLength} ${t(
+            "characters"
+          )}`,
         }),
     });
 
@@ -112,7 +118,7 @@ const TextareaForm = React.forwardRef<HTMLInputElement, InputProps>(
             formAction="submit"
           >
             <div className="text-white text-base font-lato-regular">
-              {submitButtonLabel ?? "Save"}
+              {submitButtonLabel ?? t("Save")}
             </div>
           </button>
           <div className="px-4 justify-center items-center flex">
@@ -121,7 +127,7 @@ const TextareaForm = React.forwardRef<HTMLInputElement, InputProps>(
               onClick={handleCancel}
               type="button"
             >
-              Cancel
+              {t("Cancel")}
             </button>
           </div>
         </form>

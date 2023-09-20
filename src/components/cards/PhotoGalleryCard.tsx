@@ -11,6 +11,7 @@ import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { Heading } from "../Heading";
 import Header from "../Header";
 import Skeleton from "../Skeleton";
+import { useTranslation } from "react-i18next";
 
 export interface PhotoGalleryCardProps {
   title: string;
@@ -33,6 +34,7 @@ export const PhotoGalleryCard = ({
   images,
 }: PhotoGalleryCardProps) => {
   const { formData, entityMeta, setEditId, editId } = usePageContext();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (formData[fieldId]) {
@@ -63,11 +65,11 @@ export const PhotoGalleryCard = ({
         <Header
           breadcrumbs={[
             {
-              name: "Home",
+              name: t("Home"),
               path: "/",
             },
             { name: entityMeta?.name ?? "", onClick: handleCancel },
-            { name: `Edit ${title}` },
+            { name: `${t("Edit")} ${title}` },
           ]}
         />
         <ContentContainer containerClassName="pt-4 pb-20">
@@ -75,7 +77,7 @@ export const PhotoGalleryCard = ({
           <div className="pt-4">
             <PhotoGalleryForm
               id={"photoGallery"}
-              label="Photo Gallery"
+              label={t("Photo Gallery")}
               onCancel={handleCancel}
               initialImages={images}
             />

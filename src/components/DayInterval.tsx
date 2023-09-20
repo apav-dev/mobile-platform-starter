@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { DayIntervalType as DayIntervalType } from "../types/yext";
 import { isClosedInterval } from "./form/HoursForm";
 import { formatTime } from "../utils/formatTime";
+import { useTranslation } from "react-i18next";
 
 export interface DayIntervalProps {
   day: string;
@@ -10,15 +11,16 @@ export interface DayIntervalProps {
 
 export const DayInterval = ({ day, intervals }: DayIntervalProps) => {
   const closed = isClosedInterval(intervals);
+  const { t } = useTranslation();
 
   return (
     <div className="justify-start items-start gap-4 inline-flex">
-      <div className="w-[42px] text-gray-700 text-base font-lato-bold leading-tight">
+      <div className="text-gray-700 text-base font-lato-bold leading-tight">
         {day}
       </div>
       {closed ? (
         <div className="text-gray-700 text-base font-lato-regular leading-tight">
-          Closed
+          {t("Closed")}
         </div>
       ) : (
         <div className="flex flex-col">
@@ -27,7 +29,9 @@ export const DayInterval = ({ day, intervals }: DayIntervalProps) => {
               key={uuidv4()}
               className="text-gray-700 text-base font-lato-regular leading-tight"
             >
-              {`${formatTime(interval.start)} to ${formatTime(interval.end)}`}
+              {`${formatTime(interval.start)} ${t("To")} ${formatTime(
+                interval.end
+              )}`}
             </div>
           ))}
         </div>

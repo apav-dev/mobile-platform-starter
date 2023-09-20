@@ -9,6 +9,7 @@ import { TrashIcon } from "../icons/TrashIcon";
 import { v4 as uuidv4 } from "uuid";
 
 import { DayIntervalType } from "../../types/yext";
+import { useTranslation } from "react-i18next";
 
 export interface IntervalFormCardProps {
   day: DayOfWeek;
@@ -25,6 +26,7 @@ export const IntervalFormItem = ({
   onValueChange,
   value,
 }: IntervalFormCardProps) => {
+  const { t } = useTranslation();
   const onRadioChange = (radioValue: string) => {
     if (radioValue === "closed") {
       onValueChange(day, { isClosed: true });
@@ -115,7 +117,7 @@ export const IntervalFormItem = ({
     <Card>
       <div className="space-y-3">
         <FormLabel className="font-lato-bold text-base">
-          {dayOfWeekLabel}
+          {t(dayOfWeekLabel)}
         </FormLabel>
         <RadioGroup
           onValueChange={onRadioChange}
@@ -125,13 +127,13 @@ export const IntervalFormItem = ({
           <div className="flex items-center space-x-3 space-y-0">
             <RadioGroupItem value="closed" />
             <FormLabel className="font-lato-regular text-gray-700">
-              Closed
+              {t("Closed")}
             </FormLabel>
           </div>
           <div className="flex items-center space-x-3 space-y-0">
             <RadioGroupItem value="open" />
             <FormLabel className="font-lato-regular text-gray-700">
-              Open
+              {t("Open")}
             </FormLabel>
           </div>
         </RadioGroup>
@@ -146,7 +148,7 @@ export const IntervalFormItem = ({
                 >
                   <div className="flex flex-col flex-1">
                     <Label className="font-lato-regular text-[13px] text-gray-700 pb-1">
-                      From
+                      {t("From")}
                     </Label>
                     <Input
                       id={`${day}-start`}
@@ -159,7 +161,7 @@ export const IntervalFormItem = ({
                   </div>
                   <div className="flex flex-col flex-1">
                     <Label className="font-lato-regular text-[13px] text-gray-700 pb-1">
-                      To
+                      {t("To")}
                     </Label>
                     <Input
                       id={`${day}-end`}
@@ -192,7 +194,7 @@ export const IntervalFormItem = ({
                 className="text-blue text-base font-lato-regular hover:underline"
                 onClick={handleAddInterval}
               >
-                + Add Interval
+                {`+ ${t("Add Interval")}`}
               </button>
             </div>
           </>

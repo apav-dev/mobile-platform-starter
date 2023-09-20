@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "../Select";
 import { Input } from "../Input";
+import { useTranslation } from "react-i18next";
 
 export default function GoogleCtaForm() {
   const [isSelecting, setIsSelecting] = React.useState(false);
@@ -36,25 +37,34 @@ export default function GoogleCtaForm() {
     setAddingCta,
     setSchedulePost,
   } = usePageContext();
+  const { t } = useTranslation();
 
   const FormSchema = z.object({
     addCta: z.boolean(),
     ctaType: addingCta
       ? z.enum(["BOOK", "ORDER", "BUY", "LEARN_MORE", "SIGN_UP", "CALL"], {
-          required_error: "Type is required",
+          required_error: t("Type is required"),
         })
       : z
           .enum(["BOOK", "ORDER", "BUY", "LEARN_MORE", "SIGN_UP", "CALL"], {
-            required_error: "Type is required",
+            required_error: t("Type is required"),
           })
           .optional(),
     ctaUrl:
       addingCta && ctaType !== "CALL"
-        ? z.string({ required_error: "URL is required" }).trim().url()
-        : z.string({ required_error: "URL is required" }).trim().optional(),
+        ? z
+            .string({
+              required_error: t("URL is required"),
+            })
+            .trim()
+            .url(t("Invalid url"))
+        : z
+            .string({ required_error: t("URL is required") })
+            .trim()
+            .optional(),
     ctaPhone:
       addingCta && ctaType === "CALL"
-        ? z.string().min(10, "Invalid Phone Number")
+        ? z.string().min(10, t("Invalid Phone Number"))
         : z.string().optional(),
   });
 
@@ -119,13 +129,13 @@ export default function GoogleCtaForm() {
                   />
                 </FormControl>
                 <FormDescription className="text-base font-lato-bold text-gray-700 text-xl">
-                  Add Google Call To Action
+                  {t("Add Google Call To Action")}
                 </FormDescription>
               </FormItem>
             )}
           />
           <p className="font-lato-regular text-sm text-gray-700 italic">
-            Only applies to Google. Skip this step for Facebook posts.
+            {t("Only applies to Google. Skip this step for Facebook posts.")}
           </p>
         </div>
         <div className="flex flex-col gap-2">
@@ -135,7 +145,7 @@ export default function GoogleCtaForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-base font-lato-regular text-gray-700">
-                  Call To Action Type
+                  {t("Call To Action Type")}
                 </FormLabel>
                 <Select
                   onValueChange={field.onChange}
@@ -145,27 +155,29 @@ export default function GoogleCtaForm() {
                 >
                   <FormControl>
                     <SelectTrigger className="rounded-sm py-3 px-4 bg-gray-300 font-lato-regular text-base text-gray-700">
-                      <SelectValue placeholder="Select Call To Action Type" />
+                      <SelectValue
+                        placeholder={t("Select Call To Action Type")}
+                      />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="bg-white rounded-sm z-100">
                     <SelectItem value="BOOK" className="text-base">
-                      Book
+                      {t("Book")}
                     </SelectItem>
                     <SelectItem value="ORDER" className="text-base">
-                      Order
+                      {t("Order")}
                     </SelectItem>
                     <SelectItem value="BUY" className="text-base">
-                      Buy
+                      {t("Buy")}
                     </SelectItem>
                     <SelectItem value="LEARN_MORE" className="text-base">
-                      Learn More
+                      {t("Learn More")}
                     </SelectItem>
                     <SelectItem value="SIGN_UP" className="text-base">
-                      Sign up
+                      {t("Sign up")}
                     </SelectItem>
                     <SelectItem value="CALL" className="text-base">
-                      Call
+                      {t("Call")}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -180,11 +192,11 @@ export default function GoogleCtaForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base font-lato-regular text-gray-700">
-                    URL
+                    {t("URL")}
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter URL"
+                      placeholder={t("Enter URL")}
                       {...field}
                       className="rounded-sm py-3 px-4 font-lato-regular text-base text-gray-700"
                       disabled={!addingCta}
@@ -206,7 +218,7 @@ export default function GoogleCtaForm() {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter Phone Number"
+                      placeholder={t("Enter Phone Number")}
                       {...field}
                       className="rounded-sm py-3 px-4 font-lato-regular text-base text-gray-700"
                       disabled={!addingCta}
@@ -226,8 +238,8 @@ export default function GoogleCtaForm() {
             disabled={isSelecting}
           >
             {addingCta
-              ? "Add Call To Action"
-              : "Continue Without Call To Action"}
+              ? t("Add Call To Action")
+              : t("Continue Without Call To Action")}
           </Button>
           <Button
             variant={"brand-secondary"}
@@ -242,7 +254,7 @@ export default function GoogleCtaForm() {
             }}
             disabled={isSelecting}
           >
-            <span>Back</span>
+            <span>{t("Back")}</span>
           </Button>
           <Button
             variant="brand-cancel"
@@ -250,7 +262,7 @@ export default function GoogleCtaForm() {
             onClick={handleCancel}
             disabled={isSelecting}
           >
-            <span>Cancel</span>
+            <span>{t("Cancel")}</span>
           </Button>
         </div>
       </form>

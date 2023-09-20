@@ -33,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/Select";
+import { useTranslation } from "react-i18next";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return "analytics";
@@ -60,6 +61,8 @@ const Analytics = () => {
   const [averageRating, setAverageRating] = useState<number | null>(null);
   const [totalImpressions, setTotalImpressions] = useState<number | null>(null);
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const entityId = urlParams.get("entityId");
@@ -86,16 +89,16 @@ const Analytics = () => {
     <Main
       breadcrumbs={[
         {
-          name: "Home",
+          name: t("Home"),
           path: "/",
         },
-        { name: "Analytics" },
+        { name: t("Analytics") },
       ]}
     >
       {analyticsQuery.isLoading && (
         <ContentContainer containerClassName="overflow-y-hidden">
           <div className="flex flex-col gap-y-4">
-            <Heading title={"Analytics"} icon={<AnalyticsIcon />} />
+            <Heading title={t("Analytics")} icon={<AnalyticsIcon />} />
             <div className="w-full border-t border-gray-400" />
             <div className="flex flex-col gap-y-4">
               {[...Array(4)].map((_, index) => (
@@ -108,7 +111,7 @@ const Analytics = () => {
       {analyticsQuery.isSuccess && (
         <ContentContainer containerClassName="overflow-y-hidden">
           <div className="flex flex-col gap-y-4">
-            <Heading title={"Analytics"} icon={<AnalyticsIcon />} />
+            <Heading title={t("Analytics")} icon={<AnalyticsIcon />} />
             <Select
               defaultValue={startDate.toString()}
               onValueChange={(value) => setStartDate(parseInt(value))}
@@ -117,28 +120,28 @@ const Analytics = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-white">
-                <SelectItem value={"7"}>Last 7 Days</SelectItem>
-                <SelectItem value={"30"}>Last 30 Days</SelectItem>
+                <SelectItem value={"7"}>{t("Last 7 Days")}</SelectItem>
+                <SelectItem value={"30"}>{t("Last 30 Days")}</SelectItem>
               </SelectContent>
             </Select>
             <AnalyticsMetricCard
               icon={<EyeIcon />}
-              label={"Page Views"}
+              label={t("Page Views")}
               metric={totalPageViews}
             />
             <AnalyticsMetricCard
               icon={<BsStars />}
-              label={"Impressions"}
+              label={t("Impressions")}
               metric={totalImpressions}
             />
             <AnalyticsMetricCard
               icon={<CommentBubbleIcon />}
-              label={"Total Reviews"}
+              label={t("Total Reviews")}
               metric={totalReviews}
             />
             <AnalyticsMetricCard
               icon={<StarsIcon />}
-              label={"Average Rating"}
+              label={t("Average Rating")}
               metric={averageRating?.toString().replace(".", ",")}
             />
           </div>

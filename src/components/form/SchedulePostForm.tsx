@@ -20,6 +20,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import { Input } from "../Input";
 import { usePageContext } from "../utils/useSocialPageContext";
+import { useTranslation } from "react-i18next";
 
 export default function PublisherSelectForm() {
   const {
@@ -29,16 +30,17 @@ export default function PublisherSelectForm() {
     schedulePost,
     setSchedulePost,
   } = usePageContext();
+  const { t } = useTranslation();
 
   const FormSchema = z.object({
     scheduleDate: schedulePost
-      ? z.date({ required_error: "Post Date is required." })
+      ? z.date({ required_error: t("Post date is required") })
       : z.date().optional(),
     scheduleTime: schedulePost
-      ? z.string({ required_error: "Post Time is required." })
+      ? z.string({ required_error: t("Post time is required") })
       : z.string().optional(),
     publishSchedule: z.enum(["now", "later"], {
-      required_error: "Select a publishing schedule.",
+      required_error: t("Select a publishing schedule"),
     }),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -80,7 +82,7 @@ export default function PublisherSelectForm() {
           render={({ field }) => (
             <FormItem className="space-y-3">
               <FormLabel className="text-xl font-lato-bold text-gray-700">
-                Publish Post
+                {t("Publish Post")}
               </FormLabel>
               <FormControl>
                 <RadioGroup
@@ -97,7 +99,7 @@ export default function PublisherSelectForm() {
                       />
                     </FormControl>
                     <FormLabel className="font-lato-regular text-base text-gray-700 w-full border border-2 rounded-lg py-3 px-4 peer-aria-checked:border-blue">
-                      Post Immediately
+                      {t("Post Immediately")}
                     </FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center">
@@ -109,7 +111,7 @@ export default function PublisherSelectForm() {
                       />
                     </FormControl>
                     <FormLabel className="font-lato-regular text-base text-gray-700 w-full border border-2 rounded-lg py-3 px-4 peer-aria-checked:border-blue">
-                      Schedule Post
+                      {t("Schedule Post")}
                     </FormLabel>
                   </FormItem>
                 </RadioGroup>
@@ -121,7 +123,7 @@ export default function PublisherSelectForm() {
         {schedulePost && (
           <div className="flex flex-col gap-2">
             <h3 className="font-lato-bold text-lg text-gray-700">
-              Schedule Settings
+              {t("Schedule Settings")}
             </h3>
             <FormField
               control={form.control}
@@ -129,7 +131,7 @@ export default function PublisherSelectForm() {
               render={({ field }) => (
                 <FormItem className="flex flex-col font-lato-regular text-gray-700">
                   <FormLabel className="text-base font-lato-regular text-gray-700">
-                    Date
+                    {t("Date")}
                   </FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -143,7 +145,9 @@ export default function PublisherSelectForm() {
                           {field.value ? (
                             format(field.value, "PPP")
                           ) : (
-                            <span className="text-base">Pick a date</span>
+                            <span className="text-base">
+                              {t("Pick a date")}
+                            </span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 text-black" />
                         </Button>
@@ -173,7 +177,7 @@ export default function PublisherSelectForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-base font-lato-regular text-gray-700">
-                      Time
+                      {t("Time")}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -192,7 +196,7 @@ export default function PublisherSelectForm() {
         )}
         <div className="flex flex-col gap-4">
           <Button variant={"brand-primary"} className="w-full" type="submit">
-            Create Post
+            {t("Create post")}
           </Button>
           <Button
             variant={"brand-secondary"}
@@ -201,10 +205,10 @@ export default function PublisherSelectForm() {
               setCreatePostStep(3);
             }}
           >
-            <span>Back</span>
+            <span>{t("Back")}</span>
           </Button>
           <Button variant="brand-cancel" size="cancel" onClick={handleCancel}>
-            <span>Cancel</span>
+            <span>{t("Cancel")}</span>
           </Button>
         </div>
       </form>

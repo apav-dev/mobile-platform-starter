@@ -15,6 +15,7 @@ import {
 import { FacebookIcon } from "../icons/FacebookIcon";
 import { GoogleIcon } from "../icons/GoogleIcon";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
 
 const PublisherSelectForm = () => {
   const {
@@ -25,9 +26,11 @@ const PublisherSelectForm = () => {
     setSchedulePost,
   } = usePageContext();
 
+  const { t } = useTranslation();
+
   const FormSchema = z.object({
     publisher: z.enum(["GOOGLEMYBUSINESS", "FACEBOOK"], {
-      required_error: "Select a publisher",
+      required_error: t("Select a publisher"),
     }),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -67,7 +70,7 @@ const PublisherSelectForm = () => {
           render={({ field }) => (
             <FormItem className="space-y-3">
               <FormLabel className="text-xl font-lato-bold text-gray-700">
-                Select Publisher
+                {t("Select Publisher")}
               </FormLabel>
               <FormControl>
                 <RadioGroup
@@ -107,10 +110,10 @@ const PublisherSelectForm = () => {
         />
         <div className="flex flex-col gap-4">
           <Button variant={"brand-primary"} className="w-full" type="submit">
-            Continue
+            {t("Continue")}
           </Button>
           <Button variant="brand-cancel" size="cancel" onClick={handleCancel}>
-            <span>Cancel</span>
+            <span>{t("Cancel")}</span>
           </Button>
         </div>
       </form>

@@ -8,6 +8,7 @@ import { HolidayHourFormItem } from "./HolidayHourFormItem";
 import { DayIntervalSchema, HolidayHourSchema } from "../../schemas/hours";
 
 import { DayIntervalType, HolidayHourType } from "../../types/yext";
+import { useTranslation } from "react-i18next";
 
 export type DayOfWeek =
   | "monday"
@@ -44,6 +45,7 @@ export const HolidayHoursForm = React.forwardRef<
     ref
   ) => {
     const { setFormData } = usePageContext();
+    const { t } = useTranslation();
 
     // Schema for the form
     const formSchema = z.object({
@@ -119,7 +121,7 @@ export const HolidayHoursForm = React.forwardRef<
           // onClick={handleAddHolidayHours}
           className="px-4 my-3 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular"
         >
-          + Add Holiday Hours
+          {`+ ${t("Add Holiday Hours")}`}
         </button>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -137,7 +139,7 @@ export const HolidayHoursForm = React.forwardRef<
                     control={form.control}
                     render={({ field }) => (
                       <HolidayHourFormItem
-                        label={`Holiday Hours ${index + 1}`}
+                        label={`${t("Holiday Hours")} ${index + 1}`}
                         key={index}
                         hourIndex={index}
                         onValueChange={onValueChange}
@@ -154,7 +156,9 @@ export const HolidayHoursForm = React.forwardRef<
             formAction="submit"
             className="px-4 py-3 mt-4 bg-gray-700 justify-center items-center flex flex-1 w-full border-none focus:outline-none "
           >
-            <div className="text-white text-base font-lato-regular">Save</div>
+            <div className="text-white text-base font-lato-regular">
+              {t("Save")}
+            </div>
           </button>
           <div className="px-4 justify-center items-center flex">
             <button
@@ -162,7 +166,7 @@ export const HolidayHoursForm = React.forwardRef<
               onClick={handleCancel}
               type="button"
             >
-              Cancel
+              {t("Cancel")}
             </button>
           </div>
         </form>

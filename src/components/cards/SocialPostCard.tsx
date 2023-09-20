@@ -41,6 +41,7 @@ export function SocialPostCard({
   publisher,
 }) {
   // address string where parts of the address are separated by commas and parts maybe missing so don't use commas to separate and don't show undefined parts
+  // TODO french address formatting
   const addressStr = entityAddress
     ? [
         entityAddress.line1,
