@@ -51,6 +51,8 @@ async function updateEntity(
     return { body: "Missing entity id", headers: {}, statusCode: 400 };
   }
 
+  console.log("Entity Body:", entityBody);
+
   const mgmtApiResp = await fetch(
     `https://api.yextapis.com/v2/accounts/me/entities/${entityId}?api_key=${YEXT_PUBLIC_MGMT_API_KEY}&v=20230901`,
     {
