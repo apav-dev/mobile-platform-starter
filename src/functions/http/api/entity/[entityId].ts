@@ -6,12 +6,14 @@ export default async function entity(
 ): Promise<SitesHttpResponse> {
   const { method, pathParams, body } = request;
 
-  const bodyObj = JSON.parse(body);
-
   switch (method) {
     case "GET":
       return getEntity(pathParams.entityId);
     case "PUT":
+      if (!body) {
+        return { body: "Missing entity body", headers: {}, statusCode: 400 };
+      }
+      const bodyObj = JSON.parse(body);
       return updateEntity(pathParams.entityId, bodyObj);
     default:
       return { body: "Method not allowed", headers: {}, statusCode: 405 };

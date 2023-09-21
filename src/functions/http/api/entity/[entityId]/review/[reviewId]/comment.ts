@@ -6,10 +6,12 @@ export default async function comment(
 ): Promise<SitesHttpResponse> {
   const { method, pathParams, body } = request;
 
-  const bodyObj = JSON.parse(body);
-
   switch (method) {
     case "POST":
+      if (!body) {
+        return { body: "Missing entity body", headers: {}, statusCode: 400 };
+      }
+      const bodyObj = JSON.parse(body);
       return createComment(pathParams.entityId, pathParams.reviewId, bodyObj);
     default:
       return { body: "Method not allowed", headers: {}, statusCode: 405 };

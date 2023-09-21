@@ -23,10 +23,12 @@ export default async function analytics(
 ): Promise<SitesHttpResponse> {
   const { method, body, pathParams } = request;
 
-  const bodyObj = JSON.parse(body);
-
   switch (method) {
     case "POST":
+      if (!body) {
+        return { body: "Missing entity body", headers: {}, statusCode: 400 };
+      }
+      const bodyObj = JSON.parse(body);
       return fetchAnalytics(bodyObj, pathParams.entityId);
     default:
       return { body: "Method not allowed", headers: {}, statusCode: 405 };

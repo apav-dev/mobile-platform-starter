@@ -25,12 +25,14 @@ export default async function posts(
 ): Promise<SitesHttpResponse> {
   const { method, body, queryParams, pathParams } = request;
 
-  const bodyObj = JSON.parse(body);
-
   switch (method) {
     case "GET":
       return getEntityPosts(queryParams, pathParams.entityId);
     case "POST":
+      if (!body) {
+        return { body: "Missing entity body", headers: {}, statusCode: 400 };
+      }
+      const bodyObj = JSON.parse(body);
       return createPost(bodyObj, pathParams.entityId);
     default:
       return { body: "Method not allowed", headers: {}, statusCode: 405 };
