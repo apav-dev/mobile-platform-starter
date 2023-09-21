@@ -5,6 +5,7 @@ import { FacebookIcon } from "../icons/FacebookIcon";
 import { formatUtcDate } from "../../utils/formatUtcDate";
 import { FaClock, FaCommentAlt, FaHeart } from "react-icons/fa";
 import Skeleton from "../Skeleton";
+import { GoogleIcon } from "../icons/GoogleIcon";
 
 export const SocialCardSkeleton = () => {
   return (
@@ -90,7 +91,11 @@ export function SocialPostCard({
         </p>
         <div className="flex justify-between items-center self-stretch">
           <div className="flex gap-1 items-center">
-            <FacebookIcon />
+            {publisherName === "Google" ? (
+              <GoogleIcon />
+            ) : (
+              publisherName === "Facebook" && <FacebookIcon />
+            )}
             <span className="text-gray-500 text-sm font-lato-regular normal-case">
               {publisherName}
             </span>

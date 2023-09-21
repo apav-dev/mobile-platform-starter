@@ -33,14 +33,14 @@ const Footer = ({ entityId }: FooterProps) => {
       link: `content?entityId=${entityId}`,
     },
     {
-      icon: SocialIcon,
-      title: t("Social"),
-      link: `social?entityId=${entityId}`,
-    },
-    {
       icon: StarsIcon,
       title: t("Reviews"),
       link: `reviews?entityId=${entityId}`,
+    },
+    {
+      icon: SocialIcon,
+      title: t("Social"),
+      link: `social?entityId=${entityId}`,
     },
     {
       icon: AnalyticsIcon,
@@ -74,7 +74,7 @@ const Footer = ({ entityId }: FooterProps) => {
             className="self-stretch px-2 py-2.5 justify-start items-center gap-2 inline-flex"
             href={link.link}
           >
-            <link.icon />
+            <link.icon fillColor="#C4CBD0" />
             <div className="grow shrink basis-0 text-neutral-400 text-base font-lato-regular font-bold hover:text-white">
               {link.title}
             </div>
