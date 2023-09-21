@@ -67,12 +67,14 @@ async function updateEntity(
   const resp = await mgmtApiResp.json();
 
   if (mgmtApiResp.status !== 200) {
+    console.error("Error updating entity:", resp);
     return {
       body: JSON.stringify(resp),
       headers: {},
       statusCode: mgmtApiResp.status,
     };
   } else {
+    console.log("Entity updated:", resp);
     return {
       body: JSON.stringify(resp),
       headers: {},
