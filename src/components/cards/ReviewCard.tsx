@@ -202,7 +202,10 @@ export const ReviewCard = ({
             </div>
           </div>
           {review.comments?.map((comment) => (
-            <div className="p-6 bg-gray-100 rounded-lg flex-col justify-center items-center gap-6 inline-flex">
+            <div
+              key={comment.id}
+              className="p-6 bg-gray-100 rounded-lg flex-col justify-center items-center gap-6 inline-flex"
+            >
               <div className="self-stretch justify-start items-center gap-4 inline-flex">
                 <div className="w-5 h-5 text-center text-gray-700 text-base font-black">
                   <PersonIcon />
