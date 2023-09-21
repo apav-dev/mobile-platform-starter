@@ -47,10 +47,6 @@ export const getHeadConfig: GetHeadConfig<
     viewport: "width=device-width, initial-scale=1",
   };
 };
-
-// TODO: handle error
-// TODO: Upload Images from Phone
-// TODO: Upload Images from Assets
 const Content = () => {
   const [formData, setFormData] = React.useState<Record<string, any>>({});
   const [entityId, setEntityId] = useState<string | null>(null);

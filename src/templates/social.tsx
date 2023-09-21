@@ -311,7 +311,7 @@ const Social = () => {
                     </div>
                   </div>
                 ) : (
-                  // TODO translate
+                  // TODO: translate
                   <p className="text-base text-gray-700 font-lato-regular flex justify-center">
                     No previous posts were found for this entity.
                   </p>

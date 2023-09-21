@@ -6,14 +6,7 @@ export default async function entity(
 ): Promise<SitesHttpResponse> {
   const { method, pathParams, body } = request;
 
-  // TODO: Remove and only parse body after rc.3 is released
-  const runtime = getRuntime();
-  let bodyObj = {};
-  if (runtime.name === "node") {
-    bodyObj = body;
-  } else if (runtime.name === "deno" && body) {
-    bodyObj = JSON.parse(body);
-  }
+  const bodyObj = JSON.parse(body);
 
   switch (method) {
     case "GET":

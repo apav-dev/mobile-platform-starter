@@ -25,16 +25,7 @@ export default async function posts(
 ): Promise<SitesHttpResponse> {
   const { method, body, queryParams, pathParams } = request;
 
-  // TODO: Remove and only parse body after rc.3 is released
-  const runtime = getRuntime();
-  let bodyObj = {};
-  if (runtime.name === "node") {
-    bodyObj = body;
-  } else if (runtime.name === "deno" && body) {
-    bodyObj = JSON.parse(body);
-  } else if (body) {
-    bodyObj = JSON.parse(body);
-  }
+  const bodyObj = JSON.parse(body);
 
   switch (method) {
     case "GET":
