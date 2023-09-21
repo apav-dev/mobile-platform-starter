@@ -1,4 +1,3 @@
-import * as React from "react";
 import { DayInterval } from "./DayInterval";
 
 import {

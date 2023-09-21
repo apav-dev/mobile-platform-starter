@@ -51,7 +51,7 @@
   "To": "à",
   "Add Interval": "ajouter un intervalle",
   "Invalid Time Interval": "Intervalle de temps non valide",
-  "Start time cannot be before the end time": "L'heure de début ne peut pas être antérieure à l'heure de fin",
+  "Start time cannot be after the end time": "L'heure de début ne peut pas être postérieure à l'heure de fin",
   "If a day is closed, it cannot have any open intervals": "Si un jour est fermé, il ne peut pas avoir d'intervalles ouverts",
   "Overlapping intervals are not allowed": "les intervalles qui se chevauchent ne sont pas autorisés",
   "is required": "est obligatoire",

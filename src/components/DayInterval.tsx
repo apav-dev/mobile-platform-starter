@@ -15,7 +15,7 @@ export const DayInterval = ({ day, intervals }: DayIntervalProps) => {
 
   return (
     <div className="justify-start items-start gap-4 inline-flex">
-      <div className="text-gray-700 text-base font-lato-bold leading-tight">
+      <div className="text-gray-700 w-10 text-base font-lato-bold leading-tight">
         {day}
       </div>
       {closed ? (

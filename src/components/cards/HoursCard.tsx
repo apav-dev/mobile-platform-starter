@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Card } from "../Card";
 import { useEffect } from "react";
 import { usePageContext } from "../utils/usePageContext";

@@ -12,6 +12,7 @@ import ProductCard from "../components/ProductCard";
 import { GraphIcon } from "../components/icons/GraphIcon";
 import { StarsIcon } from "../components/icons/StarsIcon";
 import { SocialIcon } from "../components/icons/SocialIcon";
+import { IoShareSocialOutline } from "react-icons/io5";
 import { AnalyticsIcon } from "../components/icons/AnalyticsIcon";
 import platformImgUrl from "../assets/images/platform.png";
 import Skeleton from "../components/Skeleton";
@@ -89,7 +90,7 @@ const Home = () => {
               link={`/reviews?entityId=${authedEntity}`}
             />
             <ProductCard
-              icon={<SocialIcon />}
+              icon={<IoShareSocialOutline className="w-5 h-5" />}
               title={t("Social")}
               description={t(
                 "View and create social posts for Google and Facebook."

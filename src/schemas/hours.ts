@@ -12,7 +12,7 @@ export const TimeIntervalSchema = z
     }),
   })
   .refine((data) => data.start <= data.end, {
-    message: "Start time cannot be before the end time",
+    message: "Start time cannot be after the end time",
     path: ["start"],
   });
 
