@@ -48,7 +48,7 @@
   "Date": "Date",
   "Pick a date": "Pick a date",
   "From": "From",
-  "To": "To",
+  "To": "to",
   "Add Interval": "Add Interval",
   "Invalid Time Interval": "Invalid Time Interval",
   "Start time cannot be after the end time": "Start time cannot be after the end time",
