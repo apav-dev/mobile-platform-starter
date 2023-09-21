@@ -18,6 +18,7 @@ import { usePageContext } from "../utils/usePageContext";
 import { formatUtcDate } from "../../utils/formatUtcDate";
 import { useEffect } from "react";
 import Skeleton from "../Skeleton";
+import { useTranslation } from "react-i18next";
 
 export interface ReviewCardProps {
   review: Review;
@@ -62,6 +63,8 @@ export const ReviewCard = ({
   entityAddress,
 }: ReviewCardProps) => {
   const { formData, entityMeta, editId, setEditId } = usePageContext();
+
+  const { t } = useTranslation();
 
   const handleCancel = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.stopPropagation();
@@ -138,15 +141,15 @@ export const ReviewCard = ({
         <Header
           breadcrumbs={[
             {
-              name: "Home",
+              name: t("Home"),
               path: "/",
             },
-            { name: "Reviews", onClick: handleCancel },
+            { name: t("Reviews"), onClick: handleCancel },
             { name: review.id },
           ]}
         />
         <ContentContainer containerClassName={"flex flex-col gap-y-6 pb-20"}>
-          <Heading title={"Reviews"} icon={<StarsIcon />} />
+          <Heading title={t("Reviews")} icon={<StarsIcon />} />
           <div className={"flex flex-col gap-y-4"}>
             <Card>
               <div className="justify-between items-center gap-4 inline-flex">
@@ -189,7 +192,7 @@ export const ReviewCard = ({
           <HorizontalDivider />
           <div className="justify-between items-center gap-4 flex">
             <div className="text-gray-700 text-base font-lato-bold leading-tight">
-              RESPONSE
+              {t("RESPONSE")}
             </div>
             <div className="p-2 justify-start items-center gap-2 flex">
               <CommentBubbleIcon />
@@ -229,8 +232,8 @@ export const ReviewCard = ({
           {review.comments?.length === 0 ? (
             <TextareaForm
               id={review.id.toString()}
-              submitButtonLabel="Submit Response"
-              placeholder="Write a Response..."
+              submitButtonLabel={t("Submit Response")}
+              placeholder={t("Write a Response...")}
               onCancel={handleCancel}
             />
           ) : (
@@ -240,7 +243,7 @@ export const ReviewCard = ({
                 onClick={handleCancel}
                 type="button"
               >
-                Cancel
+                {t("Cancel")}
               </button>
             </div>
           )}
