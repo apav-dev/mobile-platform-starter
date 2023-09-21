@@ -37,6 +37,7 @@ import {
   publisherOptions,
 } from "../components/ReviewFilters";
 import { ReviewFilterProvider } from "../components/utils/useReviewFilterContext";
+import { useTranslation } from "react-i18next";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return `reviews`;
@@ -79,6 +80,8 @@ const Reviews = () => {
   );
   const [publisherIds, setPublisherIds] =
     useState<string[]>(publisherOptionIds);
+
+  const { t } = useTranslation();
 
   const clearFilters = () => {
     setSearchQuery("");
@@ -224,16 +227,16 @@ const Reviews = () => {
       <Main
         breadcrumbs={[
           {
-            name: "Home",
+            name: t("Home"),
             path: "/",
           },
-          { name: "Reviews" },
+          { name: t("Reviews") },
         ]}
       >
         {reviewsQuery.isLoading ? (
           <ContentContainer>
             <div className="flex flex-col gap-y-4">
-              <Heading title={"Reviews"} icon={<StarsIcon />} />
+              <Heading title={t("Reviews")} icon={<StarsIcon />} />
               <div className="relative flex flex-col gap-y-2">
                 <div className="flex flex-col gap-y-4">
                   {[...Array(pageSize)].map((_, index) => (
@@ -248,7 +251,7 @@ const Reviews = () => {
             containerClassName={twMerge(editId && "overflow-y-hidden")}
           >
             <div className="flex flex-col gap-y-4">
-              <Heading title={"Reviews"} icon={<StarsIcon />} />
+              <Heading title={t("Reviews")} icon={<StarsIcon />} />
               <ReviewFilterProvider
                 value={{
                   searchQuery,
@@ -281,7 +284,7 @@ const Reviews = () => {
                     <div className="justify-between items-start gap-4 flex">
                       <div className="justify-start items-center gap-2 flex">
                         <div className="text-gray-700 text-base font-lato-regular leading-tight">
-                          Show
+                          {t("Show")}
                         </div>
                         <DropdownMenu>
                           <DropdownMenuTrigger className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-start items-center gap-2 inline-flex font-lato-regular">
@@ -370,7 +373,7 @@ const Reviews = () => {
                         className="text-blue text-base font-lato-regular hover:underline"
                         href="/"
                       >
-                        Return Home
+                        {`${t("Return Home")}`}
                       </a>
                     </div>
                   </>

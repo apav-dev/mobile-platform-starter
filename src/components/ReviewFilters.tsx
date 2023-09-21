@@ -19,6 +19,8 @@ import { cn } from "../utils/cn";
 import { Slider } from "./Slider";
 import { Checkbox } from "./Checkbox";
 import { RadioGroup, RadioGroupItem } from "./Radio";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 const SearchFormSchema = z.object({
   reviewContent: z.string(),
@@ -194,7 +196,7 @@ const PublisherFormSchema = z.object({
   publisherIds: z
     .array(z.string())
     .refine((value) => value.some((item) => item), {
-      message: "You must select at least one publisher",
+      message: t("You must select at least one publisher"),
     }),
 });
 
@@ -253,7 +255,7 @@ export function PublisherSelector() {
                           />
                         </FormControl>
                         <FormLabel className="font-lato-regular">
-                          {option.label}
+                          {t(option.label)}
                         </FormLabel>
                       </FormItem>
                     );
@@ -270,7 +272,7 @@ export function PublisherSelector() {
           type="submit"
           // disabled={isSelecting}
         >
-          Search
+          <span>{t("Search")}</span>
         </Button>
         <Button
           variant="brand-cancel"
@@ -279,7 +281,7 @@ export function PublisherSelector() {
           onClick={handleCancel}
           // disabled={isSelecting}
         >
-          <span>Cancel</span>
+          <span>{t("Cancel")}</span>
         </Button>
       </form>
     </Form>
@@ -340,6 +342,7 @@ export function AwaitingResponseSelector() {
   function handleCancel() {
     setFilterPanelOpen(false);
   }
+  const { t } = useTranslation();
 
   return (
     <Form {...form}>
@@ -361,21 +364,25 @@ export function AwaitingResponseSelector() {
                         value={AwaitingResponseType.NO_RESPONSE}
                       />
                     </FormControl>
-                    <FormLabel className="font-normal">No Response</FormLabel>
+                    <FormLabel className="font-normal">
+                      {t("No Response")}
+                    </FormLabel>
                   </FormItem>
 
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
                       <RadioGroupItem value={AwaitingResponseType.REVIEW} />
                     </FormControl>
-                    <FormLabel className="font-normal">Review</FormLabel>
+                    <FormLabel className="font-normal">{t("Review")}</FormLabel>
                   </FormItem>
 
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
                       <RadioGroupItem value={AwaitingResponseType.COMMENT} />
                     </FormControl>
-                    <FormLabel className="font-normal">Comment</FormLabel>
+                    <FormLabel className="font-normal">
+                      {t("Comment")}
+                    </FormLabel>
                   </FormItem>
 
                   <FormItem className="flex items-center space-x-3 space-y-0">
@@ -385,7 +392,7 @@ export function AwaitingResponseSelector() {
                       />
                     </FormControl>
                     <FormLabel className="font-normal">
-                      Review or Comment
+                      {t("Review or Comment")}
                     </FormLabel>
                   </FormItem>
                 </RadioGroup>
@@ -400,7 +407,7 @@ export function AwaitingResponseSelector() {
           type="submit"
           // disabled={isSelecting}
         >
-          Search
+          {t("Search")}
         </Button>
         <Button
           variant="brand-cancel"
@@ -409,7 +416,7 @@ export function AwaitingResponseSelector() {
           onClick={handleCancel}
           // disabled={isSelecting}
         >
-          <span>Cancel</span>
+          <span>{t("Cancel")}</span>
         </Button>
       </form>
     </Form>
@@ -420,6 +427,8 @@ export const ReviewFilters = () => {
   const [filterTitle, setFilterTitle] = useState("");
   const [filterDescription, setFilterDescription] = useState("");
   const [panelContent, setPanelContent] = useState<React.ReactNode>(<></>);
+
+  const { t } = useTranslation();
 
   const {
     searchQuery,
@@ -475,8 +484,8 @@ export const ReviewFilters = () => {
     <>
       <div className="justify-start items-center gap-2 flex flex-wrap">
         <FilterButton
-          title="Search"
-          description="Search for review content by keyword"
+          title={t("Search")}
+          description={t("Search for review content by keyword")}
           className={cn(
             "px-2 py-1 bg-white rounded-[15px] border border-zinc-200 justify-center items-center gap-2.5 flex",
             searchQuery && "px-3 py-1.5 bg-zinc-200"
@@ -491,19 +500,19 @@ export const ReviewFilters = () => {
         </FilterButton>
         {ratingRange[0] === 1 && ratingRange[1] === 5 ? (
           <FilterButton
-            title="Review Rating"
-            description="Filter Reviews by rating"
+            title={t("Review Rating")}
+            description={t("Filter Reviews by rating")}
             filterComponent={<ReviewRatingSlider />}
           >
-            All Ratings
+            {t("All Ratings")}
           </FilterButton>
         ) : (
           <>
             {ratingRange[0] === ratingRange[1] ? (
               <FilterButton
                 className="bg-zinc-200"
-                title="Review Rating"
-                description="Filter Reviews by rating"
+                title={t("Review Rating")}
+                description={t("Filter Reviews by rating")}
                 filterComponent={<ReviewRatingSlider />}
               >
                 {Array.from({ length: ratingRange[0] }).map((_, i) => (
@@ -515,27 +524,27 @@ export const ReviewFilters = () => {
                 {ratingRange[0] > 1 && (
                   <FilterButton
                     className="bg-zinc-200"
-                    title="Review Rating"
-                    description="Filter Reviews by rating"
+                    title={t("Review Rating")}
+                    description={t("Filter Reviews by rating")}
                     filterComponent={<ReviewRatingSlider />}
                   >
                     {Array.from({ length: ratingRange[0] }).map((_, i) => (
                       <FaStar key={i} className="text-gray-700 w-2.5 2.5" />
                     ))}
-                    & Up
+                    {t("& Up")}
                   </FilterButton>
                 )}
                 {ratingRange[1] < 5 && (
                   <FilterButton
                     className="bg-zinc-200"
-                    title="Review Rating"
-                    description="Filter Reviews by rating"
+                    title={t("Review Rating")}
+                    description={t("Filter Reviews by rating")}
                     filterComponent={<ReviewRatingSlider />}
                   >
                     {Array.from({ length: ratingRange[1] }).map((_, i) => (
                       <FaStar key={i} className="text-gray-700 w-2.5 2.5" />
                     ))}
-                    & Below
+                    {t("& Below")}
                   </FilterButton>
                 )}
               </>
@@ -549,25 +558,25 @@ export const ReviewFilters = () => {
             awaitingResponse !== AwaitingResponseType.NO_RESPONSE &&
               "bg-zinc-200"
           )}
-          title="Awaiting Response"
-          description="Filter by reviews awaiting a response"
+          title={t("Awaiting Response")}
+          description={t("Filter by reviews awaiting a response")}
           filterComponent={<AwaitingResponseSelector />}
         >
-          {
+          {t(
             awaitingResponseOptions.find(
               (option) => option.value === awaitingResponse
-            )?.label
-          }
+            )?.label ?? ""
+          )}
         </FilterButton>
 
         {publisherIds.length === publisherOptions.length ? (
           <FilterButton
             className="px-3 py-1.5 bg-white rounded-[15px] border border-zinc-200 justify-center items-center gap-2 flex text-gray-700 font-lato-regular leading-tight whitespace-nowrap"
-            title="Review Rating"
-            description="Filter Reviews by rating"
+            title={t("Publisher")}
+            description={t("Filter Reviews by publisher")}
             filterComponent={<PublisherSelector />}
           >
-            All Publishers
+            {t("All Publishers")}
           </FilterButton>
         ) : (
           // button per publisher
@@ -581,8 +590,8 @@ export const ReviewFilters = () => {
                 <FilterButton
                   key={publisher.id}
                   className="bg-zinc-200"
-                  title="Review Rating"
-                  description="Filter Reviews by rating"
+                  title={t("Publisher")}
+                  description={t("Filter Reviews by publisher")}
                   filterComponent={<PublisherSelector />}
                 >
                   {publisher.label}
@@ -595,7 +604,7 @@ export const ReviewFilters = () => {
           className="text-blue font-lato-regular leading-tight hover:underline"
           onClick={handleCancel}
         >
-          Clear
+          {t("Clear")}
         </Button>
       </div>
       <SidePanel

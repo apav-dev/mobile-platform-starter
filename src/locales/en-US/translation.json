@@ -144,5 +144,6 @@
   "Successfully updated entity": "Successfully updated entity",
   "Search": "Search",
   "Last 7 Days": "Last 7 Days",
-  "Last 30 Days": "Last 30 Days"
+  "Last 30 Days": "Last 30 Days",
+  "intlDateTime": "{{val, datetime}}"
 }
