@@ -142,7 +142,11 @@ const Analytics = () => {
             <AnalyticsMetricCard
               icon={<StarsIcon />}
               label={t("Average Rating")}
-              metric={averageRating?.toString().replace(".", ",")}
+              metric={
+                navigator.language !== "en-US"
+                  ? averageRating?.toString().replace(".", ",")
+                  : averageRating?.toString()
+              }
             />
           </div>
         </ContentContainer>
