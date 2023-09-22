@@ -90,8 +90,20 @@ async function createPost(
     const newMinutes = timeValues[1];
     postDate.setHours(newHours);
     postDate.setMinutes(newMinutes);
-    const utcDate = postDate.toUTCString();
-    postApiBody.postDate = `${utcDate}`;
+    const utcYear = postDate.getUTCFullYear();
+    const utcMonth = postDate.getUTCMonth() + 1;
+    const utcDay = postDate.getUTCDate();
+    const utcHours = postDate.getUTCHours();
+    const utcMins = postDate.getUTCMinutes();
+    const utcSecs = postDate.getUTCSeconds();
+    const dateToPost = `${utcYear}-${utcMonth
+      .toString()
+      .padStart(2, "0")}-${utcDay.toString().padStart(2, "0")} ${utcHours
+      .toString()
+      .padStart(2, "0")}:${utcMins.toString().padStart(2, "0")}:${utcSecs
+      .toString()
+      .padStart(2, "0")}`;
+    postApiBody.postDate = dateToPost;
   }
 
   if (

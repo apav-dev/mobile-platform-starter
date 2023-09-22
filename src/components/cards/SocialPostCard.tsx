@@ -2,10 +2,10 @@ import * as React from "react";
 import { Card } from "../Card";
 import { LocationPinIcon } from "../icons/LocationPinIcon";
 import { FacebookIcon } from "../icons/FacebookIcon";
-import { formatUtcDate } from "../../utils/formatUtcDate";
-import { FaClock, FaCommentAlt, FaHeart } from "react-icons/fa";
+import { FaClock } from "react-icons/fa";
 import Skeleton from "../Skeleton";
 import { GoogleIcon } from "../icons/GoogleIcon";
+import { formatUtcToLocal } from "../../utils/formatUtcToLocal";
 
 export const SocialCardSkeleton = () => {
   return (
@@ -114,7 +114,7 @@ export function SocialPostCard({
         <div className="justify-start items-center gap-4 inline-flex">
           <FaClock className="text-gray-700" />
           <div className="text-gray-700 text-base font-lato-regular leading-tight">
-            {formatUtcDate(datePosted)}
+            {formatUtcToLocal(datePosted)}
           </div>
         </div>
       </div>
