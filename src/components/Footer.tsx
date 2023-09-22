@@ -74,8 +74,8 @@ const Footer = ({ entityId }: FooterProps) => {
             className="self-stretch px-2 py-2.5 justify-start items-center gap-2 inline-flex"
             href={link.link}
           >
-            <link.icon fillColor="#C4CBD0" />
-            <div className="grow shrink basis-0 text-neutral-400 text-base font-lato-regular font-bold hover:text-white">
+            <link.icon fillColor="#ffffff" />
+            <div className="grow shrink basis-0 text-white text-base font-lato-regular font-bold hover:text-white">
               {link.title}
             </div>
           </a>
