@@ -1,5 +1,5 @@
 import { AwaitingResponseType } from "../components/ReviewFilters";
-import { Location, ReviewResponse, YextResponse } from "../types/yext";
+import { Location, Review, ReviewResponse, YextResponse } from "../types/yext";
 
 interface FormData {
   publisher?: "GOOGLEMYBUSINESS" | "FACEBOOK";
@@ -112,6 +112,16 @@ export const fetchReviews = async (
   return data;
 };
 
+export const fetchReview = async (
+  entityId: string,
+  reviewId: string
+): Promise<YextResponse<Review>> => {
+  const response = await fetch(`/api/entity/${entityId}/reviews/${reviewId}`);
+
+  const data = await response.json();
+  return data;
+};
+
 export const submitReviewResponse = async () => {};
 
 export const fetchSocialPosts = async (
@@ -145,7 +155,7 @@ export const createReviewComment = async ({
   content: string;
 }): Promise<YextResponse<{ id: string }>> => {
   const response = await fetch(
-    `/api/entity/${entityId}/review/${reviewId}/comment`,
+    `/api/entity/${entityId}/reviews/${reviewId}/comment`,
     {
       method: "POST",
       headers: {

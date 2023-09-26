@@ -19,11 +19,13 @@ import { formatUtcDate } from "../../utils/formatUtcDate";
 import { useEffect } from "react";
 import Skeleton from "../Skeleton";
 import { useTranslation } from "react-i18next";
+import { twMerge } from "tailwind-merge";
 
 export interface ReviewCardProps {
   review: Review;
   entityName?: string;
   entityAddress?: Address;
+  hidden?: boolean;
 }
 
 export const ReviewCardSkeleton = () => {
@@ -61,6 +63,7 @@ export const ReviewCard = ({
   review,
   entityName,
   entityAddress,
+  hidden,
 }: ReviewCardProps) => {
   const { formData, entityMeta, editId, setEditId } = usePageContext();
 
@@ -72,7 +75,7 @@ export const ReviewCard = ({
   };
 
   useEffect(() => {
-    if (formData[review.id.toString()]) {
+    if (formData[review?.id?.toString() ?? ""]) {
       setEditId?.("");
     }
   }, [formData, review]);
@@ -94,7 +97,12 @@ export const ReviewCard = ({
   return (
     // TODO: Is it bad to have onClick without button?
     <div onClick={() => setEditId?.(review.id)}>
-      <Card containerClassName="flex flex-col gap-y-4">
+      <Card
+        containerClassName={twMerge(
+          "flex flex-col gap-y-4",
+          hidden && "hidden"
+        )}
+      >
         <div className="justify-between items-center gap-4 inline-flex">
           <div className="flex gap-x-4">
             <div className="w-5 h-5 justify-center items-center gap-2.5 flex my-auto">
