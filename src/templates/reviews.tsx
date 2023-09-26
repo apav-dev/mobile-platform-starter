@@ -11,6 +11,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createReviewComment,
   fetchLocationFromContentApi,
+  fetchReview,
   fetchReviews,
 } from "../utils/api";
 import {
@@ -87,6 +88,7 @@ const Reviews = () => {
     setSearchQuery("");
     setRatingRange([1, 5]);
     setPublisherIds(publisherOptionIds);
+    setResponseType(AwaitingResponseType.NO_RESPONSE);
   };
 
   useEffect(() => {
@@ -126,6 +128,17 @@ const Reviews = () => {
     queryFn: () => fetchLocationFromContentApi(entityId),
   });
 
+  const reviewQuery = useQuery({
+    queryKey: ["editId", editId],
+    enabled: !!editId,
+    retry: false,
+    queryFn: () => fetchReview(entityId, editId),
+  });
+
+  useEffect(() => {
+    console.log("reviewQuery", reviewQuery);
+  }, [reviewQuery]);
+
   const commentMutation = useMutation({
     mutationFn: createReviewComment,
     onError: (error) => {
@@ -138,20 +151,24 @@ const Reviews = () => {
     },
     onSuccess: (response) => {
       if (response.meta.errors?.length === 0) {
-        const reviewId = Object.keys(formData)[0];
-        toast({
-          title: "Comment Submitted!",
-          description: "Comment successfully submitted for review",
-          duration: 5000,
-          action: (
-            <ToastAction
-              altText="View Review"
-              onClick={() => setEditId(Number(reviewId) ?? "")}
-            >
-              View Review
-            </ToastAction>
-          ),
-        });
+        setFormData({});
+        setTimeout(async () => {
+          await reviewsQuery.refetch();
+          const reviewId = Object.keys(formData)[0];
+          toast({
+            title: "Comment Submitted!",
+            description: "Comment successfully submitted for review",
+            duration: 5000,
+            action: (
+              <ToastAction
+                altText="View Review"
+                onClick={() => setEditId(Number(reviewId) ?? "")}
+              >
+                View Review
+              </ToastAction>
+            ),
+          });
+        }, 1000);
       } else {
         // TODO: throw error from api function to handle this in the onError callback
         toast({
@@ -160,9 +177,6 @@ const Reviews = () => {
           description: "There was a problem with your request.",
         });
       }
-
-      setFormData({});
-      setTimeout(() => reviewsQuery.refetch(), 1000);
     },
   });
 
@@ -281,6 +295,16 @@ const Reviews = () => {
                         entityName={entityName}
                       />
                     ))}
+                    {/* if a user submits a review response and clicks on the toast action to see a review that is no longer
+                        in the reviews state, this hidden card will display the review that was just commented on */}
+                    {reviewQuery.data?.response && (
+                      <ReviewCard
+                        hidden
+                        review={reviewQuery.data?.response}
+                        entityAddress={entityAddress}
+                        entityName={entityName}
+                      />
+                    )}
                     <div className="justify-between items-start gap-4 flex">
                       <div className="justify-start items-center gap-2 flex">
                         <div className="text-gray-700 text-base font-lato-regular leading-tight">

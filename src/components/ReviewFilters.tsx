@@ -118,7 +118,6 @@ const ReviewRatingSlider = () => {
     data.stopPropagation();
     data.preventDefault();
     console.log(form.getValues());
-    // debugger;
     setRatingRange(form.getValues().ratingRange);
     setFilterPanelOpen(false);
   }
