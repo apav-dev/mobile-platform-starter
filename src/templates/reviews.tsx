@@ -246,6 +246,7 @@ const Reviews = () => {
           },
           { name: t("Reviews") },
         ]}
+        disableScroll={!!editId}
       >
         {reviewsQuery.isLoading ? (
           <ContentContainer>
@@ -261,9 +262,7 @@ const Reviews = () => {
             </div>
           </ContentContainer>
         ) : (
-          <ContentContainer
-            containerClassName={twMerge(editId && "overflow-y-hidden")}
-          >
+          <ContentContainer>
             <div className="flex flex-col gap-y-4">
               <Heading title={t("Reviews")} icon={<StarsIcon />} />
               <ReviewFilterProvider
