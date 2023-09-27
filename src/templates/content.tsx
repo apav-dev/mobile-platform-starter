@@ -122,6 +122,7 @@ const Content = () => {
           },
           { name: location?.name ?? "" },
         ]}
+        disableScroll={!!editId}
       >
         {contentQuery.isLoading ? (
           <ContentContainer>
@@ -163,9 +164,7 @@ const Content = () => {
         ) : (
           <>
             {location && (
-              <ContentContainer
-                containerClassName={twMerge(editId && "overflow-y-hidden")}
-              >
+              <ContentContainer>
                 <Heading title={location.name} icon={<LocationPinIcon />} />
                 <div className="py-4">
                   <div className="justify-start items-center gap-2 inline-flex">
