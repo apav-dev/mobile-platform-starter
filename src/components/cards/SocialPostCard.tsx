@@ -100,16 +100,6 @@ export function SocialPostCard({
               {publisherName}
             </span>
           </div>
-          {/* <div className="flex items-center gap-4">
-            <div className="flex gap-1 items-center text-gray-700 text-base font-lato-regular">
-              <FaHeart />
-              <span>1</span>
-            </div>
-            <div className="flex gap-1 items-center text-gray-700 text-base font-lato-regular">
-              <FaCommentAlt />
-              <span>0</span>
-            </div>
-          </div> */}
         </div>
         <div className="justify-start items-center gap-4 inline-flex">
           <FaClock className="text-gray-700" />
