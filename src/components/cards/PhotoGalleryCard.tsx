@@ -49,9 +49,7 @@ export const PhotoGalleryCard = ({
 
   return (
     // TODO: Is it bad to have onClick without button?
-    <div
-    // onClick={() => setEditMode(true)}
-    >
+    <div>
       <Card>
         <div
           onClick={() => setEditId?.(fieldId)}

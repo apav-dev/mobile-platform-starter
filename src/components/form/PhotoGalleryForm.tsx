@@ -20,9 +20,11 @@ import { usePageContext } from "../utils/usePageContext";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImageToCloudinary } from "../../utils/api";
 import { toast } from "../utils/useToast";
-
 import { GalleryImage } from "../../types/yext";
 import { useTranslation } from "react-i18next";
+import { useMutation } from "@tanstack/react-query";
+import { FadeLoader } from "react-spinners";
+import { twMerge } from "tailwind-merge";
 
 export interface PhotoGalleryFormProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -97,28 +99,29 @@ export const PhotoGalleryForm = forwardRef<
     form.setValue(id, images);
   };
 
+  const imagePreviewMutation = useMutation({
+    mutationFn: uploadImageToCloudinary,
+    onError: (error) => {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: t("Failed to upload image"),
+        description: t("Please choose a different image"),
+      });
+    },
+    onSuccess: (response) => {
+      setImagePreview(response.secure_url);
+    },
+  });
+
   const handleImagePreview = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (uploadType === "file") {
       const file = e.target.files?.[0];
-
       if (file) {
-        uploadImageToCloudinary(file)
-          .then((response) => {
-            // setImagePreview(response.secure_url);
-            // console.log(response);
-            setImagePreview(response.secure_url);
-          })
-          .catch((error) => {
-            console.log(error);
-            toast({
-              variant: "destructive",
-              title: t("Failed to upload image"),
-              description: t("Please choose a different image"),
-            });
-          });
+        imagePreviewMutation.mutate(file);
+      } else if (uploadType === "file") {
+        setImagePreview(e.target.value);
       }
-    } else if (uploadType === "url") {
-      setImagePreview(e.target.value);
     }
   };
 
@@ -196,6 +199,11 @@ export const PhotoGalleryForm = forwardRef<
                     onChange={handleImagePreview}
                   />
                 </div>
+                {imagePreviewMutation.isLoading && (
+                  <div className="flex justify-center items-center gap-2">
+                    <FadeLoader color="#E1E5E8" />
+                  </div>
+                )}
                 {imagePreview && (
                   <>
                     <img
@@ -208,8 +216,12 @@ export const PhotoGalleryForm = forwardRef<
                 <DialogFooter className="flex-col gap-y-4">
                   <DialogTrigger
                     type="button"
-                    className="px-4 py-3 bg-gray-700 rounded-[3px] justify-center items-center gap-2 flex w-full text-white font-lato-regular"
+                    className={twMerge(
+                      "px-4 py-3 bg-gray-700 rounded-[3px] justify-center items-center gap-2 flex w-full text-white font-lato-regular",
+                      !imagePreview && "opacity-50 cursor-not-allowed"
+                    )}
                     onClick={(e) => handleAddImage(e)}
+                    disabled={!imagePreview}
                   >
                     {t("Add Photo")}
                   </DialogTrigger>
