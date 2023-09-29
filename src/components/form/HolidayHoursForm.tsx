@@ -85,20 +85,20 @@ export const HolidayHoursForm = React.forwardRef<
       form.setValue(`${id}.holidayHours`, holidayHours);
     };
 
-    // const handleAddHolidayHours = () => {
-    //   const holidayHours = form.getValues(id).holidayHours;
-    //   const today = new Date();
-    //   holidayHours.push({
-    //     date: today.toISOString().split("T")[0],
-    //     openIntervals: [
-    //       {
-    //         start: "",
-    //         end: "",
-    //       },
-    //     ],
-    //   });
-    //   form.setValue(`${id}.holidayHours`, holidayHours);
-    // };
+    const handleAddHolidayHours = () => {
+      const holidayHours = form.getValues(id).holidayHours;
+      const today = new Date();
+      holidayHours.push({
+        date: today.toISOString().split("T")[0],
+        openIntervals: [
+          {
+            start: "",
+            end: "",
+          },
+        ],
+      });
+      form.setValue(`${id}.holidayHours`, holidayHours);
+    };
 
     const handleSubmit = (values: z.infer<typeof formSchema>) => {
       setFormData((prev: Record<string, any>) => ({
@@ -118,7 +118,7 @@ export const HolidayHoursForm = React.forwardRef<
         <FormLabel className="font-lato-bold text-base">{label}</FormLabel>
         <button
           type="button"
-          // onClick={handleAddHolidayHours}
+          onClick={handleAddHolidayHours}
           className="px-4 my-3 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular"
         >
           {`+ ${t("Add Holiday Hours")}`}

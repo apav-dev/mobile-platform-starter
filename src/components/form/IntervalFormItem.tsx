@@ -150,14 +150,7 @@ export const IntervalFormItem = ({
                     <Label className="font-lato-regular text-[13px] text-gray-700 pb-1">
                       {t("From")}
                     </Label>
-                    <Input
-                      id={`${day}-start`}
-                      type="time"
-                      step={60}
-                      className="font-lato-regular text-[13px] h-8 text-gray-500"
-                      onChange={(e) => handleStartChange(e, index)}
-                      value={interval.start}
-                    />
+  
                   </div>
                   <div className="flex flex-col flex-1">
                     <Label className="font-lato-regular text-[13px] text-gray-700 pb-1">
