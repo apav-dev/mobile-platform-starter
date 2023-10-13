@@ -24,7 +24,7 @@ async function getReview(reviewId?: string): Promise<SitesHttpResponse> {
   }
 
   const params = new URLSearchParams({
-    api_key: YEXT_PUBLIC_MGMT_API_KEY,
+    api_key: YEXT_PUBLIC_YEXT_API_KEY,
     v: "20230901",
   });
 

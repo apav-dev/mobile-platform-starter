@@ -77,7 +77,7 @@ const Reviews = () => {
   const [ratingRange, setRatingRange] = useState<[number, number]>([1, 5]);
   const [filterPanelOpen, setFilterPanelOpen] = useState<boolean>(false);
   const [responseType, setResponseType] = useState<AwaitingResponseType>(
-    AwaitingResponseType.NO_RESPONSE
+    AwaitingResponseType.ALL_REVIEWS
   );
   const [publisherIds, setPublisherIds] =
     useState<string[]>(publisherOptionIds);
@@ -88,7 +88,7 @@ const Reviews = () => {
     setSearchQuery("");
     setRatingRange([1, 5]);
     setPublisherIds(publisherOptionIds);
-    setResponseType(AwaitingResponseType.NO_RESPONSE);
+    setResponseType(AwaitingResponseType.ALL_REVIEWS);
   };
 
   useEffect(() => {
