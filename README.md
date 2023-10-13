@@ -42,6 +42,7 @@ As mentioned above, this project references a custom content API for fetching th
 | Localization | Primary      |
 
 **Fields**: id, name, address
+
 **Indexed Fields**: id
 
 ### Cloudinary
