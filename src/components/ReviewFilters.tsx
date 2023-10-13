@@ -55,7 +55,7 @@ const ReviewSearchForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Search..." {...field} />
+                <Input placeholder={`${t("Search")}...`} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -76,7 +76,7 @@ const ReviewSearchForm = () => {
           onClick={handleCancel}
           // disabled={isSelecting}
         >
-          <span>Cancel</span>
+          <span>{t("Cancel")}</span>
         </Button>
       </form>
     </Form>
@@ -288,7 +288,7 @@ export function PublisherSelector() {
 }
 
 export enum AwaitingResponseType {
-  NO_RESPONSE = "NO_RESPONSE",
+  ALL_REVIEWS = "ALL_REVIEWS",
   REVIEW = "REVIEW",
   COMMENT = "COMMENT",
   REVIEW_OR_COMMENT = "REVIEW_OR_COMMENT",
@@ -296,11 +296,11 @@ export enum AwaitingResponseType {
 
 const awaitingResponseOptions = [
   {
-    label: "No Response",
-    value: AwaitingResponseType.NO_RESPONSE,
+    label: "All Reviews",
+    value: AwaitingResponseType.ALL_REVIEWS,
   },
   {
-    label: "Review",
+    label: "Reviews with no response",
     value: AwaitingResponseType.REVIEW,
   },
   {
@@ -360,38 +360,19 @@ export function AwaitingResponseSelector() {
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
                       <RadioGroupItem
-                        value={AwaitingResponseType.NO_RESPONSE}
+                        value={AwaitingResponseType.ALL_REVIEWS}
                       />
                     </FormControl>
                     <FormLabel className="font-normal">
-                      {t("No Response")}
+                      {t("All Reviews")}
                     </FormLabel>
                   </FormItem>
-
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
                       <RadioGroupItem value={AwaitingResponseType.REVIEW} />
                     </FormControl>
-                    <FormLabel className="font-normal">{t("Review")}</FormLabel>
-                  </FormItem>
-
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value={AwaitingResponseType.COMMENT} />
-                    </FormControl>
                     <FormLabel className="font-normal">
-                      {t("Comment")}
-                    </FormLabel>
-                  </FormItem>
-
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem
-                        value={AwaitingResponseType.REVIEW_OR_COMMENT}
-                      />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      {t("Review or Comment")}
+                      {t("Reviews with no response")}
                     </FormLabel>
                   </FormItem>
                 </RadioGroup>
@@ -500,7 +481,7 @@ export const ReviewFilters = () => {
         {ratingRange[0] === 1 && ratingRange[1] === 5 ? (
           <FilterButton
             title={t("Review Rating")}
-            description={t("Filter Reviews by rating")}
+            description={t("Filter Reviews by Rating")}
             filterComponent={<ReviewRatingSlider />}
           >
             {t("All Ratings")}
@@ -554,7 +535,7 @@ export const ReviewFilters = () => {
         <FilterButton
           className={cn(
             "px-3 py-1.5 bg-white rounded-[15px] border border-zinc-200 justify-center items-center gap-2 flex text-gray-700 font-lato-regular leading-tight whitespace-nowrap",
-            awaitingResponse !== AwaitingResponseType.NO_RESPONSE &&
+            awaitingResponse !== AwaitingResponseType.ALL_REVIEWS &&
               "bg-zinc-200"
           )}
           title={t("Awaiting Response")}
@@ -572,7 +553,7 @@ export const ReviewFilters = () => {
           <FilterButton
             className="px-3 py-1.5 bg-white rounded-[15px] border border-zinc-200 justify-center items-center gap-2 flex text-gray-700 font-lato-regular leading-tight whitespace-nowrap"
             title={t("Publisher")}
-            description={t("Filter Reviews by publisher")}
+            description={t("Filter Reviews by Publisher")}
             filterComponent={<PublisherSelector />}
           >
             {t("All Publishers")}

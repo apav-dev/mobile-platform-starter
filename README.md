@@ -1,131 +1,58 @@
-# Pages Empty Starter
+# Yext Mobile Platform Starter
 
-This repository provides an empty starter template for Yext Pages. This starter is recommended if you want to build from scratch or are following a track that requires the empty starter.
+This repository is designed to be implemented in a client's account to provide them a limited set of platform functionality optimized for small viewports (mobile).
 
-## Getting Started
+## Prerequisites
 
-### Prerequisites
+### Yext API Keys
 
-1. Have the Yext CLI installed: https://hitchhikers.yext.com/guides/cli-getting-started-resources/01-install-cli/
-1. Have Deno installed, version 1.21.0 or later: https://deno.land/manual/getting_started/installation
-1. Have node installed, version 17: https://nodejs.org/en/download/
+This starter uses the Yext Management, Analytics, Reviews, and Social Posts APIs to mimic the functionality of the Yext platform. It also uses a Content API on the Reviews page to fetch some information about the entity that is being reviewed.
 
-   - It's recommend to use nvm: https://github.com/nvm-sh/nvm#installing-and-updating or via brew `brew install nvm`
+You will need to create a new app in the Yext developer console and add the following permissions:
 
-1. Have a Yext account. You can sign up for a free account here: https://hitchhikers.yext.com/create-playground-account
+| Endpoint                   | Permissions  |
+| -------------------------- | ------------ |
+| Entities (Management API)  | Read / Write |
+| Locations (Management API) | Read / Write |
+| Analytics                  | Read         |
+| Reviews                    | Read / Write |
+| Posts                      | Read / Write |
+| Content API                | Read-Only    |
 
+After you have created you API and applied the correct endpoints and permissions, add `YEXT_PUBLIC_YEXT_API_KEY` to your `.env` locally and to the branch settings of your account.
 
-### _Recommended_: Set up with `pages new` 
-Once you have the prerequisites installed, we recommend running `yext pages new` which will guide you through the setup flow. Alternatively, you can clone this repo directly by following the directions below. 
+### Content API
 
-### Clone this repo and install dependencies
+As mentioned above, this project references a custom content API for fetching the related entity when on the reviews screen. You will need to configure the following content API in the client account:
 
-```shell
-git clone https://github.com/yext/empty-starter
-cd empty-starter
-npm install
-```
+**Settings**
 
+| -------------------------- | ------------ |
+| Name | Locations |
+| ID | locations |
+| Base URL | https://cdn.yextapis.com/v2/accounts/me/content/locations |
+| Source | Content |
 
-### Recommended Development Flow
+**Content Source Settings**
 
-While _developing locally_, run the following command:
+| -------------------------- | ------------ |
+| Filter | Entity Types |
+| Localization | Primary |
 
-```
-npm run dev
-```
+**Fields**: id, name, address
+**Indexed Fields**: id
 
-This command will start a Vite-powered dev server that will enable hot-reloading. Additionally, the command will generate a `localData` directory that contains a subset of your Knowledge Graph data. This command is automatically in "dynamic" mode, which means it will pull data updates automatically from your Knowledge graph, so real-time data changes in your Yext account will be reflected in your local dev site.
+### Cloudinary
 
-NOTE: Whenever you make changes to your stream definitions, you must re-run `npm run dev` for the system to update the `features.json` and the required entities to power your site. 
+Since this project does not have the ability to upload images to the Yext image server, it leverages Cloudinary to upload local image files. Cloudinary returns a public image url that can then be passed to the management API for for image upload.
 
-_Before committing_ your code, we recommend running the following command:
-```
-npm run build:serve
-``` 
+To enable this functionality for the client, you will need to set up your own Cloudinary project. Then, you need to add your Cloudinary product environment and [upload preset](https://cloudinary.com/documentation/upload_presets) as the following environment variables:
 
-This command will generate a production build of your site, so you can ensure there are no build errors or unexpected behavior. This build step replicates the production build environment used in the Yext system, and serves your data at `localhost:8000`.
+- YEXT_PUBLIC_CLOUDINARY_ENV_NAME
+- YEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
 
-In practice, development builds (via `npm run dev`) and production builds compile and bundle assets differently. For local development, ES Modules are loaded directly by the browser, allowing fast iteration during local development and also allows for hot module replacement (HMR). Other things like CSS are also loaded directly by the browser, including linking to sourcemaps. During a production build all of the different files are compiled (via ESBuild for jsx/tsx) and minified, creating assets as small as possible so that the final html files load quickly when served to a user. Tree-shaking also occurs during the build step, in which any unused dependencies are removed from your final build. 
+## Running this project
 
-### Other Useful commands
+Once the above prerequistes are met, you can run the following command to run this project locally:
 
-`yext init` - Authenticates the Yext CLI with your Yext account
-
-`yext pages generate-test-data` - pull an example set of `localData` from your account. This command is packaged within `npm run dev'. 
-
-`npm run build` - Runs a production build against your `localData`: part one of `npm run build:serve`
-
-`npm run serve` - Runs a local server against your production-built files: part two of `npm run build:serve`
-
-`npm run fmt` - Automatically formats all code
-
-`npm run lint` - Run ESLint to check for errors and warnings
-
-## Repository Layout
-
-```
-root
-└───localData
-└───sites-config
-│   │   ci.json
-└───src
-│   │   index.css
-│   │
-│   └───components
-│   │
-│   └───templates
-│       │   location.tsx
-│       │   robots.ts
-│       │   static.tsx
-│   │
-│   └───types
-```
-
-### localData
-
-Contains example stream documents that are used while local developing. By default this repo contains example files that work with the provided example templates. You can generate real stream documents specific to your Yext account via `yext pages generate-test-data`.
-
-NOTE: You normally wouldn't want to check in the localData folder as it's only used for local dev. It is gitignored by default.
-
-### sites-config
-
-Contains a single `ci.json` file. This file defines how the Yext CI system will build your project. It is not used during local dev. However, it is used when running a local production build (i.e. `yext pages build`).
-
-NOTE: A `features.json` file will automatically be generated during CI build for you based on the template configs defined in your templates. If this file doesn't exist then `yext pages build` will implicitly generate a new one when it calls `npm run build:local` (defined in `sites-config/ci.json`). In the recommended devleopment flow with `npm run dev`, the `features.json` will be automatically generated.
-
-NOTE: After changing your stream definitions, you should rerun `yext pages generate` and `yext pages generate-text-data` to ensure your local build pulls in the required data from the Knowledge Graph
-
-### src
-
-#### components
-
-This is where all of your custom components _may_ live. This folder is not required and you can set up your own custom folder structure for your own components in any way you'd like, as long as it lives in the `src` directory.
-
-#### templates
-
-Required. This is where your actual templates live. There are effectively two types of components:
-
-1. stream-based templates: those that have an exported `config`
-1. static templates: those that don't have an exported `config`.
-
-#### types
-
-Here you can define any custom TypeScript types you need.
-
-#### index.css
-
-Not required. In this example this sets up Tailwind CSS.
-
-### vite.config.js
-
-Vite is now a first class member of the starter! This file defines any custom Vite configuration you want, giving you full control over your setup. Specifically, it will allows users to pass additional configuration options to the vite-plugin-yext-sites-ssg plugin when they become more widely available.
-
-### Everything else
-
-The rest of the files are basic config setup common to many other React projects. In this example we've enabled:
-
-1. Tailwind CSS (which leverages PostCSS) - used for easy styling
-1. ESLint - catches errors in your code
-1. Prettier - formats your code (you can add .prettierrc to override any default settings)
-1. TypeScript - adds typing to Javascript for a better developer experience
+`npm run dev`

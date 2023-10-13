@@ -56,7 +56,7 @@ export const fetchLocationFromContentApi = async (
   entityId: string
 ): Promise<YextResponse<Location>> => {
   const response = await fetch(
-    `https://cdn.yextapis.com/v2/accounts/me/content/locations?api_key=${YEXT_PUBLIC_CONTENT_API_KEY}&v=20230817&id=${entityId}`
+    `https://cdn.yextapis.com/v2/accounts/me/content/locations?api_key=${YEXT_PUBLIC_YEXT_API_KEY}&v=20230817&id=${entityId}`
   );
   const data = await response.json();
   return data;
@@ -72,7 +72,7 @@ export const fetchReviews = async (
   awaitingResponse?: AwaitingResponseType
 ): Promise<YextResponse<ReviewResponse>> => {
   const params = new URLSearchParams({
-    api_key: YEXT_PUBLIC_CONTENT_API_KEY,
+    api_key: YEXT_PUBLIC_YEXT_API_KEY,
     limit: limit?.toString() ?? "5",
   });
 
@@ -99,7 +99,7 @@ export const fetchReviews = async (
 
   if (
     awaitingResponse &&
-    awaitingResponse !== AwaitingResponseType.NO_RESPONSE
+    awaitingResponse !== AwaitingResponseType.ALL_REVIEWS
   ) {
     params.append("awaitingResponse", awaitingResponse);
   }
@@ -129,7 +129,7 @@ export const fetchSocialPosts = async (
   pageToken?: string
 ): Promise<YextResponse<any>> => {
   const params = new URLSearchParams({
-    api_key: YEXT_PUBLIC_MGMT_API_KEY,
+    api_key: YEXT_PUBLIC_YEXT_API_KEY,
     v: "20230901",
   });
 
@@ -191,10 +191,10 @@ export const uploadImageToCloudinary = async (
 ): Promise<CloudinaryAsset> => {
   const formData = new FormData();
   formData.append("file", image);
-  formData.append("upload_preset", "mobile_platform");
+  formData.append("upload_preset", YEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
 
   const response = await fetch(
-    "https://api.cloudinary.com/v1_1/yext/image/upload",
+    `https://api.cloudinary.com/v1_1/${YEXT_PUBLIC_CLOUDINARY_ENV_NAME}/image/upload`,
     {
       method: "POST",
       body: formData,

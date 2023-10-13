@@ -12,18 +12,16 @@ export interface ImageCarouselProps {
 export const ImageCarousel = ({ images }: ImageCarouselProps) => {
   let [index, setIndex] = useState(0);
 
-  console.log(images);
-
   return (
     <div className="flex justify-center">
       <MotionConfig transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}>
         <div className="relative overflow-hidden z-0 w-full max-w-sm flex">
-          <motion.div className="flex" animate={{ x: `-${index * 100}%` }}>
+          <motion.div className="flex w-96" animate={{ x: `-${index * 100}%` }}>
             {images.map((image, i) => (
               <img
                 key={`image-${uuidv4()}`}
                 src={image.image.url}
-                className="object-cover aspect-3/2 max-h-80"
+                className="object-cover aspect-3/2 max-h-80 min-w-full"
               />
             ))}
           </motion.div>
