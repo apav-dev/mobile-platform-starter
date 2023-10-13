@@ -27,16 +27,19 @@ As mentioned above, this project references a custom content API for fetching th
 
 **Settings**
 
-| Name | Locations |
-| ID | locations |
+| Setting  | Value                                                     |
+| -------- | --------------------------------------------------------- |
+| Name     | Locations                                                 |
+| ID       | locations                                                 |
 | Base URL | https://cdn.yextapis.com/v2/accounts/me/content/locations |
-| Source | Content |
+| Source   | Content                                                   |
 
 **Content Source Settings**
 
-| Filter | Entity Types |
-| Localization | Primary |
-| ------------ | ------- |
+| Setting      | Value        |
+| ------------ | ------------ |
+| Filter       | Entity Types |
+| Localization | Primary      |
 
 **Fields**: id, name, address
 **Indexed Fields**: id
