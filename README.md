@@ -27,7 +27,6 @@ As mentioned above, this project references a custom content API for fetching th
 
 **Settings**
 
-| -------------------------- | ------------ |
 | Name | Locations |
 | ID | locations |
 | Base URL | https://cdn.yextapis.com/v2/accounts/me/content/locations |
@@ -35,7 +34,6 @@ As mentioned above, this project references a custom content API for fetching th
 
 **Content Source Settings**
 
-| -------------------------- | ------------ |
 | Filter | Entity Types |
 | Localization | Primary |
 
