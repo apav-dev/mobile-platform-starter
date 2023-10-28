@@ -65,7 +65,6 @@ export const HoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
   const sortedHours = sortIntervalsByStartTime(hours);
 
   return (
-    // TODO: Is it bad to have onClick without button?
     <div onClick={() => setEditId?.(fieldId)}>
       <Card>
         <div className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2">
@@ -88,8 +87,8 @@ export const HoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
           <Heading title={entityMeta?.name ?? ""} icon={<LocationPinIcon />} />
           <div className="pt-4">
             <HoursForm
-              id="hours"
-              label={t("Hours")}
+              id={fieldId}
+              label={t(title)}
               initialHours={sortedHours}
               onCancel={handleCancel}
             />

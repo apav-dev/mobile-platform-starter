@@ -18,7 +18,10 @@ import { useTranslation } from "react-i18next";
 
 export interface HoursCardProps {
   title: string;
-  fieldId: string;
+  // arbitrary ID for the card
+  id: string;
+  // The field ID for the hours field
+  hoursFieldId: string;
   hours: {
     monday: DayIntervalType;
     tuesday: DayIntervalType;
@@ -47,7 +50,12 @@ export const HoildayHoursCardSkeleton = () => {
   );
 };
 
-export const HolidayHoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
+export const HolidayHoursCard = ({
+  title,
+  id,
+  hours,
+  hoursFieldId,
+}: HoursCardProps) => {
   if (!hours.holidayHours) {
     return null;
   }
@@ -56,10 +64,10 @@ export const HolidayHoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (formData[fieldId]) {
+    if (formData[id]) {
       setEditId?.("");
     }
-  }, [formData, fieldId]);
+  }, [formData, id]);
 
   const handleCancel = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
@@ -70,15 +78,14 @@ export const HolidayHoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
   const { holidayHours } = hours;
 
   return (
-    // TODO: Is it bad to have onClick without button?
-    <div onClick={() => setEditId?.(fieldId)}>
+    <div onClick={() => setEditId?.(id)}>
       <Card>
         <div className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2">
           {title}
         </div>
         <HolidayHours holidayHours={holidayHours} />
       </Card>
-      <EditPanel open={editId === fieldId}>
+      <EditPanel open={editId === id}>
         <Header
           breadcrumbs={[
             {
@@ -93,8 +100,8 @@ export const HolidayHoursCard = ({ title, fieldId, hours }: HoursCardProps) => {
           <Heading title={entityMeta?.name ?? ""} icon={<LocationPinIcon />} />
           <div className="pt-4">
             <HolidayHoursForm
-              id="hours"
-              label={t("Holiday Hours")}
+              id={hoursFieldId}
+              label={t(title)}
               initialHolidayHours={hours}
               onCancel={handleCancel}
             />

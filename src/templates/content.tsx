@@ -29,7 +29,6 @@ import { LocationPinIcon } from "../components/icons/LocationPinIcon";
 import { Main } from "../components/layouts/Main";
 import { PageContextProvider } from "../components/utils/usePageContext";
 import { editLocation, fetchLocation } from "../utils/api";
-import { twMerge } from "tailwind-merge";
 import { toast } from "../components/utils/useToast";
 import Skeleton from "../components/Skeleton";
 import { useTranslation } from "react-i18next";
@@ -49,8 +48,8 @@ export const getHeadConfig: GetHeadConfig<
 };
 const Content = () => {
   const [formData, setFormData] = React.useState<Record<string, any>>({});
-  const [entityId, setEntityId] = useState<string | null>(null);
-  const [editId, setEditId] = useState("");
+  const [entityId, setEntityId] = useState<string | undefined>();
+  const [editId, setEditId] = useState<string | number>("");
 
   const { t } = useTranslation();
 
@@ -62,9 +61,6 @@ const Content = () => {
 
   const contentQuery = useQuery({
     queryKey: ["entityId", entityId],
-    // TODO: why is this refetching on photo upload?
-    // enabled: !!entityId,
-    // enabled: false,
     retry: false,
     queryFn: () => fetchLocation(entityId),
   });
@@ -212,8 +208,31 @@ const Content = () => {
                   />
                   <HolidayHoursCard
                     title={t("Holiday Hours")}
-                    fieldId="holidayHours"
+                    id="holidayHours"
+                    hoursFieldId="hours"
                     hours={location.hours}
+                  />
+                  <HoursCard
+                    title={t("Pickup Hours")}
+                    fieldId="pickupHours"
+                    hours={location.pickupHours}
+                  />
+                  <HolidayHoursCard
+                    title={t("Pickup Holiday Hours")}
+                    id="pickupHolidayHours"
+                    hoursFieldId="pickupHours"
+                    hours={location.pickupHours}
+                  />
+                  <HoursCard
+                    title={t("Drive-Through Hours")}
+                    fieldId="driveThroughHours"
+                    hours={location.driveThroughHours}
+                  />
+                  <HolidayHoursCard
+                    title={t("Drive-Through Holiday Hours")}
+                    id="driveThroughHolidayHours"
+                    hoursFieldId="driveThroughHours"
+                    hours={location.driveThroughHours}
                   />
                 </div>
               </ContentContainer>
