@@ -213,17 +213,6 @@ const Content = () => {
                     hours={location.hours}
                   />
                   <HoursCard
-                    title={t("Pickup Hours")}
-                    fieldId="pickupHours"
-                    hours={location.pickupHours}
-                  />
-                  <HolidayHoursCard
-                    title={t("Pickup Holiday Hours")}
-                    id="pickupHolidayHours"
-                    hoursFieldId="pickupHours"
-                    hours={location.pickupHours}
-                  />
-                  <HoursCard
                     title={t("Drive-Through Hours")}
                     fieldId="driveThroughHours"
                     hours={location.driveThroughHours}
@@ -233,6 +222,17 @@ const Content = () => {
                     id="driveThroughHolidayHours"
                     hoursFieldId="driveThroughHours"
                     hours={location.driveThroughHours}
+                  />
+                  <HoursCard
+                    title={t("Pickup Hours")}
+                    fieldId="pickupHours"
+                    hours={location.pickupHours}
+                  />
+                  <HolidayHoursCard
+                    title={t("Pickup Holiday Hours")}
+                    id="pickupHolidayHours"
+                    hoursFieldId="pickupHours"
+                    hours={location.pickupHours}
                   />
                 </div>
               </ContentContainer>

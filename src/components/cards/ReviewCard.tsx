@@ -95,7 +95,6 @@ export const ReviewCard = ({
     : "";
 
   return (
-    // TODO: Is it bad to have onClick without button?
     <div onClick={() => setEditId?.(review.id)}>
       <Card
         containerClassName={twMerge(
@@ -244,7 +243,7 @@ export const ReviewCard = ({
             <TextareaForm
               id={review.id.toString()}
               submitButtonLabel={t("Submit Response")}
-              placeholder={t("Write a Response...")}
+              placeholder={`${t("Write a Response")}...`}
               onCancel={handleCancel}
             />
           ) : (

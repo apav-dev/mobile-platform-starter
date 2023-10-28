@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 export interface PhotoGalleryCardProps {
   title: string;
   fieldId: string;
-  images: GalleryImage[];
+  images?: GalleryImage[];
 }
 
 export const PhotoGalleryCardSkeleton = () => {
@@ -57,7 +57,13 @@ export const PhotoGalleryCard = ({
         >
           {title}
         </div>
-        <ImageCarousel images={images} />
+        {!images || images?.length === 0 ? (
+          <div className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular">
+            {t("addField", { field: t(title) })}
+          </div>
+        ) : (
+          <ImageCarousel images={images} />
+        )}
       </Card>
       <EditPanel open={editId === fieldId}>
         <Header

@@ -56,10 +56,6 @@ export const HolidayHoursCard = ({
   hours,
   hoursFieldId,
 }: HoursCardProps) => {
-  if (!hours.holidayHours) {
-    return null;
-  }
-
   const { formData, entityMeta, setEditId, editId } = usePageContext();
   const { t } = useTranslation();
 
@@ -75,7 +71,7 @@ export const HolidayHoursCard = ({
     setEditId?.("");
   };
 
-  const { holidayHours } = hours;
+  const { holidayHours } = hours ?? { holidayHours: [] };
 
   return (
     <div onClick={() => setEditId?.(id)}>
@@ -83,7 +79,13 @@ export const HolidayHoursCard = ({
         <div className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2">
           {title}
         </div>
-        <HolidayHours holidayHours={holidayHours} />
+        {!holidayHours || holidayHours.length === 0 ? (
+          <div className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular">
+            {t("addField", { field: t(title) })}
+          </div>
+        ) : (
+          <HolidayHours hours={holidayHours} />
+        )}
       </Card>
       <EditPanel open={editId === id}>
         <Header
@@ -102,7 +104,7 @@ export const HolidayHoursCard = ({
             <HolidayHoursForm
               id={hoursFieldId}
               label={t(title)}
-              initialHolidayHours={hours}
+              initialHolidayHours={hours ?? { holidayHours: [] }}
               onCancel={handleCancel}
             />
           </div>

@@ -8,6 +8,8 @@
     "outDir": "./dist",
     "module": "esnext",
     "baseUrl": ".",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
   },
   "include": ["src"]
 }

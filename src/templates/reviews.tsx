@@ -135,10 +135,6 @@ const Reviews = () => {
     queryFn: () => fetchReview(entityId, editId),
   });
 
-  useEffect(() => {
-    console.log("reviewQuery", reviewQuery);
-  }, [reviewQuery]);
-
   const commentMutation = useMutation({
     mutationFn: createReviewComment,
     onError: (error) => {
