@@ -9,7 +9,6 @@ import { Button } from "../Button";
 import { cn } from "../../utils/cn";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../Calendar";
-import { format } from "date-fns";
 import { TrashIcon } from "../icons/TrashIcon";
 import { v4 as uuidv4 } from "uuid";
 import { useTranslation } from "react-i18next";
@@ -183,7 +182,7 @@ export const HolidayHourFormItem = ({
                 )}
               >
                 {localDate ? (
-                  format(localDate, "MM/dd/yyyy")
+                  localDate.toLocaleDateString()
                 ) : (
                   <span>{t("Pick a date")}</span>
                 )}

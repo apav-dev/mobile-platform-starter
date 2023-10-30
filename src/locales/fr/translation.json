@@ -20,11 +20,11 @@
   "Name": "Nom",
   "Address": "Adresse",
   "Hours": "Horaires",
-  "Holiday Hours": "Des horaires exceptionnels",
-  "Pickup Hours": "Des horaires de Retrait",
-  "Pickup Holiday Hours": "Des horaires de Retrait (des horaires exceptionnels)",
-  "Drive-Through Hours": "Des horaires de Drive",
-  "Drive-Through Holiday Hours": "Des horaires de Drive (des horaires exceptionnels)",
+  "Holiday Hours": "Horaires Exceptionnels",
+  "Pickup Hours": "Horaires Retrait",
+  "Pickup Holiday Hours": "Horaires Retrait (des horaires exceptionnels)",
+  "Drive-Through Hours": "Horaires Drive",
+  "Drive-Through Holiday Hours": "Horaires de Drive (des horaires exceptionnels)",
   "Open": "Ouvert",
   "Closed": "Fermé",
   "Business Logo": "Logo de l'entreprise",
@@ -170,7 +170,7 @@
   "daysAgo": "il y a {{count}} jours",
   "Today": "Aujourd'hui",
   "Yesterday": "Hier",
-  "addField": "+ Ajouter {{field}}",
+  "addField": "+ Ajouter des {{field}}",
   "Awaiting Response": "En Attente de Réponse",
-  "Publisher": "Éditrice"  
+  "Publisher": "Publisher"  
 }

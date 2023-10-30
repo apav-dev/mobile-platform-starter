@@ -84,7 +84,7 @@ export const HolidayHoursCard = ({
             {t("addField", { field: t(title) })}
           </div>
         ) : (
-          <HolidayHours hours={holidayHours} />
+          <HolidayHours holidayHours={holidayHours} />
         )}
       </Card>
       <EditPanel open={editId === id}>
