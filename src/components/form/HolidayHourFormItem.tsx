@@ -56,7 +56,7 @@ export const HolidayHourFormItem = ({
   };
 
   const onDateChange = (date: Date | undefined) => {
-    const dateStr = date?.toISOString().split("T")[0];
+    let dateStr = date?.toISOString().split("T")[0];
     onValueChange(hourIndex, {
       date: dateStr || "",
       isClosed: value.isClosed,

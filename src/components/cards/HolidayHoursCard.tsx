@@ -71,7 +71,9 @@ export const HolidayHoursCard = ({
     setEditId?.("");
   };
 
-  const { holidayHours } = hours ?? { holidayHours: [] };
+  const initialHours = hours.holidayHours
+    ? hours
+    : { ...hours, holidayHours: [] };
 
   return (
     <div onClick={() => setEditId?.(id)}>
@@ -79,12 +81,12 @@ export const HolidayHoursCard = ({
         <div className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2">
           {title}
         </div>
-        {!holidayHours || holidayHours.length === 0 ? (
+        {!initialHours || initialHours.holidayHours?.length === 0 ? (
           <div className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular">
             {t("addField", { field: t(title) })}
           </div>
         ) : (
-          <HolidayHours holidayHours={holidayHours} />
+          <HolidayHours holidayHours={initialHours.holidayHours} />
         )}
       </Card>
       <EditPanel open={editId === id}>
@@ -104,7 +106,7 @@ export const HolidayHoursCard = ({
             <HolidayHoursForm
               id={hoursFieldId}
               label={t(title)}
-              initialHolidayHours={hours ?? { holidayHours: [] }}
+              initialHolidayHours={initialHours}
               onCancel={handleCancel}
             />
           </div>

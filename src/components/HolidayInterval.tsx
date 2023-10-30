@@ -1,6 +1,5 @@
 import { formatTime } from "../utils/formatTime";
 import { HolidayHourType } from "../types/yext";
-import { getDayOfWeek } from "../utils/getDayOfWeek";
 import { useTranslation } from "react-i18next";
 
 export interface DayIntervalProps {
@@ -10,14 +9,18 @@ export interface DayIntervalProps {
 const HolidayInterval = ({ holiday }: DayIntervalProps) => {
   const { t } = useTranslation();
 
-  const date = new Date(holiday.date);
-  const formattedDate = date.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-  });
+  const date = new Date(holiday.date + "Z"); // Ensure we parse as UTC
+  const formattedDate = date
+    .toLocaleDateString(undefined, {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      timeZone: "UTC",
+    })
+    .replace(/\//g, "/");
   const dayOfWeek = date.toLocaleDateString(undefined, {
     weekday: "short",
+    timeZone: "UTC", // Also add timeZone here to be consistent
   });
   const finalDate = `${formattedDate} (${t(dayOfWeek)})`;
 
