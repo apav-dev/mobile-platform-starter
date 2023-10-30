@@ -23,7 +23,7 @@ interface FormData {
 }
 
 export const fetchLocation = async (
-  entityId: string
+  entityId?: string
 ): Promise<YextResponse<Location>> => {
   const response = await fetch(`api/entity/${entityId}`);
   const data = await response.json();

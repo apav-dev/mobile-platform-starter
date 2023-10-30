@@ -121,7 +121,7 @@ export const HolidayHoursForm = React.forwardRef<
           onClick={handleAddHolidayHours}
           className="px-4 my-3 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular"
         >
-          {`+ ${t("Add Holiday Hours")}`}
+          {t("addField", { field: t("Holiday Hours") })}
         </button>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}

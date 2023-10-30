@@ -1,7 +1,7 @@
 import { isClosedInterval } from "../components/form/HoursForm";
 import { DayIntervalType, HolidayHourType } from "../types/yext";
 
-export const sortIntervalsByStartTime = (hours: {
+export const sortIntervalsByStartTime = (hours?: {
   monday: DayIntervalType;
   tuesday: DayIntervalType;
   wednesday: DayIntervalType;
@@ -11,6 +11,9 @@ export const sortIntervalsByStartTime = (hours: {
   sunday: DayIntervalType;
   holidayHours: HolidayHourType[];
 }): typeof hours => {
+  if (!hours) {
+    return hours;
+  }
   const days: (keyof typeof hours)[] = [
     "monday",
     "tuesday",

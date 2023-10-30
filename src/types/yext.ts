@@ -73,6 +73,26 @@ export interface Location {
     sunday: DayIntervalType;
     holidayHours?: HolidayHourType[];
   };
+  pickupHours: {
+    monday: DayIntervalType;
+    tuesday: DayIntervalType;
+    wednesday: DayIntervalType;
+    thursday: DayIntervalType;
+    friday: DayIntervalType;
+    saturday: DayIntervalType;
+    sunday: DayIntervalType;
+    holidayHours?: HolidayHourType[];
+  };
+  driveThroughHours: {
+    monday: DayIntervalType;
+    tuesday: DayIntervalType;
+    wednesday: DayIntervalType;
+    thursday: DayIntervalType;
+    friday: DayIntervalType;
+    saturday: DayIntervalType;
+    sunday: DayIntervalType;
+    holidayHours?: HolidayHourType[];
+  };
   logo: {
     image: ComplexImageType;
   };

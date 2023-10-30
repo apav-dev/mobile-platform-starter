@@ -1,3 +1,5 @@
+import i18next from "i18next";
+
 export const getDaysSince = (date: number): string => {
   const now = new Date();
   const nowUTC = Date.UTC(
@@ -16,10 +18,10 @@ export const getDaysSince = (date: number): string => {
   const daysSince = Math.floor((nowUTC - thenUTC) / (1000 * 60 * 60 * 24));
 
   if (daysSince === 0) {
-    return "Today";
+    return i18next.t("Today");
   } else if (daysSince === 1) {
-    return "Yesterday";
+    return i18next.t("Yesterday");
   } else {
-    return `${daysSince} days ago`;
+    return i18next.t("daysAgo", { count: daysSince });
   }
 };

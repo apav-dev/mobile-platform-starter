@@ -53,13 +53,18 @@ export const MultilineTextCard = ({
   };
 
   return (
-    // TODO: Is it bad to have onClick without button?
     <div onClick={() => setEditId?.(fieldId)}>
       <Card>
         <div className="self-stretch text-gray-700 text-base font-lato-bold font-normal leading-tight mb-2">
           {title}
         </div>
-        {renderEntityText(value ?? "", "text-sm")}
+        {!value || value?.length === 0 ? (
+          <div className="px-4 py-3 bg-zinc-200 rounded-[3px] justify-center items-center gap-2 flex w-full font-lato-regular">
+            {t("addField", { field: t(title) })}
+          </div>
+        ) : (
+          renderEntityText(value ?? "", "text-sm")
+        )}
       </Card>
       <EditPanel open={editId === fieldId}>
         <Header

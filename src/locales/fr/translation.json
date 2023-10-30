@@ -20,7 +20,11 @@
   "Name": "Nom",
   "Address": "Adresse",
   "Hours": "Horaires",
-  "Holiday Hours": "Horaires (horaires de jours fériés)",
+  "Holiday Hours": "Horaires Exceptionnels",
+  "Pickup Hours": "Horaires Retrait",
+  "Pickup Holiday Hours": "Horaires Retrait (des horaires exceptionnels)",
+  "Drive-Through Hours": "Horaires Drive",
+  "Drive-Through Holiday Hours": "Horaires de Drive (des horaires exceptionnels)",
   "Open": "Ouvert",
   "Closed": "Fermé",
   "Business Logo": "Logo de l'entreprise",
@@ -28,6 +32,7 @@
   "Description": "Description",
   "Save": "Sauvegarder",
   "Cancel": "Annuler",
+  "Clear": "Effacer",
   "Add": "Ajouter",
   "Add Photos": "Ajouter des photos",
   "Monday": "Lundi",
@@ -161,5 +166,11 @@
   "Search for review content by keyword": "Rechercher dans le contenu des avis par mot-clé",
   "Comment": "Commentaire",
   "Review or Comment": "Avis ou commentaire",
-  "You must select at least one publisher": "Vous devez sélectionner au moins un éditeur"
+  "You must select at least one publisher": "Vous devez sélectionner au moins un éditeur",
+  "daysAgo": "il y a {{count}} jours",
+  "Today": "Aujourd'hui",
+  "Yesterday": "Hier",
+  "addField": "+ Ajouter des {{field}}",
+  "Awaiting Response": "En Attente de Réponse",
+  "Publisher": "Publisher"  
 }
