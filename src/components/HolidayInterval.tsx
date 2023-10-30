@@ -10,14 +10,12 @@ const HolidayInterval = ({ holiday }: DayIntervalProps) => {
   const { t } = useTranslation();
 
   const date = new Date(holiday.date + "Z"); // Ensure we parse as UTC
-  const formattedDate = date
-    .toLocaleDateString(undefined, {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      timeZone: "UTC",
-    })
-    .replace(/\//g, "/");
+  const formattedDate = date.toLocaleDateString(undefined, {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "UTC",
+  });
   const dayOfWeek = date.toLocaleDateString(undefined, {
     weekday: "short",
     timeZone: "UTC", // Also add timeZone here to be consistent
