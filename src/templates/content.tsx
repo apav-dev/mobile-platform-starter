@@ -206,34 +206,40 @@ const Content = () => {
                     fieldId="hours"
                     hours={location.hours}
                   />
-                  <HolidayHoursCard
-                    title={t("Holiday Hours")}
-                    id="holidayHours"
-                    hoursFieldId="hours"
-                    hours={location.hours}
-                  />
+                  {location.hours && (
+                    <HolidayHoursCard
+                      title={t("Holiday Hours")}
+                      id="holidayHours"
+                      hoursFieldId="hours"
+                      hours={location.hours}
+                    />
+                  )}
                   <HoursCard
                     title={t("Drive-Through Hours")}
                     fieldId="driveThroughHours"
                     hours={location.driveThroughHours}
                   />
-                  <HolidayHoursCard
-                    title={t("Drive-Through Holiday Hours")}
-                    id="driveThroughHolidayHours"
-                    hoursFieldId="driveThroughHours"
-                    hours={location.driveThroughHours}
-                  />
+                  {location.driveThroughHours && (
+                    <HolidayHoursCard
+                      title={t("Drive-Through Holiday Hours")}
+                      id="driveThroughHolidayHours"
+                      hoursFieldId="driveThroughHours"
+                      hours={location.driveThroughHours}
+                    />
+                  )}
                   <HoursCard
                     title={t("Pickup Hours")}
                     fieldId="pickupHours"
                     hours={location.pickupHours}
                   />
-                  <HolidayHoursCard
-                    title={t("Pickup Holiday Hours")}
-                    id="pickupHolidayHours"
-                    hoursFieldId="pickupHours"
-                    hours={location.pickupHours}
-                  />
+                  {location.pickupHours && (
+                    <HolidayHoursCard
+                      title={t("Pickup Holiday Hours")}
+                      id="pickupHolidayHours"
+                      hoursFieldId="pickupHours"
+                      hours={location.pickupHours}
+                    />
+                  )}
                 </div>
               </ContentContainer>
             )}
