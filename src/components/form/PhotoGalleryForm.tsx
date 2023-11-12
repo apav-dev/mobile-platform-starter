@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
 import { FadeLoader } from "react-spinners";
 import { twMerge } from "tailwind-merge";
+import { checkAndOptimizeImageSize } from "../../utils/imageUtils";
 
 export interface PhotoGalleryFormProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -42,6 +43,8 @@ export const PhotoGalleryForm = forwardRef<
 >(({ className, type, id, label, initialImages, onCancel, ...props }, ref) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploadType, setUploadType] = useState<UploadType>("none");
+  const [imagePreviewLoading, setImagePreviewLoading] =
+    useState<boolean>(false);
 
   const { setFormData } = usePageContext();
   const { t } = useTranslation();
@@ -110,17 +113,29 @@ export const PhotoGalleryForm = forwardRef<
       });
     },
     onSuccess: (response) => {
-      setImagePreview(response.secure_url);
+      if (response.bytes > 5000000) {
+        checkAndOptimizeImageSize(
+          `http://res.cloudinary.com/${YEXT_PUBLIC_CLOUDINARY_ENV_NAME}/image`,
+          response.public_id
+        ).then((optimizedUrl) => {
+          setImagePreview(optimizedUrl);
+          setImagePreviewLoading(false);
+        });
+      } else {
+        setImagePreview(response.secure_url);
+      }
     },
   });
 
   const handleImagePreview = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImagePreviewLoading(true);
     if (uploadType === "file") {
       const file = e.target.files?.[0];
       if (file) {
         imagePreviewMutation.mutate(file);
       } else if (uploadType === "file") {
         setImagePreview(e.target.value);
+        setImagePreviewLoading(false);
       }
     }
   };
@@ -199,7 +214,7 @@ export const PhotoGalleryForm = forwardRef<
                     onChange={handleImagePreview}
                   />
                 </div>
-                {imagePreviewMutation.isLoading && (
+                {imagePreviewLoading && (
                   <div className="flex justify-center items-center gap-2">
                     <FadeLoader color="#E1E5E8" />
                   </div>

@@ -30,6 +30,7 @@ import { TrashIcon } from "../icons/TrashIcon";
 import { Card } from "../Card";
 import { Input } from "../Input";
 import { useTranslation } from "react-i18next";
+import { checkAndOptimizeImageSize } from "../../utils/imageUtils";
 
 type UploadType = "none" | "url" | "file";
 
@@ -95,7 +96,16 @@ const SocialPostContentForm = () => {
       if (file) {
         uploadImageToCloudinary(file)
           .then((response) => {
-            setImagePreview(response.secure_url);
+            if (response.bytes > 5000000) {
+              checkAndOptimizeImageSize(
+                `http://res.cloudinary.com/${YEXT_PUBLIC_CLOUDINARY_ENV_NAME}/image`,
+                response.public_id
+              ).then((optimizedUrl) => {
+                setImagePreview(optimizedUrl);
+              });
+            } else {
+              setImagePreview(response.secure_url);
+            }
           })
           .catch((error) => {
             console.log(error);
