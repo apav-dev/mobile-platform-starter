@@ -30,6 +30,8 @@ import { TrashIcon } from "../icons/TrashIcon";
 import { Card } from "../Card";
 import { Input } from "../Input";
 import { useTranslation } from "react-i18next";
+import { checkAndOptimizeImageSize } from "../../utils/imageUtils";
+import { FadeLoader } from "react-spinners";
 
 type UploadType = "none" | "url" | "file";
 
@@ -37,12 +39,16 @@ const SocialPostContentForm = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploadType, setUploadType] = useState<UploadType>("none");
 
+  const [imagePreviewLoading, setImagePreviewLoading] =
+    useState<boolean>(false);
+
   const {
     formData,
     setFormData,
     setCreatePostStep,
     setCreatingPost,
     setSchedulePost,
+    setCloudinaryDeleteToken,
   } = usePageContext();
   const { t } = useTranslation();
 
@@ -65,7 +71,7 @@ const SocialPostContentForm = () => {
 
   const currentPhoto = form.watch("photoUrl");
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     setFormData((prevState) => ({
       ...prevState,
       postText: data.postText,
@@ -93,9 +99,22 @@ const SocialPostContentForm = () => {
       const file = e.target.files?.[0];
 
       if (file) {
+        setImagePreviewLoading(true);
         uploadImageToCloudinary(file)
           .then((response) => {
-            setImagePreview(response.secure_url);
+            setCloudinaryDeleteToken(response.delete_token);
+            if (response.bytes > 5000000) {
+              checkAndOptimizeImageSize(
+                `http://res.cloudinary.com/${YEXT_PUBLIC_CLOUDINARY_ENV_NAME}/image`,
+                response.public_id
+              ).then((optimizedUrl) => {
+                setImagePreview(optimizedUrl);
+                setImagePreviewLoading(false);
+              });
+            } else {
+              setImagePreview(response.secure_url);
+              setImagePreviewLoading(false);
+            }
           })
           .catch((error) => {
             console.log(error);
@@ -205,27 +224,7 @@ const SocialPostContentForm = () => {
                   </div>
                 </>
               )}
-              {uploadType === "file" && (
-                <>
-                  {imagePreview && (
-                    <>
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
-                        className="h-40 w-40 object-cover rounded-[3px]"
-                      />
-                    </>
-                  )}
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
-                    <Input
-                      id="new-image"
-                      type="file"
-                      accept=".jpeg,.jpg,.png"
-                      onChange={handleImagePreview}
-                    />
-                  </div>
-                </>
-              )}
+
               {uploadType === "url" && (
                 <>
                   <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -244,6 +243,32 @@ const SocialPostContentForm = () => {
                       className="h-40 w-40 object-cover rounded-[3px]"
                     />
                   )}
+                </>
+              )}
+              {uploadType === "file" && (
+                <>
+                  {imagePreviewLoading && (
+                    <div className="flex justify-center items-center gap-2">
+                      <FadeLoader color="#E1E5E8" />
+                    </div>
+                  )}
+                  {imagePreview && (
+                    <>
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="h-40 w-40 object-cover rounded-[3px]"
+                      />
+                    </>
+                  )}
+                  <div className="grid w-full max-w-sm items-center gap-1.5">
+                    <Input
+                      id="new-image"
+                      type="file"
+                      accept=".jpeg,.jpg,.png"
+                      onChange={handleImagePreview}
+                    />
+                  </div>
                 </>
               )}
               {uploadType !== "none" && (

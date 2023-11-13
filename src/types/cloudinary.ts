@@ -19,4 +19,5 @@ interface CloudinaryAsset {
   folder: string;
   access_mode: string;
   original_filename: string;
+  delete_token: string;
 }

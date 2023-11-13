@@ -7,9 +7,9 @@ import { SocialIcon } from "./icons/SocialIcon";
 import { StarsIcon } from "./icons/StarsIcon";
 import { AnalyticsIcon } from "./icons/AnalyticsIcon";
 import { HomeIcon } from "./icons/HomeIcon";
-import { motion } from "framer-motion";
 import { XIcon } from "./icons/XIcon";
 import { useTranslation } from "react-i18next";
+import { Transition } from "@headlessui/react";
 
 type FooterProps = {
   entityId: string;
@@ -17,7 +17,6 @@ type FooterProps = {
 
 const Footer = ({ entityId }: FooterProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [menuHidden, setMenuHidden] = useState(true);
 
   const { t } = useTranslation();
 
@@ -51,22 +50,18 @@ const Footer = ({ entityId }: FooterProps) => {
 
   return (
     <div className="fixed bottom-0 w-full z-40">
-      <motion.div
+      <Transition
+        show={menuOpen}
+        enter="transition duration-400 ease-out"
+        enterFrom="transform translate-y-full"
+        enterTo="transform translate-y-0"
+        leave="transition duration-400 ease-out"
+        leaveFrom="transform translate-y-0"
+        leaveTo="transform translate-y-full"
         className={twMerge(
-          "bg-gray-900 z-[5] w-full shadow rounded-t-xl flex-col justify-start items-start gap-1 flex overflow-hidden",
-          menuOpen && "px-2 py-4",
-          menuHidden && "hidden"
+          "bg-gray-900 z-[5] w-full shadow rounded-t-xl flex-col justify-start items-start gap-1 flex overflow-hidden px-2 py-4"
         )}
-        initial={false}
-        animate={{ y: menuOpen ? 0 : "100%" }}
-        exit="closed"
-        transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-        onAnimationStart={() => {
-          setMenuHidden(false);
-        }}
-        onAnimationComplete={() => {
-          !menuOpen && setMenuHidden(true);
-        }}
+        afterLeave={() => setMenuOpen(false)}
       >
         {footerLinks.map((link) => (
           <a
@@ -80,7 +75,7 @@ const Footer = ({ entityId }: FooterProps) => {
             </div>
           </a>
         ))}
-      </motion.div>
+      </Transition>
       <div className="bg-gray-900 relative z-10 pl-[15px] w-full pr-1.5 py-2 justify-center items-center gap-4 inline-flex border-t border-gray-700">
         <YextIcon />
         <div className="grow shrink basis-0 text-white text-sm font-bold font-lato-bold">

@@ -19,6 +19,8 @@ type PageContextType = {
   setSchedulePost: (schedulePost: boolean) => void;
   ctaType: string;
   setCtaType: (ctaType: string) => void;
+  cloudinaryDeleteToken?: string;
+  setCloudinaryDeleteToken: (token: string) => void;
 };
 
 // TODO: edit mode by field id

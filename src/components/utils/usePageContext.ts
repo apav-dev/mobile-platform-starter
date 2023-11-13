@@ -9,6 +9,8 @@ type PageContextType = {
   };
   editId?: string | number;
   setEditId?: (id: number | string) => void;
+  cloudinaryDeleteToken?: string;
+  setCloudinaryDeleteToken: (token: string) => void;
 };
 
 // Setup LocatorProvider to pass the [selected, hovered, focused]Ids between Marker interactions and LocatorCard interactions
