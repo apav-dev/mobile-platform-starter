@@ -205,7 +205,29 @@ export const uploadImageToCloudinary = async (
     throw new Error("Failed to upload image");
   }
   const data = await response.json();
+  console.log(data);
   return data;
+};
+
+export const deleteImageFromCloudinary = async (
+  deleteToken: string
+): Promise<void> => {
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${YEXT_PUBLIC_CLOUDINARY_ENV_NAME}/delete_by_token`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: deleteToken,
+      }),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to delete image");
+  }
 };
 
 export const fetchAnalyticsForEntity = async (

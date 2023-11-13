@@ -18,7 +18,10 @@ import {
 } from "../Dialog";
 import { usePageContext } from "../utils/usePageContext";
 import { v4 as uuidv4 } from "uuid";
-import { uploadImageToCloudinary } from "../../utils/api";
+import {
+  deleteImageFromCloudinary,
+  uploadImageToCloudinary,
+} from "../../utils/api";
 import { toast } from "../utils/useToast";
 import { GalleryImage } from "../../types/yext";
 import { useTranslation } from "react-i18next";
@@ -46,7 +49,7 @@ export const PhotoGalleryForm = forwardRef<
   const [imagePreviewLoading, setImagePreviewLoading] =
     useState<boolean>(false);
 
-  const { setFormData } = usePageContext();
+  const { setFormData, setCloudinaryDeleteToken } = usePageContext();
   const { t } = useTranslation();
 
   const ThumbnailSchema = z.object({
@@ -79,7 +82,7 @@ export const PhotoGalleryForm = forwardRef<
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     setFormData((prev: GalleryImage[]) => ({
       ...prev,
       [id]: values[id],
@@ -113,6 +116,7 @@ export const PhotoGalleryForm = forwardRef<
       });
     },
     onSuccess: (response) => {
+      setCloudinaryDeleteToken(response.delete_token);
       if (response.bytes > 5000000) {
         checkAndOptimizeImageSize(
           `http://res.cloudinary.com/${YEXT_PUBLIC_CLOUDINARY_ENV_NAME}/image`,
@@ -123,15 +127,16 @@ export const PhotoGalleryForm = forwardRef<
         });
       } else {
         setImagePreview(response.secure_url);
+        setImagePreviewLoading(false);
       }
     },
   });
 
   const handleImagePreview = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImagePreviewLoading(true);
     if (uploadType === "file") {
       const file = e.target.files?.[0];
       if (file) {
+        setImagePreviewLoading(true);
         imagePreviewMutation.mutate(file);
       } else if (uploadType === "file") {
         setImagePreview(e.target.value);

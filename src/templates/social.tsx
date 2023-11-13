@@ -11,6 +11,7 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createSocialPost,
+  deleteImageFromCloudinary,
   fetchLocationFromContentApi,
   fetchSocialPosts,
 } from "../utils/api";
@@ -62,6 +63,9 @@ const Social = () => {
   const [addingCta, setAddingCta] = React.useState(false);
   const [schedulePost, setSchedulePost] = React.useState(false);
   const [ctaType, setCtaType] = React.useState("");
+  const [cloudinaryDeleteToken, setCloudinaryDeleteToken] = useState<
+    string | undefined
+  >();
 
   const { t } = useTranslation();
 
@@ -97,7 +101,7 @@ const Social = () => {
         description: t("There was a problem with your request."),
       });
     },
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       if (response.meta.errors?.length === 0) {
         toast({
           title: t("Success!"),
@@ -115,6 +119,12 @@ const Social = () => {
 
       setFormData({});
       setTimeout(() => socialsQuery.refetch(), 1000);
+
+      // if there is cloudinary delete token, delete the image
+      if (cloudinaryDeleteToken) {
+        await deleteImageFromCloudinary(cloudinaryDeleteToken);
+        setCloudinaryDeleteToken(undefined);
+      }
     },
   });
 
@@ -171,6 +181,8 @@ const Social = () => {
         setSchedulePost,
         ctaType,
         setCtaType,
+        cloudinaryDeleteToken,
+        setCloudinaryDeleteToken,
       }}
     >
       <Main

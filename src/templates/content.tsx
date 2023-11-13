@@ -28,10 +28,15 @@ import { TextCard, TextCardSkeleton } from "../components/cards/TextCard";
 import { LocationPinIcon } from "../components/icons/LocationPinIcon";
 import { Main } from "../components/layouts/Main";
 import { PageContextProvider } from "../components/utils/usePageContext";
-import { editLocation, fetchLocation } from "../utils/api";
+import {
+  deleteImageFromCloudinary,
+  editLocation,
+  fetchLocation,
+} from "../utils/api";
 import { toast } from "../components/utils/useToast";
 import Skeleton from "../components/Skeleton";
 import { useTranslation } from "react-i18next";
+import { de } from "date-fns/locale";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return "content";
@@ -50,6 +55,9 @@ const Content = () => {
   const [formData, setFormData] = React.useState<Record<string, any>>({});
   const [entityId, setEntityId] = useState<string | undefined>();
   const [editId, setEditId] = useState<string | number>("");
+  const [cloudinaryDeleteToken, setCloudinaryDeleteToken] = useState<
+    string | undefined
+  >();
 
   const { t } = useTranslation();
 
@@ -80,7 +88,8 @@ const Content = () => {
         description: t("There was a problem with your request"),
       });
     },
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
+      console.log(response);
       setFormData({});
       contentQuery.refetch();
       toast({
@@ -88,6 +97,12 @@ const Content = () => {
         description: t("Successfully updated entity"),
         duration: 5000,
       });
+
+      // if there is cloudinary delete token, delete the image
+      if (cloudinaryDeleteToken) {
+        await deleteImageFromCloudinary(cloudinaryDeleteToken);
+        setCloudinaryDeleteToken(undefined);
+      }
     },
   });
 
@@ -108,6 +123,8 @@ const Content = () => {
         },
         setEditId,
         editId,
+        cloudinaryDeleteToken,
+        setCloudinaryDeleteToken,
       }}
     >
       <Main
